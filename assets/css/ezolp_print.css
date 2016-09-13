@@ -1,0 +1,38 @@
+@media print {
+
+    body,
+    .content,
+    .page-header-fixed {
+        padding: 0 !important;
+        margin: 0 !important;
+        font-size: large;
+    }
+
+    .sidebar,
+    .header,
+    .theme-panel {
+        display: none !important;
+    }
+
+    .receipt-print {
+        padding-bottom: 20px !important;
+    }
+
+    .dontprint {
+        display: none;
+    }
+
+    .doprint {
+        display: block;
+    }
+
+    .receipt-logo {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .center-text {
+        text-align: center;
+    }
+
+}
