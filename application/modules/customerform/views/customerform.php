@@ -8,15 +8,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <!--<![endif]-->
 
-<?php 
-		$css = new Asset_css('donationform');
-	    $css->add_asset($this->config->item('base_preprocess'));
-		$css->add_asset($this->config->item('client'));
-		$css->add_asset('./assets/scss/donation.scss');
-	
-		$data['asset'] = $css;
-		$this->load->view('header', $data); 
-?>
+<?php $this->load->view('header'); ?>
+
 <style>
     #loading-div-background{
         display: none;
@@ -47,41 +40,36 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     }
 </style>
 
-<body class="flat-black donation-form">
+<body class="flat-black">
 
-<!-- begin #page-container -->
 <div id="page-container" class="fade in page-without-sidebar">
-    <!-- begin #header -->
-    <div id="header" class="header navbar navbar-default">
-        <!-- begin container-fluid -->
-        <div class="container-fluid">
-            <!-- begin mobile sidebar expand / collapse button -->
-            <div class="navbar-header">
-                <a href="<?php echo current_url(); ?>">
-                    <div class="logo-img">
-                        <?php if($Donationform_Logo != 'FALSE'){ ?>
-                            <img src="<?php echo base_url(); ?>/client/<?php echo $Donationform_Logo ?>" height="300" width="350">
-                        <?php } ?>
-                    </div>
-                    <h1 class="page-title"><?php echo $page_data['title'];?></h1>
-                </a>
-            </div>
-            <!-- end mobile sidebar expand / collapse button -->
-        </div>
-        <!-- end container-fluid -->
-    </div>
-    <!-- end #header -->
+
     <!-- begin #content -->
     <div id="content" class="content">
         <!-- begin page-header -->
-        <h1 class="page-header"><?php echo $page_data['slogan'];?></h1>
+
+        <h1 class="page-header">
+            <?php if(isset($customer -> logofile)){ ?>
+                <img src="<?php echo base_url(); ?>/client/uploads/<?php echo $customer -> logofile; ?>" alt="" height="120" width="200">
+            <?php }
+
+            if ($customer -> showname == '1')
+            {
+                echo $customer -> customername;
+            }
+
+            ?>
+        </h1>
         <!-- end page-header -->
+
+
         <div class="row">
             <!-- begin col-12 -->
             <div class="col-12">
-                <?php $attributes = array('class' => 'form-horizontal', 'id' => 'donationform'); ?>
-                <?php echo form_open('donation/Donation/submit', $attributes); ?>
-                    <?php $data = array(
+                <?php $attributes = array('class' => 'form-horizontal', 'id' => 'guestform'); ?>
+                <?php echo form_open('guestform/submit', $attributes);
+
+                    $data = array(
                         'type'  => 'hidden',
                         'name'  => 'cardtype',
                         'id'    => 'cardtype',
@@ -90,136 +78,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     );
 
                     echo form_input($data) ;
-
-                    ?>
-
+                ?>
                     <!-- begin panel -->
                     <div class="panel panel-inverse" >
                         <div class="panel-heading">
-                            <h4 class="panel-title">DONATION INFORMATION ( <span class="required">*</span> = Required Field)</h4>
+                            <h4 class="panel-title">PAYMENT INFORMATION (* = Required Field)</h4>
                         </div>
                         <div class="panel-body">
-                        		<div class="donation-grp">
-									<legend>My Donation</legend>
-									<div class="form-group <?php echo(!empty(form_error('paymentamount')) ? 'has-error has-feedback' : ''); ?>">
-										<div class="row">
-											<label class="col-md-3 control-label">Amount <span class="required">*</span></label>
-											<div class="col-md-9">
-												<div class="btn-group pay-btns pay-btns-1" data-toggle="buttons">
-													<label class="btn btn-primary">
-														<input type="radio" class="amt-rad" name="paymentamount" id="paymentamount25" value="25.00" <?php echo set_radio('paymentamount', '25.00'); ?> /> <span>$25</span>
-													</label>
-												
-													<label class="btn btn-primary">
-														<input type="radio" class="amt-rad" name="paymentamount" id="paymentamount50" value="50.00" <?php echo set_radio('paymentamount', '50.00'); ?> /><span>$50</span>
-													</label>
-											
-													<label class="btn btn-primary">
-														<input type="radio" class="amt-rad" name="paymentamount" id="paymentamount75" value="75.00" <?php echo set_radio('paymentamount', '75.00'); ?> /><span>$75</span>
-													</label>
-												
-													<label class="btn btn-primary">
-														<input type="radio" class="amt-rad" name="paymentamount" id="paymentamount100" value="100.00" <?php echo set_radio('paymentamount', '100.00'); ?> /><span>$100</span>
-													</label>
-												
-													<label class="btn btn-primary">
-														<input type="radio" class="amt-rad" name="paymentamount" id="paymentamount200" value="200.00" <?php echo set_radio('paymentamount', '200.00'); ?> /><span>$200</span>
-													</label>
-													
-													<label class="btn btn-primary other-special">
-														<input type="radio" class="amt-rad" name="paymentamount" id="paymentamountother" value="other" <?php echo set_radio('paymentamount', 'other'); ?> /><span>Other</span>
-														$
-													</label>
-													<?php
-                                                        $data = array(
-                                                            'name'          => 'otheramount',
-                                                            'id'            => 'maskedMoney-input-paymentamount',
-                                                            'value'         => set_value('otheramount'),
-                                                            'class'         => 'form-control input-other-pay',
-                                                            'type'          => 'text',
-                                                            'placeholder'   => '0.00',
-                                                            'maxlength'     => '10',
-                                                            'data-parsley-required' => 'true'
-                                                        );
 
-                                                        echo form_input($data);
-                                                    ?>
-												</div><!-- ./ pay-btns -->
-											</div><!-- ./col-md-9 -->
-										</div><!-- ./row -->
-
-										<div class="row other-pay-error">
-											<div class="col-md-9 col-md-offset-3">
-												<?php echo form_error('paymentamount'); ?>
-												<?php echo form_error('otheramount'); ?>
-											</div>
-										</div>
-                                        <div class="row other-pay-error">
-                                            <div class="col-md-9 col-md-offset-3">
-                                                <label class="col-md-3 control-label">Make Recurring</label>
-                                                <div class="col-md-9">
-                                                    <?php
-                                                    $data = array(
-                                                        'name'          => 'recurring',
-                                                        'id'            => 'recurring',
-                                                        'value'         => 'recurring',
-                                                        'class'         => 'form-control max-250',
-                                                        'checked'       => set_checkbox('recurring')
-                                                    );
-                                                    echo form_checkbox($data);
-                                                    ?>
-                                                </div>
-                                                Please make this a recurring contribution.<br>
-                                                By clicking donate, you acknowledge that you are making a <br>
-                                                recurring contribution and that the amount selected will <br>
-                                                be charged to your credit card immediately and on this <br>
-                                                date every month during the campaign.<br>
-                                            </div>
-                                        </div>
-									</div><!-- ./ form-grp -->	
-								</div><!-- ./donation-grp -->
-									
-
-				
-				
-				
-							<div class="donation-grp">
-                            <legend>My Information</legend>
+                            <legend>Billing Information</legend>
 
                                 <div class="form-group <?php echo(!empty(form_error('firstname')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">First Name <span class="required">*</span></label>
+                                    <label class="col-md-3 control-label">FIRST NAME*</label>
                                     <div class="col-md-9">
                                         <?php
-                                            $data = array(
-                                                'name'          => 'firstname',
-                                                'id'            => 'firstname',
-                                                'value'         => set_value('firstname'),
-                                                'class'         => 'form-control max-250',
-                                                'type'          => 'text',
-                                                'placeholder'   => 'Required',
-                                                'maxlength'     => '100',
-                                                'data-parsley-required' => 'true'
-                                            );
+                                        $data = array(
+                                            'name'          => 'firstname',
+                                            'id'            => 'firstname',
+                                            'value'         => set_value('firstname'),
+                                            'class'         => 'form-control',
+                                            'type'          => 'text',
+                                            'placeholder'   => 'Required',
+                                            'maxlength'     => '100',
+                                            'data-parsley-required' => 'true'
+                                        );
 
-                                            echo form_input($data);
+                                        echo form_input($data);
                                         ?>
                                         <?php echo(!empty(form_error('firstname')) ? '<span class="fa fa-times form-control-feedback"></span>' : ''); ?>
                                         <?php echo form_error('firstname'); ?>
                                     </div>
                                 </div>
                                 <div class="form-group <?php echo(!empty(form_error('middleinitial')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">Middle Initial </label>
+                                    <label class="col-md-3 control-label">MIDDLE INITIAL</label>
                                     <div class="col-md-9">
                                         <?php
                                         $data = array(
                                             'name'          => 'middleinitial',
                                             'id'            => 'middleinitial',
                                             'value'         => set_value('middleinitial'),
-                                            'class'         => 'form-control max-100',
+                                            'class'         => 'form-control',
                                             'type'          => 'text',
-                                            'placeholder'   => ' ',
-                                            'maxlength'     => '100',
-                                            'data-parsley-required' => 'false'
+                                            'placeholder'   => 'Middle Initial',
+                                            'maxlength'     => '1'
                                         );
 
                                         echo form_input($data);
@@ -229,14 +130,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </div>
                                 </div>
                                 <div class="form-group <?php echo(!empty(form_error('lastname')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">Last Name <span class="required">*</span></label>
+                                    <label class="col-md-3 control-label">LAST NAME*</label>
                                     <div class="col-md-9">
                                         <?php
                                         $data = array(
                                             'name'          => 'lastname',
                                             'id'            => 'lastname',
                                             'value'         => set_value('lastname'),
-                                            'class'         => 'form-control max-250',
+                                            'class'         => 'form-control',
                                             'type'          => 'text',
                                             'placeholder'   => 'Required',
                                             'maxlength'     => '100',
@@ -250,17 +151,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </div>
                                 </div>
 
-
-
                                 <div class="form-group <?php echo(!empty(form_error('streetaddress')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">Street Address <span class="required">*</span></label>
+                                    <label class="col-md-3 control-label">STREET ADDRESS*</label>
                                     <div class="col-md-9">
                                         <?php
                                         $data = array(
                                             'name'          => 'streetaddress',
                                             'id'            => 'streetaddress',
                                             'value'         => set_value('streetaddress'),
-                                            'class'         => 'form-control max-350',
+                                            'class'         => 'form-control',
                                             'type'          => 'text',
                                             'placeholder'   => 'Required',
                                             'maxlength'     => '100',
@@ -274,14 +173,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </div>
                                 </div>
                                 <div class="form-group <?php echo(!empty(form_error('streetaddress2')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">Street Address (2)</label>
+                                    <label class="col-md-3 control-label">STREET ADDRESS(2)</label>
                                     <div class="col-md-9">
                                         <?php
                                         $data = array(
                                             'name'          => 'streetaddress2',
                                             'id'            => 'streetaddress2',
                                             'value'         => set_value('streetaddress2'),
-                                            'class'         => 'form-control max-350',
+                                            'class'         => 'form-control',
                                             'type'          => 'text',
                                             'placeholder'   => '',
                                             'maxlength'     => '100',
@@ -295,14 +194,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </div>
                                 </div>
                                 <div class="form-group <?php echo(!empty(form_error('city')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">City <span class="required">*</span></label>
+                                    <label class="col-md-3 control-label">CITY*</label>
                                     <div class="col-md-9">
                                         <?php
                                         $data = array(
                                             'name'          => 'city',
                                             'id'            => 'city',
                                             'value'         => set_value('city'),
-                                            'class'         => 'form-control max-350',
+                                            'class'         => 'form-control',
                                             'type'          => 'text',
                                             'placeholder'   => 'Required',
                                             'maxlength'     => '100',
@@ -316,11 +215,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </div>
                                 </div>
                                 <div class="form-group <?php echo(!empty(form_error('state')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">State <span class="required">*</span></label>
+                                    <label class="col-md-3 control-label">STATE*</label>
                                     <div class="col-md-9">
                                         <?php
                                             $extra = array(
-                                                'class' => 'form-control selectpicker max-200',
+                                                'class' => 'form-control selectpicker',
                                                 'data-live-search' => 'true',
                                                 'data-style' => (!empty(form_error('state')) ? 'btn-danger' : ''),
                                             );
@@ -387,14 +286,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </div>
                                 </div>
                                 <div class="form-group <?php echo(!empty(form_error('zip')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">Zip Code <span class="required">*</span></label>
+                                    <label class="col-md-3 control-label">ZIP*</label>
                                     <div class="col-md-9">
                                         <?php
                                         $data = array(
                                             'name'          => 'zip',
                                             'id'            => 'masked-input-zip',
                                             'value'         => set_value('zip'),
-                                            'class'         => 'form-control max-100',
+                                            'class'         => 'form-control',
                                             'type'          => 'text',
                                             'placeholder'   => '99999',
                                             'maxlength'     => '5',
@@ -408,110 +307,163 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </div>
                                 </div>
                                 <div class="form-group <?php echo(!empty(form_error('email')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">Email<?php echo( $Donationform_Email_Required == 'TRUE' ? '*' : ' ') ?></label>
-                                    <div class="col-md-9">
-                                        <?php
-                                        $data = array(
-                                            'name'          => 'email',
-                                            'id'            => 'email',
-                                            'value'         => set_value('email'),
-                                            'class'         => 'form-control max-250',
-                                            'type'          => 'email',
-                                            'placeholder'   => 'email address',
-                                            'maxlength'     => '100',
-                                            'data-parsley-required' => $Donationform_Email_Required
-                                        );
 
-                                        echo form_input($data);
-                                        ?>
-                                        <?php echo(!empty(form_error('email')) ? '<span class="fa fa-times form-control-feedback"></span>' : ''); ?>
-                                        <?php echo form_error('email'); ?>
-                                    </div>
+                                        <label class="col-md-3 control-label">EMAIL</label>
+                                        <div class="col-md-9">
+                                            <?php
+                                            $data = array(
+                                                'name'          => 'email',
+                                                'id'            => 'email',
+                                                'value'         => set_value('email'),
+                                                'class'         => 'form-control',
+                                                'type'          => 'email',
+                                                'placeholder'   => 'email address',
+                                                'maxlength'     => '100',
+                                                'data-parsley-required' => 'false'
+                                            );
+
+                                            echo form_input($data);
+                                            ?>
+                                            <?php echo(!empty(form_error('zip')) ? '<span class="fa fa-times form-control-feedback"></span>' : ''); ?>
+                                            <?php echo form_error('zip'); ?>
+                                        </div>
+
                                 </div>
                                 <div class="form-group <?php echo(!empty(form_error('notes')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">Notes</label>
-                                    <div class="col-md-9">
-                                        <?php
-                                        $data = array(
-                                            'name'          => 'notes',
-                                            'id'            => 'notes',
-                                            'value'         => set_value('notes'),
-                                            'class'         => 'form-control max-350',
-                                            'type'          => 'text',
-                                            'placeholder'   => 'Notes',
-                                            'maxlength'     => '100',
-                                            'data-parsley-required' => 'true'
-                                        );
 
-                                        echo form_input($data);
-                                        ?>
-                                        <?php echo(!empty(form_error('notes')) ? '<span class="fa fa-times form-control-feedback"></span>' : ''); ?>
-                                        <?php echo form_error('notes'); ?>
-                                    </div>
-                                </div>
-                                <div class="form-group <?php echo(!empty(form_error('employer')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">Employer <span class="required">*</span></label>
-                                    <div class="col-md-9">
-                                        Federal law requires us to collect the following information:<br>
-                                        if retired please put “Retired” in each field
-                                        <?php
-                                        $data = array(
-                                            'name'          => 'employer',
-                                            'id'            => 'employer',
-                                            'value'         => set_value('employer'),
-                                            'class'         => 'form-control max-350',
-                                            'type'          => 'text',
-                                            'placeholder'   => 'Required',
-                                            'maxlength'     => '100',
-                                            'data-parsley-required' => 'true'
-                                        );
+                                        <label class="col-md-3 control-label">NOTES</label>
+                                        <div class="col-md-9">
+                                            <?php
+                                            $data = array(
+                                                'name'          => 'notes',
+                                                'id'            => 'notes',
+                                                'value'         => set_value('notes'),
+                                                'class'         => 'form-control',
+                                                'type'          => 'text',
+                                                'maxlength'     => '100',
+                                                'data-parsley-required' => 'false'
+                                            );
 
-                                        echo form_input($data);
-                                        ?>
-                                        <?php echo(!empty(form_error('employer')) ? '<span class="fa fa-times form-control-feedback"></span>' : ''); ?>
-                                        <?php echo form_error('employer'); ?>
-                                    </div>
-                                </div>
-                                <div class="form-group <?php echo(!empty(form_error('occupation')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">Occupation <span class="required">*</span></label>
-                                    <div class="col-md-9">
-                                        <?php
-                                        $data = array(
-                                            'name'          => 'occupation',
-                                            'id'            => 'occupation',
-                                            'value'         => set_value('occupation'),
-                                            'class'         => 'form-control max-350',
-                                            'type'          => 'text',
-                                            'placeholder'   => 'Required',
-                                            'maxlength'     => '100',
-                                            'data-parsley-required' => 'true'
-                                        );
+                                            echo form_input($data);
+                                            ?>
+                                            <?php echo(!empty(form_error('notes')) ? '<span class="fa fa-times form-control-feedback"></span>' : ''); ?>
+                                            <?php echo form_error('notes'); ?>
+                                        </div>
 
-                                        echo form_input($data);
-                                        ?>
-                                        <?php echo(!empty(form_error('occupation')) ? '<span class="fa fa-times form-control-feedback"></span>' : ''); ?>
-                                        <?php echo form_error('occupation'); ?>
-                                    </div>
                                 </div>
-							</div>	
-							
-							<div class="donation-grp">
-                            <legend>My Payment Information</legend>
-                            <div class="form-group <?php echo(!empty(form_error('creditcard')) ? 'has-error has-feedback' : ''); ?>">
-                            <label class="col-md-3 control-label">We Accept</label>
-                            <div class="col-md-9"><img src="<?php echo base_url(); ?>/client/credit-card-icons.png" width="150"/></div>
+
+                                <?php if ($customer -> cf1enabled == 1) { ?>
+                                <div class="form-group <?php echo(!empty(form_error('cf1')) ? 'has-error has-feedback' : ''); ?>">
+                                <label class="col-md-3 control-label">
+                                    <?php
+                                        echo $customer -> cf1name;
+                                        if ($customer -> cf1required == 1)
+                                        {
+                                            echo '*';
+                                        }
+                                    ?>
+                                </label>
+                                <div class="col-md-9">
+                                    <?php
+                                    $data = array(
+                                        'name'          => 'cf1',
+                                        'id'            => 'cf1',
+                                        'value'         => set_value('cf1'),
+                                        'class'         => 'form-control',
+                                        'type'          => 'text',
+                                        'placeholder'   => ($customer->cf1required == 1 ? 'Required' : $customer->cf1name),
+                                        'maxlength'     => '100',
+                                        'data-parsley-required' => ($customer->cf1required == 1 ? 'true' : 'false')
+                                    );
+
+                                    echo form_input($data);
+                                    ?>
+                                    <?php echo(!empty(form_error('cf1')) ? '<span class="fa fa-times form-control-feedback"></span>' : ''); ?>
+                                    <?php echo form_error('cf1'); ?>
+                                </div>
                             </div>
+                            <?php } ?>
+
+                                <?php if ($customer -> cf2enabled == 1) { ?>
+                                    <div class="form-group <?php echo(!empty(form_error('cf2')) ? 'has-error has-feedback' : ''); ?>">
+                                    <label class="col-md-3 control-label">
+                                        <?php
+                                            echo $customer -> cf2name;
+                                            if ($customer -> cf2required == 1)
+                                            {
+                                                echo '*';
+                                            }
+                                        ?>
+                                    </label>
+                                    <div class="col-md-9">
+                                        <?php
+                                        $data = array(
+                                            'name'          => 'cf2',
+                                            'id'            => 'cf2',
+                                            'value'         => set_value('cf2'),
+                                            'class'         => 'form-control',
+                                            'type'          => 'text',
+                                            'placeholder'   => ($customer->cf2required == 1 ? 'Required' : $customer->cf2name),
+                                            'maxlength'     => '100',
+                                            'data-parsley-required' => ($customer->cf2required == 1 ? 'true' : 'false')
+                                        );
+
+                                        echo form_input($data);
+                                        ?>
+                                        <?php echo(!empty(form_error('cf2')) ? '<span class="fa fa-times form-control-feedback"></span>' : ''); ?>
+                                        <?php echo form_error('cf2'); ?>
+                                    </div>
+                                </div>
+                                <?php } ?>
+
+                                <?php if ($customer -> cf3enabled == 1) { ?>
+                                    <div class="form-group <?php echo(!empty(form_error('cf3')) ? 'has-error has-feedback' : ''); ?>">
+                                    <label class="col-md-3 control-label">
+                                        <?php
+                                            echo $customer -> cf3name;
+                                            if ($customer -> cf3required == 1)
+                                            {
+                                                echo '*';
+                                            }
+                                        ?>
+                                    </label>
+                                    <div class="col-md-9">
+                                        <?php
+                                        $data = array(
+                                            'name'          => 'cf3',
+                                            'id'            => 'cf3',
+                                            'value'         => set_value('cf3'),
+                                            'class'         => 'form-control',
+                                            'type'          => 'text',
+                                            'placeholder'   => ($customer->cf3required == 1 ? 'Required' : $customer->cf3name),
+                                            'maxlength'     => '100',
+                                            'data-parsley-required' => ($customer->cf3required == 1 ? 'true' : 'false')
+                                        );
+
+                                        echo form_input($data);
+                                        ?>
+                                        <?php echo(!empty(form_error('cf3')) ? '<span class="fa fa-times form-control-feedback"></span>' : ''); ?>
+                                        <?php echo form_error('cf3'); ?>
+                                    </div>
+                                </div>
+                                <?php } ?>
+
+                            <legend>Credit Card Information</legend>
+                            <div class="form-group ">
+                                                                <label class="col-md-3 control-label">WE ACCEPT</label> 
+<div class="col-md-9"><img src="<?php echo base_url(); ?>/client/credit-card-icons.png" width="150"/></div> 
+</div>
                                 <div class="form-group <?php echo(!empty(form_error('creditcard')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">Credit Card <span class="required">*</span></label>
+                                    <label class="col-md-3 control-label">CREDIT CARD *</label>
                                     <div class="col-md-9">
                                         <?php
                                         $data = array(
                                             'name'          => 'creditcard',
                                             'id'            => 'creditcard',
                                             'value'         => set_value('creditcard'),
-                                            'class'         => 'form-control max-200 creditcard',
+                                            'class'         => 'form-control creditcard',
                                             'type'          => 'text',
-                                            'placeholder'   => '9999 9999 9999 9999',
+                                            'placeholder'   => '9999 9999 9999 9999'
                                         );
 
                                         echo form_input($data);
@@ -523,11 +475,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
 
                                 <div class="form-group <?php echo(!empty(form_error('expirationmonth')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">Expiration Month <span class="required">*</span></label>
+                                    <label class="col-md-3 control-label">Expiration Month *</label>
                                     <div class="col-md-9">
                                         <?php
                                         $extra = array(
-                                            'class' => 'form-control selectpicker max-200',
+                                            'class' => 'form-control selectpicker',
                                             'id' => 'expirationmonth',
                                             'name' => 'expirationmonth',
                                             'data-live-search' => 'true',
@@ -557,11 +509,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </div>
                                 </div>
                                 <div class="form-group <?php echo(!empty(form_error('expirationyear')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">Expiration Year <span class="required">*</span></label>
+                                    <label class="col-md-3 control-label">Expiration Year *</label>
                                     <div class="col-md-9">
                                         <?php
                                         $extra = array(
-                                            'class' => 'form-control selectpicker max-200',
+                                            'class' => 'form-control selectpicker',
                                             'id' => 'expirationyear',
                                             'name' => 'expirationyear',
                                             'data-live-search' => 'true',
@@ -583,14 +535,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
 
                                 <div class="form-group <?php echo(!empty(form_error('cvv2')) ? 'has-error has-feedback' : ''); ?>">
-                                    <label class="col-md-3 control-label">CVV <span class="required">*</span> <span style="display: inline;" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="bottom" title="3 digit security code on back of credit card"></span></label>
+                                    <label class="col-md-3 control-label">CVV2 *</label>
                                     <div class="col-md-9">
                                         <?php
                                         $data = array(
                                             'name'          => 'cvv2',
                                             'id'            => 'cvv2',
                                             'value'         => set_value('cvv2'),
-                                            'class'         => 'form-control max-200 cvv2',
+                                            'class'         => 'form-control cvv2',
                                             'type'          => 'text',
                                             'placeholder'   => '000',
                                             'maxlength'     => '4',
@@ -603,16 +555,36 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         <?php echo form_error('cvv2'); ?>
                                     </div>
                                 </div>
-							</div>	
+
+                            <legend>Payment Amount</legend>
+                                <div class="form-group <?php echo(!empty(form_error('paymentamount')) ? 'has-error has-feedback' : ''); ?>">
+                                    <label class="col-md-3 control-label">Amount *</label>
+                                    <div class="col-md-9">
+                                        <?php
+                                        $data = array(
+                                            'name'          => 'paymentamount',
+                                            'id'            => 'maskedMoney-input-paymentamount',
+                                            'value'         => set_value('paymentamount'),
+                                            'class'         => 'form-control',
+                                            'type'          => 'text',
+                                            'placeholder'   => '0.00',
+                                            'maxlength'     => '10',
+                                            'data-parsley-required' => 'true'
+                                        );
+
+                                        echo form_input($data);
+                                        ?>
+                                        <?php echo(!empty(form_error('paymentamount')) ? '<span class="fa fa-times form-control-feedback"></span>' : ''); ?>
+                                        <?php echo form_error('paymentamount'); ?>
+                                    </div>
+                                </div>
 
                             <div class="form-group">
-                                <div class="col-md-12 end-form-donate">
-                                    <button type="submit" class="btn btn-donate btn-primary">Donate Now</button>
+                                <label class="col-md-3 control-label">Submit</label>
+                                <div class="col-md-9">
+                                    <button type="submit" class="btn btn-sm btn-success">Submit Button</button>
                                 </div>
                             </div>
-
-                        
-
                         </div>
                     </div>
                     <!-- end panel -->
@@ -648,10 +620,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="<?php echo base_url(); ?>/assets/plugins/jquery-payment/lib/jquery.payment.min.js"></script>
 
 <script type="text/javascript">
+
     $(document).ready(function() {
         $("#loading-div-background").css({ opacity: 1.0 });
 
-        $('#donationform').submit(function(){
+        $('#guestform').submit(function(){
             var cardType = $.payment.cardType($('.creditcard').val());
             $('.cardtype').val(cardType);
             $('#submit').attr({
@@ -663,9 +636,116 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         $('.creditcard').payment('formatCardNumber');
         $('.cc-cvc').payment('formatCardCVC');
-
     });
+
 </script>
+
+<script type="text/javascript">
+    /* Credit Card Swipe Logic */
+    var readErrorReason = "Credit card read error. Please try again.";
+
+    var creditCardParser = function (rawData) {
+
+        var trackpattern = new RegExp("^(%[^%;\\?]+\\?)(;[0-9\\:<>\\=]+\\?)?(;[0-9\\:<>\\=]+\\?)?");
+
+        var trackmatches = trackpattern.exec(rawData);
+        if (!trackmatches) return null;
+
+        var fieldpattern = new RegExp("^(\\%)([a-zA-Z])(\\d{1,19})(\\^)(.{2,26})(\\^)(\\d{0,4}|\\^)(\\d{0,3}|\\^)(.*)(\\?)");
+
+        var fieldmatches = fieldpattern.exec(rawData);
+
+        if (!fieldmatches) return null;
+
+        // Extract the three lines
+        var cardData = {
+            track1: trackmatches[1],
+            track2: trackmatches[2],
+            track3: trackmatches[3],
+            FC: fieldmatches[2],
+            PAN: fieldmatches[3],
+            NM: fieldmatches[5],
+            ED: fieldmatches[7],
+            SC: fieldmatches[8],
+            DD: fieldmatches[9]
+        };
+
+        if (cardData.FC != "B")
+        {
+            readErrorReason = "Invalid Format Code. Only cards with Format Code 'B' may be processed.";
+        }
+        else if (cardData.PAN.length == 0)
+        {
+            readErrorReason = "Can not read Primary Account Number. Please try again.";
+        }
+        else if (cardData.ED.length == 0)
+        {
+            readErrorReason = "Can not read Expiration Date. Please try again.";
+        }
+
+        console.log(cardData);
+
+        return cardData;
+    };
+
+    var goodScan = function (data) {
+        $("#status").text("Success!");
+        $("#track1").text(data.track1);
+        $("#track2").text(data.track2);
+        $("#track3").text(data.track3);
+
+        // console.log(data.PAN);
+        // console.log(data.ED.substring(2, 4));
+        // console.log(data.ED.substring(0, 2));
+
+        // Swap around the name
+        var fullname  = data.NM.split("/");
+        var firstname = fullname[1].trim();
+        var lastname = fullname[0].trim();
+        var formattedname = firstname.concat(" ", lastname).trim();
+
+        $("[name='fullname']").val(formattedname);
+        $("[name='creditcard']").val(data.PAN);
+
+        // Set Value of Element then run the selectpicker refresh
+        $("#expirationmonth").val(data.ED.substring(2, 4));
+        $('.selectpicker').selectpicker('refresh');
+
+        // var expirationyear = data.ED.substring(0, 2);
+        // $("[name='expirationyear']").val(data.ED.substring(0, 2));
+        var year_prefix = "20";
+        var year_suffix = data.ED.substring(0, 2);
+        var cardyear = year_prefix.concat(year_suffix);
+        $("#expirationyear").val(cardyear);
+        $('.selectpicker').selectpicker('refresh');
+
+
+        $("[name='cvv2']").focus();
+    }
+
+    var badScan = function () {
+        $("#status").text("Failed!");
+        $(".line").text("");
+        alert(readErrorReason);
+    }
+
+    // Initialize the plugin with default parser and callbacks.
+    //
+    // Set debug to true to watch the characters get captured and the state machine transitions
+    // in the javascript console. This requires a browser that supports the console.log function.
+    //
+    // Set firstLineOnly to true to invoke the parser after scanning the first line. This will speed up the
+    // time from the start of the scan to invoking your success callback.
+    $.cardswipe({
+        firstLineOnly: false,
+        success: goodScan,
+        parser: creditCardParser,
+        error: badScan,
+        debug: true
+    });
+
+</script>
+
 
 </body>
 </html>
