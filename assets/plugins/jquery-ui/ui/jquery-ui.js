@@ -301,7 +301,6 @@ $.extend( $.ui, {
 			return true;
 		}
 
-		// TODO: determine which cases actually cause this to happen
 		// if the element doesn't have the scroll set, see if it's possible to
 		// set the scroll
 		el[ scroll ] = 1;
@@ -408,7 +407,6 @@ $.widget = function( name, base, prototype ) {
 		})();
 	});
 	constructor.prototype = $.widget.extend( basePrototype, {
-		// TODO: remove support for widgetEventPrefix
 		// always use the name + a colon as the prefix, e.g., draggable:start
 		// don't prefix for widgets that aren't DOM-based
 		widgetEventPrefix: existingConstructor ? (basePrototype.widgetEventPrefix || name) : name
@@ -573,7 +571,6 @@ $.Widget.prototype = {
 		this.element
 			.unbind( this.eventNamespace )
 			// 1.9 BC for #7810
-			// TODO remove dual storage
 			.removeData( this.widgetName )
 			.removeData( this.widgetFullName )
 			// support: jquery <1.6.3
@@ -857,7 +854,6 @@ $.widget("ui.mouse", {
 		this.started = false;
 	},
 
-	// TODO: make sure destroying one instance of mouse doesn't mess with
 	// other instances of mouse
 	_mouseDestroy: function() {
 		this.element.unbind("."+this.widgetName);
@@ -2411,7 +2407,6 @@ $.widget("ui.resizable", $.ui.mouse, {
 				// Apply zIndex to all handles - see #7960
 				axis.css({ zIndex: o.zIndex });
 
-				//TODO : What's going on here?
 				if ("se" === handle) {
 					axis.addClass("ui-icon ui-icon-gripsmall-diagonal-se");
 				}
@@ -2455,14 +2450,12 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 				}
 
-				//TODO: What's that good for? There's not anything to be executed left
 				if(!$(this.handles[i]).length) {
 					continue;
 				}
 			}
 		};
 
-		//TODO: make renderAxis a prototype function
 		this._renderAxis(this.element);
 
 		this._handles = $(".ui-resizable-handle", this.element)
@@ -2517,7 +2510,6 @@ $.widget("ui.resizable", $.ui.mouse, {
 					.removeData("resizable").removeData("ui-resizable").unbind(".resizable").find(".ui-resizable-handle").remove();
 			};
 
-		//TODO: Unwrap at same DOM position
 		if (this.elementIsWrapper) {
 			_destroy(this.element);
 			wrapper = this.element;
@@ -2668,7 +2660,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 			pr = this._proportionallyResizeElements;
 			ista = pr.length && (/textarea/i).test(pr[0].nodeName);
-			soffseth = ista && $.ui.hasScroll(pr[0], "left") /* TODO - jump height */ ? 0 : that.sizeDiff.height;
+			soffseth = ista && $.ui.hasScroll(pr[0], "left") ? 0 : that.sizeDiff.height;
 			soffsetw = ista ? 0 : that.sizeDiff.width;
 
 			s = { width: (that.helper.width()  - soffsetw), height: (that.helper.height() - soffseth) };
@@ -2868,7 +2860,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 				position: "absolute",
 				left: this.elementOffset.left +"px",
 				top: this.elementOffset.top +"px",
-				zIndex: ++o.zIndex //TODO: Don't modify option
+				zIndex: ++o.zIndex
 			});
 
 			this.helper
@@ -2942,7 +2934,7 @@ $.ui.plugin.add("resizable", "animate", {
 			o = that.options,
 			pr = that._proportionallyResizeElements,
 			ista = pr.length && (/textarea/i).test(pr[0].nodeName),
-			soffseth = ista && $.ui.hasScroll(pr[0], "left") /* TODO - jump height */ ? 0 : that.sizeDiff.height,
+			soffseth = ista && $.ui.hasScroll(pr[0], "left") ? 0 : that.sizeDiff.height,
 			soffsetw = ista ? 0 : that.sizeDiff.width,
 			style = { width: (that.size.width - soffsetw), height: (that.size.height - soffseth) },
 			left = (parseInt(that.element.css("left"), 10) + (that.position.left - that.originalPosition.left)) || null,
@@ -3716,7 +3708,6 @@ $.widget("ui.sortable", $.ui.mouse, {
 		});
 
 		// Only after we got the offset, we can change the helper's position to absolute
-		// TODO: Still need to figure out a way to make relative sorting possible
 		this.helper.css("position", "absolute");
 		this.cssPosition = this.helper.css("position");
 
@@ -4317,7 +4308,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 		//Append it after the actual current item
 		that.currentItem.after(that.placeholder);
 
-		//Update the size of the placeholder (TODO: Logic to fuzzy, see line 316/317)
+		//Update the size of the placeholder (see line 316/317)
 		o.placeholder.update(that, that.placeholder);
 
 	},
@@ -7395,14 +7386,12 @@ $.widget( "ui.button", {
 			if ( this.buttonElement.is("a") ) {
 				this.buttonElement.keyup(function(event) {
 					if ( event.keyCode === $.ui.keyCode.SPACE ) {
-						// TODO pass through original event correctly (just as 2nd argument doesn't work)
 						$( this ).click();
 					}
 				});
 			}
 		}
 
-		// TODO: pull out $.Widget's handling for the disabled option into
 		// $.Widget.prototype._setOptionDisabled so it's easy to proxy and can
 		// be overridden by individual plugins
 		this._setOption( "disabled", options.disabled );
@@ -7719,7 +7708,6 @@ $.extend(Datepicker.prototype, {
 	//Keep track of the maximum number of rows displayed (see #7043)
 	maxRows: 4,
 
-	// TODO rename to "widget" when switching to widget factory
 	_widgetDatepicker: function() {
 		return this.dpDiv;
 	},
@@ -10333,7 +10321,6 @@ $.widget( "ui.dialog", {
 			return true;
 		}
 
-		// TODO: Remove hack when datepicker implements
 		// the .ui-front logic (#8989)
 		return !!$( event.target ).closest(".ui-datepicker").length;
 	},
@@ -12033,7 +12020,6 @@ $.widget( "ui.menu", {
 	},
 
 	select: function( event ) {
-		// TODO: It should never be possible to not have an active item at this
 		// point, but the tests don't trigger mouseenter before click.
 		this.active = this.active || $( event.target ).closest( ".ui-menu-item" );
 		var ui = { item: this.active };
@@ -13504,7 +13490,6 @@ $.widget( "ui.spinner", {
 			}
 			this._repeat( null, $( event.currentTarget ).hasClass( "ui-spinner-up" ) ? 1 : -1, event );
 		},
-		// TODO: do we really want to consider this a stop?
 		// shouldn't we just stop the repeater and wait until mouseup before
 		// we trigger the stop event?
 		"mouseleave .ui-spinner-button": "_stop"
@@ -13740,7 +13725,6 @@ $.widget( "ui.spinner", {
 		this.element.attr({
 			"aria-valuemin": this.options.min,
 			"aria-valuemax": this.options.max,
-			// TODO: what should we do with values that can't be parsed?
 			"aria-valuenow": this._parse( this.element.val() )
 		});
 	},

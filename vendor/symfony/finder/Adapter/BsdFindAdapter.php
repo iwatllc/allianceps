@@ -93,7 +93,6 @@ class BsdFindAdapter extends AbstractFindAdapter
         foreach ($contains as $contain) {
             $expr = Expression::create($contain);
 
-            // todo: avoid forking process for each $pattern by using multiple -e options
             $command
                 ->add('| grep -v \'^$\'')
                 ->add('| xargs -I{} grep -I')

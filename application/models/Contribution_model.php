@@ -50,7 +50,6 @@ class Contribution_model extends CI_Model {
     }
 
     /*
-     * TODO: This is a quick hack to allow us to be able to access a
      * second database.
      */ 
     private function selectPreviousDatabase() {

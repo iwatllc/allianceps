@@ -98,7 +98,7 @@
 			},
 			setVisible: seriesTypes.pie.prototype.pointClass.prototype.setVisible
 		}),
-		// @todo Move to translate
+		
 		handleLayout: function () {
 			var tree = this.tree,
 				seriesArea;
@@ -130,7 +130,6 @@
 			this.nodeMap = [];
 
 			// Map children to index
-			// @todo Use data instead of points
 			each(this.points, function (point, index) {
 				var parent = "";
 				allIds.push(point.id);
@@ -181,7 +180,7 @@
 				children: children,
 				level: level,
 				parent: parent,
-				visible: false // @todo move this to better location
+				visible: false
 			};
 			series.nodeMap[node.id] = node;
 			if (point) {
@@ -206,7 +205,6 @@
 				if (!child.ignore) {
 					childrenTotal += child.val;
 				} else {
-					// @todo Add predicate to avoid looping already ignored children
 					series.eachChildren(child, function (node) {
 						extend(node, {
 							ignore: true,
@@ -668,7 +666,6 @@
 						attr.fill = 'none';
 						delete hover.fill;
 					} else {
-						// TODO: let users set the opacity
 						attr.fill = Color(attr.fill).setOpacity(0.15).get();
 						hover.fill = Color(hover.fill).setOpacity(0.75).get();
 					}
@@ -679,7 +676,6 @@
 					delete hover.fill;
 				}
 				point.pointAttr[''] = H.extend(point.pointAttr[''], attr);
-				// @todo Move this to drawDataLabels
 				if (point.dataLabel) {
 					point.dataLabel.attr({ zIndex: (point.pointAttr[''].zIndex + 1) });
 				}

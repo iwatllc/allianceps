@@ -23,7 +23,7 @@ class Seeder extends CI_Controller
             exit('Direct access is not allowed');
         }
 
-        // TODO: Add restriction so this can only be run within certain environments?
+        // Need to add restriction so this can only be run within certain environments?
  
         // initiate faker
         $this->faker = Faker\Factory::create();

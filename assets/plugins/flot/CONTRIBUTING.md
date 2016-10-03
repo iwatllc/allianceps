@@ -73,7 +73,6 @@ example:
     var a = 5;
 
     // We're going to loop here
-    // TODO: Make this loop faster, better, stronger!
 
     for (var x = 0; x < 10; x++) {}
 ```

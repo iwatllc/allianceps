@@ -36,7 +36,6 @@ $this->taskApiGen('./apigen.neon')
 * `php($php)`   * `param boolean|string` $php 'yes' or true to generate documentation for internal php classes,
 * `tree($tree)`   * `param boolean|string` $tree 'yes' or true to generate a tree view of classes, 'no' or false otherwise
 * `deprecated($dep)`   * `param boolean|string` $dep 'yes' or true to generate documentation for deprecated classes, 'no' or false otherwise
-* `todo($todo)`   * `param boolean|string` $todo 'yes' or true to document tasks, 'no' or false otherwise
 * `sourceCode($src)`   * `param boolean|string` $src 'yes' or true to generate highlighted source code, 'no' or false otherwise
 * `download($zipped)`   * `param boolean|string` $zipped 'yes' or true to generate downloadable documentation, 'no' or false otherwise
 * `report($path)` 

@@ -712,7 +712,6 @@ $.widget( "ui.dialog", {
 			return true;
 		}
 
-		// TODO: Remove hack when datepicker implements
 		// the .ui-front logic (#8989)
 		return !!$( event.target ).closest(".ui-datepicker").length;
 	},

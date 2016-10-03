@@ -198,7 +198,7 @@ class Auth extends MX_Controller
 
 
 			// Run form validation and register user if it's pass the validation
-			// TODO: SOMETHING GOING WRONG HERE --> not going in this if statement, something to do with $val->run()
+			// SOMETHING GOING WRONG HERE --> not going in this if statement, something to do with $val->run()
 			if ($val->run() AND $this->dx_auth->register($val->set_value('username'), $val->set_value('password'), $val->set_value('email')))
 			{
 

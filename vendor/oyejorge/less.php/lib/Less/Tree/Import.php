@@ -169,7 +169,6 @@ class Less_Tree_Import extends Less_Tree{
 		}
 
 		if( $this->options['inline'] ){
-			//todo needs to reference css file not import
 			//$contents = new Less_Tree_Anonymous($this->root, 0, array('filename'=>$this->importedFilename), true );
 
 			Less_Parser::AddParsedFile($full_path);

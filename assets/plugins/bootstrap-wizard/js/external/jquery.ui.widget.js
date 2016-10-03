@@ -98,7 +98,6 @@ $.widget = function( name, base, prototype ) {
 		}
 	});
 	constructor.prototype = $.widget.extend( basePrototype, {
-		// TODO: remove support for widgetEventPrefix
 		// always use the name + a colon as the prefix, e.g., draggable:start
 		// don't prefix for widgets that aren't DOM-based
 		widgetEventPrefix: name
@@ -106,7 +105,6 @@ $.widget = function( name, base, prototype ) {
 		constructor: constructor,
 		namespace: namespace,
 		widgetName: name,
-		// TODO remove widgetBaseClass, see #8155
 		widgetBaseClass: fullName,
 		widgetFullName: fullName
 	});
@@ -234,7 +232,6 @@ $.Widget.prototype = {
 
 		if ( element !== this ) {
 			// 1.9 BC for #7810
-			// TODO remove dual storage
 			$.data( element, this.widgetName, this );
 			$.data( element, this.widgetFullName, this );
 			this._on({
@@ -268,7 +265,6 @@ $.Widget.prototype = {
 		this.element
 			.unbind( this.eventNamespace )
 			// 1.9 BC for #7810
-			// TODO remove dual storage
 			.removeData( this.widgetName )
 			.removeData( this.widgetFullName )
 			// support: jquery <1.6.3

@@ -58,7 +58,6 @@ class Shell
             return false;
         }
 
-        // todo: find a better way (command could not be available)
         $testCommand = 'which ';
         if (self::TYPE_WINDOWS === $this->type) {
             $testCommand = 'where ';

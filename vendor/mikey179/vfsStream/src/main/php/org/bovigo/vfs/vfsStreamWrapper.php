@@ -805,7 +805,6 @@ class vfsStreamWrapper
      * @param   string  $path
      * @param   int     $options
      * @return  bool
-     * @todo    consider $options with STREAM_MKDIR_RECURSIVE
      */
     public function rmdir($path, $options)
     {

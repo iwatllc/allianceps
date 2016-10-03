@@ -97,7 +97,6 @@ class Backend extends CI_Controller
 				$form_vars['access_token'] = $response['result']['access_token'];
 				$form_vars['token_success'] = true;
 			}
-			// TODO: handle response code other than 200.
 		}
 
 		$data['form_vars'] = $form_vars;

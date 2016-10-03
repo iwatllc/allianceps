@@ -49,7 +49,6 @@
 * - Fix special catch scope across browsers
 * - Work around buggy-handling of named function expressions in IE<=8
 *
-* TODO?
 * - foo['bar'] => foo.bar
 * - {'foo':'bar'} => {foo:'bar'}
 * - Dead code removal (never used function)
@@ -508,7 +507,6 @@ class JSqueeze
         {
             // Special catch scope handling
 
-            // FIXME: this implementation doesn't work with nested catch scopes who need
             // access to their parent's caught variable (but who needs that?).
 
             $f = preg_split("@}catch\(({$this->varRx})@", $code, -1, PREG_SPLIT_DELIM_CAPTURE);

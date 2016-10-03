@@ -62,7 +62,6 @@ class Less_Visitor_import extends Less_VisitorReplacing{
 				}
 
 				if( $importNode->options['inline'] ){
-					//todo needs to reference css file not import
 					//$contents = new Less_Tree_Anonymous($importNode->root, 0, array('filename'=>$importNode->importedFilename), true );
 
 					Less_Parser::AddParsedFile($full_path);

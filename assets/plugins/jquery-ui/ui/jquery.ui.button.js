@@ -177,14 +177,12 @@ $.widget( "ui.button", {
 			if ( this.buttonElement.is("a") ) {
 				this.buttonElement.keyup(function(event) {
 					if ( event.keyCode === $.ui.keyCode.SPACE ) {
-						// TODO pass through original event correctly (just as 2nd argument doesn't work)
 						$( this ).click();
 					}
 				});
 			}
 		}
 
-		// TODO: pull out $.Widget's handling for the disabled option into
 		// $.Widget.prototype._setOptionDisabled so it's easy to proxy and can
 		// be overridden by individual plugins
 		this._setOption( "disabled", options.disabled );

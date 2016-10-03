@@ -95,7 +95,6 @@ class GnuFindAdapter extends AbstractFindAdapter
         foreach ($contains as $contain) {
             $expr = Expression::create($contain);
 
-            // todo: avoid forking process for each $pattern by using multiple -e options
             $command
                 ->add('| xargs -I{} -r grep -I')
                 ->add($expr->isCaseSensitive() ? null : '-i')

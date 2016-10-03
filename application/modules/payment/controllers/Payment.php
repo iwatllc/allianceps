@@ -115,7 +115,6 @@ class Payment extends MX_Controller
 
 		if(strcmp($gateway, 'NPC') == 0) {
 			//Gateway is NPC
-			//TODO: Add NPC Gateway Refund Code
 		} else if(strcmp($gateway, 'NMI') == 0) {
 			//Gateway is NMI
 			$this->load->module('nmi');
@@ -172,7 +171,6 @@ class Payment extends MX_Controller
 
 		if(strcmp($gateway, 'NPC') == 0) {
 			//Gateway is NPC
-			//TODO: Add NPC Gateway Void Code
 		}
 
 		else if(strcmp($gateway, 'NMI') == 0) {
@@ -219,7 +217,6 @@ class Payment extends MX_Controller
 
         if(strcmp($gateway, 'NPC') == 0) {
             //Gateway is NPC
-            //TODO: Add NPC Gateway Void Code
         }
 
         else if(strcmp($gateway, 'NMI') == 0) {
@@ -245,7 +242,6 @@ class Payment extends MX_Controller
         if(strcmp($gateway, 'NPC') == 0) {
 
             //Gateway is NPC
-            //TODO: Add NPC Gateway Void Code
 
         } else if(strcmp($gateway, 'NMI') == 0) {
             //Gateway is NMI
@@ -267,7 +263,6 @@ class Payment extends MX_Controller
         if(strcmp($gateway, 'NPC') == 0) {
 
             //Gateway is NPC
-            //TODO: Add NPC Gateway Void Code
 
         } else if(strcmp($gateway, 'NMI') == 0) {
 

@@ -237,7 +237,6 @@ describe('Mouse events feature', function() {
   });
 
   it('should highlight widget inputs on click', function() {
-      //TODO;
       //tp1.setTime('11:55 AM');
       //tp1.update();
 

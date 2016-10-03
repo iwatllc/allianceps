@@ -27,7 +27,7 @@ class Less_Tree_Comment extends Less_Tree{
 		//if( $this->debugInfo ){
 			//$output->add( tree.debugInfo($env, $this), $this->currentFileInfo, $this->index);
 		//}
-		$output->add( trim($this->value) );//TODO shouldn't need to trim, we shouldn't grab the \n
+		$output->add( trim($this->value) );
 	}
 
 	public function toCSS(){
