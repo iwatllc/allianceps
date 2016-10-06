@@ -38,6 +38,22 @@ class Customerform extends MX_Controller {
         // Query customer table for the slug
         $data['customer'] = $this -> customerform_model -> get_customer_form_from_slug($slug);
 
+        // JetDirect URL to send form for testing
+//        $data['jd_url'] = 'https://testapp1.jetpay.com/jetdirect/post/cc/process_cc.php';
+        $data['jd_url'] = 'testing_url';
+        
+        
+        // JetPay info
+        $data['jp_tid']     = 'TESTMCC3102X';
+        $data['jp_key']     = 'qyXzTempJRiV8iJJPS8V3st6';
+        $data['jp_token']   = 'vmdkorket3hSV12SuH5knWnOj4oqwW5LHTWV5MUuoVtzPcBJ8VK6vXUgGDwiRNzOMNxSEum7';
+        $data['trans_type'] = 'SALE';
+
+        // TODO: Create a controller that will have two functions: one for APPROVED Transaction and another for DECLINED Transaction
+        $data['ret_url'] = '';
+        $data['dec_url'] = '';
+        $data['data_url'] = ''; // TODO: Create function in controller that will retrieve transaction information from JetPay to display on the two views
+
         $view_vars = array(
             'title' => $this->configsys->get_config_value('Client_Title'),
             'heading' => $this->configsys->get_config_value('Client_Title'),
@@ -47,12 +63,66 @@ class Customerform extends MX_Controller {
             'author' => $this->configsys->get_config_value('Client_Author')
         );
         $data['page_data'] = $view_vars;
-
-        // Display the guestform index
+        
         $this -> load -> view('paymentform', $data);
-//        $this -> load -> view('customerform', $this -> get_view_data());
     }
-    
+
+    public function ajax_submit_customer_info()
+    {
+        $this -> load -> model('customerform_model', '', TRUE);
+
+        $uid        = $this -> input -> post('uuid');
+        $firstname  = $this -> input -> post('firstname');
+        $middleinit = $this -> input -> post('middleinit');
+        $lastname   = $this -> input -> post('lastname');
+        $email      = $this -> input -> post('email');
+        $address1   = $this -> input -> post('address1');
+        $address2   = $this -> input -> post('address2');
+        $city       = $this -> input -> post('city');
+        $state      = $this -> input -> post('state');
+        $zip        = $this -> input -> post('zip');
+        $cf1        = $this -> input -> post('cf1');
+        $cf2        = $this -> input -> post('cf2');
+        $cf3        = $this -> input -> post('cf3');
+        $notes      = $this -> input -> post('notes');
+        $amount     = $this -> input -> post('amount');
+        $slug       = $this -> input -> post('slug');
+
+        // Get the customerid based on the name of the slug
+        $customerid = $this -> customerform_model -> get_customer_form_from_slug($slug) -> id;
+        
+        // Get current date
+        $this -> load -> helper('date');
+        $insertdate = mdate("%Y-%m-%d %H:%i:%s", time());
+
+        $data = array(
+            'firstname'     => $firstname,
+            'lastname'      => $lastname,
+            'middleinitial' => $middleinit,
+            'address'       => $address1,
+            'address2'      => $address2,
+            'city'          => $city,
+            'state'         => $state,
+            'zip'           => $zip,
+            'email'         => $email,
+            'notes'         => $notes,
+            'customerid'    => $customerid,
+            'cf1'           => $cf1,
+            'cf2'           => $cf2,
+            'cf3'           => $cf3,
+            'insertdate'    => $insertdate
+        );
+
+        // Insert into form_submissions table
+        $data['uuid'] = $this -> customerform_model -> add_form_submission($data, $uid);
+
+        echo json_encode($data);
+    }
+
+    /**
+     * Begin old functions for guestform.
+     */
+
     /*
      * Handles submission of the guest form
      */

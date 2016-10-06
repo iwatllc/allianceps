@@ -450,9 +450,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                             <legend>Credit Card Information</legend>
                             <div class="form-group ">
-                                                                <label class="col-md-3 control-label">WE ACCEPT</label> 
-<div class="col-md-9"><img src="<?php echo base_url(); ?>/client/credit-card-icons.png" width="150"/></div> 
-</div>
+                                <label class="col-md-3 control-label">WE ACCEPT</label> 
+                                <div class="col-md-9"><img src="<?php echo base_url(); ?>/client/credit-card-icons.png" width="150"/></div> 
+                            </div>
                                 <div class="form-group <?php echo(!empty(form_error('creditcard')) ? 'has-error has-feedback' : ''); ?>">
                                     <label class="col-md-3 control-label">CREDIT CARD *</label>
                                     <div class="col-md-9">

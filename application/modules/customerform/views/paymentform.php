@@ -82,8 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 ?>
 
-
-
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
 <!--[if !IE]><!-->
@@ -91,11 +89,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <!--<![endif]-->
 
 <head>
+
+    <?php $this->load->view('header'); ?>
+
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link href="<?php echo base_url(); ?>assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <script src="<?php echo base_url('assets/js/paymentform/jquery-1.11.3.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/js/paymentform/jquery.payment.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/js/paymentform/jquery.maskMoney.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/js/paymentform/paymentform.js'); ?>"></script>
+    <link href="<?php echo base_url('assets/plugins/select2/select2.min.css'); ?>" rel="stylesheet" />
+    <script src="<?php echo base_url('assets/plugins/select2/select2.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/plugins/js-sha512/sha512.js'); ?>"></script>
 
 <?php if($page_status == 'payment'){
     //=======================================================================================
@@ -108,43 +114,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             border-width: 2px;
         }
         .validation.text-danger:after {
-            content: 'Validation failed';
+            content: 'Validation failed: Please make sure all fields are filled out and correct';
         }
         .validation.text-success:after {
             content: 'Validation passed';
         }
+
+        .select2-container--default .select2-selection--single {
+            height: 46px !important;
+            padding: 10px 16px;
+            font-size: 18px;
+            line-height: 1.33;
+            border-radius: 6px;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            top: 85% !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 26px !important;
+        }
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #CCC !important;
+            box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+            transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        }
+        .has-error .state {
+            border: 1px solid #a94442;
+            border-radius: 4px;
+        }
     </style>
-
-    <script>
-        jQuery(function($) {
-            $('[data-numeric]').maskMoney();;
-            $('.cc-number').payment('formatCardNumber');
-            $('.cc-exp').payment('formatCardExpiry');
-            $('.cc-cvc').payment('formatCardCVC');
-            $.fn.toggleInputError = function(erred) {
-                this.parent('.form-group').toggleClass('has-error', erred);
-                return this;
-            };
-            $('form').submit(function(e) {
-                //e.preventDefault();
-                var cardType = $.payment.cardType($('.cc-number').val());
-                $('.cardtype').val(cardType);
-                $('.firstname').toggleInputError($('.firstname').val().length == 0 ? true : false );
-                $('.lastname').toggleInputError($('.lastname').val().length == 0 ? true : false );
-                $('[data-numeric]').toggleInputError($('[data-numeric]').val().length == 0 ? true : false );
-                $('.cc-number').toggleInputError(!$.payment.validateCardNumber($('.cc-number').val()));
-                $('.cc-exp').toggleInputError(!$.payment.validateCardExpiry($('.cc-exp').payment('cardExpiryVal')));
-                $('.cc-cvc').toggleInputError(!$.payment.validateCardCVC($('.cc-cvc').val(), cardType));
-                $('.cc-brand').text(cardType);
-                // $('.validation').removeClass('text-danger text-success');
-                // $('.validation').addClass($('.has-error').length ? 'text-danger' : 'text-success');
-
-                if ($('.form-group').hasClass('has-error')) {
-                    e.preventDefault();
-                }
-            });
-        });
-    </script>
 
 </head>
 <body>
@@ -158,131 +156,272 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         </center>
     <?php } ?>
 
-    <?php
-    if ($customer -> showname == '1')
-    {
-        echo '<h1 style="text-align:center">';
-            echo $customer -> customername;
-        echo '</h1>';
-    }
-    ?>
+    <?php if ($customer -> showname == '1') { ?>
+        <h1 style="text-align:center">
+            <?php echo $customer -> customername; ?>
+        </h1>
+    <?php } ?>
 
+    <form novalidate autocomplete="on" id="submit-form" method="POST" action="<?php echo $jd_url; ?>">
 
-    <?php
-//        if ($error){
-//            echo '<strong>$error_message</strong>';
-//        }
-    ?>
+        <div id="client-info">
+            <div class="form-group">
+                <label for="firstname" class="control-label">First Name &#42;</label>
+                <input id="firstname" name="fName" type="text" class="input-lg form-control firstname" autocomplete="firstname" placeholder="First Name" maxlength ="50" required>
+            </div>
+    
+            <div class="form-group">
+                <label for="middleinitial" class="control-label">Middle Initial</label>
+                <input id="middleinitial" name="middleinitial" type="text" class="input-lg form-control middleinitial" autocomplete="middleinitial" placeholder="Middle Initial" maxlength ="1" required>
+            </div>
+    
+            <div class="form-group">
+                <label for="lastname" class="control-label">Last Name &#42;</label>
+                <input id="lastname" name="lName" type="text" class="input-lg form-control lastname" autocomplete="lastname" placeholder="Last Name" maxlength ="50" required>
+            </div>
+    
+            <div class="form-group">
+                <label for="email" class="control-label">Email </label>
+                <input id="email" name="customerEmail" type="text" class="input-lg form-control email" autocomplete="email" placeholder="Email" maxlength ="255" required>
+            </div>
+    
+            <div class="form-group">
+                <label for="address1" class="control-label">Billing Address &#42;</label>
+                <input id="address1" name="billingAddress1" type="text" class="input-lg form-control address1" autocomplete="address1" placeholder="Billing Address 1" maxlength ="100" required>
+            </div>
+    
+            <div class="form-group">
+                <label for="address2" class="control-label">Billing Address (2)</label>
+                <input id="address2" name="billingAddress2" type="text" class="input-lg form-control address2" autocomplete="address2" placeholder="Billing Address 2" maxlength ="100" required>
+            </div>
+    
+            <div class="form-group">
+                <label for="city" class="control-label">City &#42;</label>
+                <input id="city" name="billingCity" type="text" class="input-lg form-control city" autocomplete="city" placeholder="City" maxlength ="50" required>
+            </div>
+    
+            <div class="form-group">
+                <label for="state" class="control-label">State &#42;</label><br/>
+                <select id="state" name="billingState" class="form-control select2-container step2-select state">
+                    <option></option>
+                    <option value="AL">Alabama</option>
+                    <option value="AK">Alaska</option>
+                    <option value="AZ">Arizona</option>
+                    <option value="AR">Arkansas</option>
+                    <option value="CA">California</option>
+                    <option value="CO">Colorado</option>
+                    <option value="CT">Connecticut</option>
+                    <option value="DE">Delaware</option>
+                    <option value="DC">District Of Columbia</option>
+                    <option value="FL">Florida</option>
+                    <option value="GA">Georgia</option>
+                    <option value="HI">Hawaii</option>
+                    <option value="ID">Idaho</option>
+                    <option value="IL">Illinois</option>
+                    <option value="IN">Indiana</option>
+                    <option value="IA">Iowa</option>
+                    <option value="KS">Kansas</option>
+                    <option value="KY">Kentucky</option>
+                    <option value="LA">Louisiana</option>
+                    <option value="ME">Maine</option>
+                    <option value="MD">Maryland</option>
+                    <option value="MA">Massachusetts</option>
+                    <option value="MI">Michigan</option>
+                    <option value="MN">Minnesota</option>
+                    <option value="MS">Mississippi</option>
+                    <option value="MO">Missouri</option>
+                    <option value="MT">Montana</option>
+                    <option value="NE">Nebraska</option>
+                    <option value="NV">Nevada</option>
+                    <option value="NH">New Hampshire</option>
+                    <option value="NJ">New Jersey</option>
+                    <option value="NM">New Mexico</option>
+                    <option value="NY">New York</option>
+                    <option value="NC">North Carolina</option>
+                    <option value="ND">North Dakota</option>
+                    <option value="OH">Ohio</option>
+                    <option value="OK">Oklahoma</option>
+                    <option value="OR">Oregon</option>
+                    <option value="PA">Pennsylvania</option>
+                    <option value="RI">Rhode Island</option>
+                    <option value="SC">South Carolina</option>
+                    <option value="SD">South Dakota</option>
+                    <option value="TN">Tennessee</option>
+                    <option value="TX">Texas</option>
+                    <option value="UT">Utah</option>
+                    <option value="VT">Vermont</option>
+                    <option value="VA">Virginia</option>
+                    <option value="WA">Washington</option>
+                    <option value="WV">West Virginia</option>
+                    <option value="WI">Wisconsin</option>
+                    <option value="WY">Wyoming</option>
+                </select>
+            </div>
+    
+            <div class="form-group">
+                <label for="zip" class="control-label">Zip &#42;</label>
+                <input id="zip" name="billingZip" type="text" class="input-lg form-control zip" autocomplete="zip" placeholder="Zip" maxlength="11" required>
+            </div>
 
-    <form novalidate autocomplete="on" method="POST" action="<?=$_SERVER['PHP_SELF']?>">
-        <input type="hidden" name="cardtype" value="" id="cardtype" class="cardtype"  />
+            <input type="hidden" name="billingCountry" value="USA">
+    
+            <!--<div class="form-group">
+                <label for="notes" class="control-label">Notes</label>
+                <input id="notes" name="notes" type="text" class="input-lg form-control notes" placeholder="Notes" required>
+            </div>-->
+    
+            <?php if ($customer -> cf1enabled == 1) { ?>
+            <div class="form-group">
+                <label for="<?php echo $customer->cf1name; ?>" class="control-label"><?php echo $customer->cf1name . ($customer->cf1required == 1 ? ' &#42;' : '') ?></label>
+                <?php
+                    $data = array(
+                        'id'            => 'cf1',
+                        'name'          => 'ud1',
+                        'class'         => 'input-lg form-control cf1',
+                        'type'          => 'text',
+                        'value'         => set_value('cf1'),
+                        'placeholder'   => ($customer->cf1required == 1 ? 'Required' : $customer->cf1name),
+                        'maxlength'     => '50',
+                        'required'      => ($customer->cf1required == 1 ? 'required' : ''),
+                        'data-parsley-required' => ($customer->cf1required == 1 ? 'true' : 'false')
+                    );
+    
+                    echo form_input($data);
+                ?>
+            </div>
+            <?php } ?>
+    
+            <?php if ($customer -> cf2enabled == 1) { ?>
+            <div class="form-group">
+                <label for="<?php echo $customer->cf2name; ?>" class="control-label"><?php echo $customer->cf2name . ($customer->cf2required == 1 ? ' &#42;' : '') ?></label>
+                <?php
+                    $data = array(
+                        'id'            => 'cf2',
+                        'name'          => 'ud2',
+                        'class'         => 'input-lg form-control cf2',
+                        'type'          => 'text',
+                        'value'         => set_value('cf2'),
+                        'placeholder'   => ($customer->cf2required == 1 ? 'Required' : $customer->cf2name),
+                        'maxlength'     => '50',
+                        'required'      => ($customer->cf2required == 1 ? 'required' : ''),
+                        'data-parsley-required' => ($customer->cf2required == 1 ? 'true' : 'false')
+                    );
+    
+                    echo form_input($data);
+                ?>
+            </div>
+            <?php } ?>
+            
+            <?php if ($customer -> cf3enabled == 1) { ?>
+            <div class="form-group">
+                <label for="<?php echo $customer->cf3name; ?>" class="control-label"><?php echo $customer->cf3name . ($customer->cf3required == 1 ? ' &#42;' : '') ?></label>
+                <?php
+                    $data = array(
+                        'id'            => 'cf3',
+                        'name'          => 'ud3',
+                        'class'         => 'input-lg form-control cf3',
+                        'type'          => 'text',
+                        'value'         => set_value('cf3'),
+                        'placeholder'   => ($customer->cf3required == 1 ? 'Required' : $customer->cf3name),
+                        'maxlength'     => '50',
+                        'required'      => ($customer->cf3required == 1 ? 'required' : ''),
+                        'data-parsley-required' => ($customer->cf3required == 1 ? 'true' : 'false')
+                    );
+    
+                    echo form_input($data);
+                ?>
+            </div>
+            <?php } ?>
+            
+            <button type="button" class="btn btn-lg btn-primary btn-next">Next</button>
+            <button type="button" class="btn btn-lg btn-primary btn-back" style="display:none;">Back</button>
 
-        <div class="form-group">
-            <label for="firstname" class="control-label">First Name</label>
-            <input id="firstname" name="firstname" type="text" class="input-lg form-control firstname" autocomplete="name" placeholder="First Name" required>
         </div>
 
-        <div class="form-group">
-            <label for="middleinitial" class="control-label">Middle Initial</label>
-            <input id="middleinitial" name="middleinitial" type="text" class="input-lg form-control middleinitial" autocomplete="name" placeholder="Middle Initial" required>
+        <br/><br/>
+
+        <div id="cc-info" style="display:block;">
+            <div class="form-group">
+                <label for="cc-number" class="control-label">Card Number  <small class="text-muted">[<span class="cc-brand"></span>]</small></label>
+                <input id="cc-number" name="cardNum" type="tel" class="input-lg form-control cc-number" autocomplete="off" placeholder="•••• •••• •••• ••••" required>
+            </div>
+
+            <!--<label for="cc-exp" class="control-label">Card Expiry </label>
+            <div class="input-group input-group-lg">
+                <input id="cc-exp" name="expMo" type="tel" class="input-lg form-control cc-exp" autocomplete="off" placeholder="••" required>
+                <select name="expMo" id="expMo" class="form-control input-lg selectpicker" autocomplete="off">
+                    <option value=''></option>
+                    <option value='01'>01</option>
+                    <option value='02'>02</option>
+                    <option value='03'>03</option>
+                    <option value='04'>04</option>
+                    <option value='05'>05</option>
+                    <option value='06'>06</option>
+                    <option value='07'>07</option>
+                    <option value='08'>08</option>
+                    <option value='09'>09</option>
+                    <option value='10'>10</option>
+                    <option value='11'>11</option>
+                    <option value='12'>12</option>
+                </select>
+
+                <span class="input-group-addon">/</span>
+
+                <?php
+                    $extra = array(
+                        'class' => 'form-control input-lg selectpicker',
+                        'id'    => 'expYr',
+                        'name'  => 'expYr'
+                    );
+
+                    $options = array();
+                    $options[''] = '';
+                    for ($i = 0; $i <= 10; $i++ ){
+                        $a_year = date("Y") + $i;
+                        $b_year = date("y") + $i;
+                        $options[$b_year] = $a_year;
+                    }
+
+                    //echo form_dropdown('expYr', $options, set_value('expYr'), $extra);
+                ?>
+
+            </div>
+            <br/>-->
+
+            <div class="form-group">
+                <label for="cc-exp" class="control-label">Card Expiry </label>
+                <input id="cc-exp" name="cc-exp" type="tel" class="input-lg form-control cc-exp" autocomplete="off" placeholder="•• / ••" required>
+            </div>
+
+            <div id="exp-info" style="display:none;">
+                <input id="mo-exp" name="expMo" required>
+                <input id="yr-exp" name="expYr" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cc-cvc" class="control-label">Card CVC </label>
+                <input id="cc-cvc" name="cvc" type="tel" class="input-lg form-control cc-cvc" autocomplete="off" placeholder="•••" required>
+            </div>
+
+            <div class="form-group">
+                <label for="numeric" class="control-label">Amount &#42;</label>
+                <input id="numeric" name="amount" type="tel" class="input-lg form-control" placeholder="$" data-numeric>
+            </div>
+
+            <input type="hidden"                name="cid"              value="<?php echo $customer -> uuid; ?>" />
+            <input type="hidden" id="mtid"      name="jp_tid"           value="<?php echo $jp_tid; ?>" />
+            <input type="hidden"                name="jp_key"           value="<?php echo $jp_key; ?>" />
+            <input type="hidden" id="req_hash"  name="jp_request_hash"  value="" /> <!-- TODO: Need to fill this value before form is submitted -->
+            <input type="hidden" id="uuid"      name="order_number"     value="" />
+            <input type="hidden"                name="trans_type"       value="<?php echo $trans_type; ?>" />
+            <input type="hidden" id="jd_token"                          value="<?php echo $jp_token; ?>" />
+
+            <input type="hidden" name="retUrl"  value="<?php echo $ret_url; ?>" />
+            <input type="hidden" name="decUrl"  value="<?php echo $dec_url; ?>" />
+            <input type="hidden" name="dataUrl" value="<?php echo $data_url; ?>" />
+            
+            <button type="submit" class="btn btn-lg btn-primary" id="submit-btn">Submit</button>
         </div>
-
-        <div class="form-group">
-            <label for="lastname" class="control-label">Last Name</label>
-            <input id="lastname" name="lastname" type="text" class="input-lg form-control lastname" autocomplete="name" placeholder="Last Name" required>
-        </div>
-
-        <div class="form-group">
-            <label for="email" class="control-label">Email </label>
-            <input id="email" name="email" type="text" class="input-lg form-control email" autocomplete="email" placeholder="Email" required>
-        </div>
-
-        <div class="form-group">
-            <label for="notes" class="control-label">Notes</label>
-            <input id="notes" name="notes" type="text" class="input-lg form-control notes" placeholder="Notes" required>
-        </div>
-
-        <?php if ($customer -> cf1enabled == 1) { ?>
-        <div class="form-group">
-            <label for="<?php echo $customer->cf1name; ?>" class="control-label"><?php echo $customer->cf1name . ($customer->cf1required == 1 ? ' *' : '') ?></label>
-            <?php
-                $data = array(
-                    'id'            => 'cf1',
-                    'name'          => 'cf1',
-                    'class'         => 'input-lg form-control cf1',
-                    'type'          => 'text',
-                    'value'         => set_value('cf1'),
-                    'placeholder'   => ($customer->cf1required == 1 ? 'Required' : $customer->cf1name),
-                    'required'      => ($customer->cf1required == 1 ? 'required' : ''),
-                    'data-parsley-required' => ($customer->cf1required == 1 ? 'true' : 'false')
-                );
-
-                echo form_input($data);
-            ?>
-        </div>
-        <?php } ?>
-
-        <?php if ($customer -> cf2enabled == 1) { ?>
-        <div class="form-group">
-            <label for="<?php echo $customer->cf2name; ?>" class="control-label"><?php echo $customer->cf2name . ($customer->cf2required == 1 ? ' *' : '') ?></label>
-            <?php
-                $data = array(
-                    'id'            => 'cf2',
-                    'name'          => 'cf2',
-                    'class'         => 'input-lg form-control cf2',
-                    'type'          => 'text',
-                    'value'         => set_value('cf2'),
-                    'placeholder'   => ($customer->cf2required == 1 ? 'Required' : $customer->cf2name),
-                    'required'      => ($customer->cf2required == 1 ? 'required' : ''),
-                    'data-parsley-required' => ($customer->cf2required == 1 ? 'true' : 'false')
-                );
-
-                echo form_input($data);
-            ?>
-        </div>
-        <?php } ?>
-        
-        <?php if ($customer -> cf3enabled == 1) { ?>
-        <div class="form-group">
-            <label for="<?php echo $customer->cf3name; ?>" class="control-label"><?php echo $customer->cf3name . ($customer->cf3required == 1 ? ' *' : '') ?></label>
-            <?php
-                $data = array(
-                    'id'            => 'cf3',
-                    'name'          => 'cf3',
-                    'class'         => 'input-lg form-control cf3',
-                    'type'          => 'text',
-                    'value'         => set_value('cf3'),
-                    'placeholder'   => ($customer->cf3required == 1 ? 'Required' : $customer->cf3name),
-                    'required'      => ($customer->cf3required == 1 ? 'required' : ''),
-                    'data-parsley-required' => ($customer->cf3required == 1 ? 'true' : 'false')
-                );
-
-                echo form_input($data);
-            ?>
-        </div>
-        <?php } ?>
-        
-        <div class="form-group">
-            <label for="cc-number" class="control-label">Card Number  <small class="text-muted">[<span class="cc-brand"></span>]</small></label>
-            <input id="cc-number" name="cc-number" type="tel" class="input-lg form-control cc-number" autocomplete="cc-number" placeholder="•••• •••• •••• ••••" required>
-        </div>
-
-        <div class="form-group">
-            <label for="cc-exp" class="control-label">Card Expiry </label>
-            <input id="cc-exp" name="cc-exp" type="tel" class="input-lg form-control cc-exp" autocomplete="cc-exp" placeholder="•• / ••" required>
-        </div>
-
-        <div class="form-group">
-            <label for="cc-cvc" class="control-label">Card CVC </label>
-            <input id="cc-cvc" name="cc-cvc" type="tel" class="input-lg form-control cc-cvc" autocomplete="off" placeholder="•••" required>
-        </div>
-
-        <div class="form-group">
-            <label for="numeric" class="control-label">Amount</label>
-            <input id="numeric" name="numeric" type="tel" class="input-lg form-control" placeholder="$" data-numeric>
-        </div>
-
-        <button type="submit" class="btn btn-lg btn-primary">Submit</button>
 
         <h2 class="validation"></h2>
     </form>
@@ -331,6 +470,81 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 } ?>
 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("select.state").select2({
+                placeholder: "Select a state",
+                allowClear:   true
+            });
+            $('.selectpicker').selectpicker();
+        });
+
+        // Credit card information
+        $('[data-numeric]').maskMoney();
+        $('.cc-number').payment('formatCardNumber');
+        $('.cc-exp').payment('formatCardExpiry');
+        $('.cc-cvc').payment('formatCardCVC');
+        $.fn.toggleInputError = function(erred) {
+            this.parent('.form-group').toggleClass('has-error', erred);
+            return this;
+        };
+        $('form').submit(function(e) {
+            //e.preventDefault();
+
+            var cardType = $.payment.cardType($('.cc-number').val());
+            $('.cardtype').val(cardType);
+
+            $('[data-numeric]').toggleInputError($('[data-numeric]').val().length == 0 ? true : false );
+            $('.cc-number').toggleInputError(!$.payment.validateCardNumber($('.cc-number').val()));
+            $('.cc-exp').toggleInputError(!$.payment.validateCardExpiry($('.cc-exp').payment('cardExpiryVal')));
+
+            $('.cc-cvc').toggleInputError(!$.payment.validateCardCVC($('.cc-cvc').val(), cardType));
+            $('.cc-brand').text(cardType);
+            $('.validation').removeClass('text-danger text-success');
+            $('.validation').addClass($('.has-error').length ? 'text-danger' : 'text-success');
+
+            split_card_expiry_field($('.cc-exp').val());
+            generate_sha512_hash();
+
+            if ($('.form-group').hasClass('has-error')) {
+                e.preventDefault();
+            }
+        });
+
+        function split_card_expiry_field(expire_date)
+        {
+            // Split expire_date into two strings (month and year)
+            var splitdate = expire_date.split(' / ');
+            var expMo = splitdate[0];
+            var expYr = splitdate[1];
+
+            if (expYr.length > 2) {
+                expYr = expYr.substring(2);
+            }
+
+            // Fill inputs with values
+            $('#mo-exp').val(expMo);
+            $('#yr-exp').val(expYr);
+        }
+
+        function generate_sha512_hash()
+        {
+            // Get inputs from fields
+            var tid         = $('#mtid').val();
+            var amount      = $('#numeric').val();
+            var token       = $('#jd_token').val();
+            var ordernum    = $('#uuid').val();
+
+            var hash_vars = tid + amount + token + ordernum;
+
+            // Apply SHA512 method to variables
+            var hash = sha512(hash_vars);
+
+            // Put inside SHA512 hash field
+            $('#req_hash').val(hash);
+//            alert( $('#req_hash').val() );
+        }
+    </script>
 
 </body>
 </html>
