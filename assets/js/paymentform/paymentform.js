@@ -85,7 +85,7 @@ $(document).on('click', 'button.btn-next', function(e){
     }
 
     var pathToController = "/customerform/customerform/ajax_submit_customer_info";
-    
+
     jQuery.ajax({
         type: "POST",
         url: baseUrl + pathToController,

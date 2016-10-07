@@ -162,44 +162,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         </h1>
     <?php } ?>
 
-    <form novalidate autocomplete="on" id="submit-form" method="POST" action="<?php echo $jd_url; ?>">
+    <input type="button" value="Fill All Inputs (Testing)" onclick="fill_sample_inputs();" />
+
+    <form novalidate id="submit-form" method="POST" action="<?php echo $jd_url; ?>">
 
         <div id="client-info">
             <div class="form-group">
                 <label for="firstname" class="control-label">First Name &#42;</label>
                 <input id="firstname" name="fName" type="text" class="input-lg form-control firstname" autocomplete="firstname" placeholder="First Name" maxlength ="50" required>
             </div>
-    
+
             <div class="form-group">
                 <label for="middleinitial" class="control-label">Middle Initial</label>
                 <input id="middleinitial" name="middleinitial" type="text" class="input-lg form-control middleinitial" autocomplete="middleinitial" placeholder="Middle Initial" maxlength ="1" required>
             </div>
-    
+
             <div class="form-group">
                 <label for="lastname" class="control-label">Last Name &#42;</label>
                 <input id="lastname" name="lName" type="text" class="input-lg form-control lastname" autocomplete="lastname" placeholder="Last Name" maxlength ="50" required>
             </div>
-    
+
             <div class="form-group">
                 <label for="email" class="control-label">Email </label>
                 <input id="email" name="customerEmail" type="text" class="input-lg form-control email" autocomplete="email" placeholder="Email" maxlength ="255" required>
             </div>
-    
+
             <div class="form-group">
                 <label for="address1" class="control-label">Billing Address &#42;</label>
                 <input id="address1" name="billingAddress1" type="text" class="input-lg form-control address1" autocomplete="address1" placeholder="Billing Address 1" maxlength ="100" required>
             </div>
-    
+
             <div class="form-group">
                 <label for="address2" class="control-label">Billing Address (2)</label>
                 <input id="address2" name="billingAddress2" type="text" class="input-lg form-control address2" autocomplete="address2" placeholder="Billing Address 2" maxlength ="100" required>
             </div>
-    
+
             <div class="form-group">
                 <label for="city" class="control-label">City &#42;</label>
                 <input id="city" name="billingCity" type="text" class="input-lg form-control city" autocomplete="city" placeholder="City" maxlength ="50" required>
             </div>
-    
+
             <div class="form-group">
                 <label for="state" class="control-label">State &#42;</label><br/>
                 <select id="state" name="billingState" class="form-control select2-container step2-select state">
@@ -257,19 +259,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <option value="WY">Wyoming</option>
                 </select>
             </div>
-    
+
             <div class="form-group">
                 <label for="zip" class="control-label">Zip &#42;</label>
                 <input id="zip" name="billingZip" type="text" class="input-lg form-control zip" autocomplete="zip" placeholder="Zip" maxlength="11" required>
             </div>
 
             <input type="hidden" name="billingCountry" value="USA">
-    
+
             <!--<div class="form-group">
                 <label for="notes" class="control-label">Notes</label>
                 <input id="notes" name="notes" type="text" class="input-lg form-control notes" placeholder="Notes" required>
             </div>-->
-    
+
             <?php if ($customer -> cf1enabled == 1) { ?>
             <div class="form-group">
                 <label for="<?php echo $customer->cf1name; ?>" class="control-label"><?php echo $customer->cf1name . ($customer->cf1required == 1 ? ' &#42;' : '') ?></label>
@@ -285,12 +287,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         'required'      => ($customer->cf1required == 1 ? 'required' : ''),
                         'data-parsley-required' => ($customer->cf1required == 1 ? 'true' : 'false')
                     );
-    
+
                     echo form_input($data);
                 ?>
             </div>
             <?php } ?>
-    
+
             <?php if ($customer -> cf2enabled == 1) { ?>
             <div class="form-group">
                 <label for="<?php echo $customer->cf2name; ?>" class="control-label"><?php echo $customer->cf2name . ($customer->cf2required == 1 ? ' &#42;' : '') ?></label>
@@ -306,12 +308,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         'required'      => ($customer->cf2required == 1 ? 'required' : ''),
                         'data-parsley-required' => ($customer->cf2required == 1 ? 'true' : 'false')
                     );
-    
+
                     echo form_input($data);
                 ?>
             </div>
             <?php } ?>
-            
+
             <?php if ($customer -> cf3enabled == 1) { ?>
             <div class="form-group">
                 <label for="<?php echo $customer->cf3name; ?>" class="control-label"><?php echo $customer->cf3name . ($customer->cf3required == 1 ? ' &#42;' : '') ?></label>
@@ -327,12 +329,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         'required'      => ($customer->cf3required == 1 ? 'required' : ''),
                         'data-parsley-required' => ($customer->cf3required == 1 ? 'true' : 'false')
                     );
-    
+
                     echo form_input($data);
                 ?>
             </div>
             <?php } ?>
-            
+
             <button type="button" class="btn btn-lg btn-primary btn-next">Next</button>
             <button type="button" class="btn btn-lg btn-primary btn-back" style="display:none;">Back</button>
 
@@ -346,48 +348,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 <input id="cc-number" name="cardNum" type="tel" class="input-lg form-control cc-number" autocomplete="off" placeholder="•••• •••• •••• ••••" required>
             </div>
 
-            <!--<label for="cc-exp" class="control-label">Card Expiry </label>
-            <div class="input-group input-group-lg">
-                <input id="cc-exp" name="expMo" type="tel" class="input-lg form-control cc-exp" autocomplete="off" placeholder="••" required>
-                <select name="expMo" id="expMo" class="form-control input-lg selectpicker" autocomplete="off">
-                    <option value=''></option>
-                    <option value='01'>01</option>
-                    <option value='02'>02</option>
-                    <option value='03'>03</option>
-                    <option value='04'>04</option>
-                    <option value='05'>05</option>
-                    <option value='06'>06</option>
-                    <option value='07'>07</option>
-                    <option value='08'>08</option>
-                    <option value='09'>09</option>
-                    <option value='10'>10</option>
-                    <option value='11'>11</option>
-                    <option value='12'>12</option>
-                </select>
-
-                <span class="input-group-addon">/</span>
-
-                <?php
-                    $extra = array(
-                        'class' => 'form-control input-lg selectpicker',
-                        'id'    => 'expYr',
-                        'name'  => 'expYr'
-                    );
-
-                    $options = array();
-                    $options[''] = '';
-                    for ($i = 0; $i <= 10; $i++ ){
-                        $a_year = date("Y") + $i;
-                        $b_year = date("y") + $i;
-                        $options[$b_year] = $a_year;
-                    }
-
-                    //echo form_dropdown('expYr', $options, set_value('expYr'), $extra);
-                ?>
-
-            </div>
-            <br/>-->
-
             <div class="form-group">
                 <label for="cc-exp" class="control-label">Card Expiry </label>
                 <input id="cc-exp" name="cc-exp" type="tel" class="input-lg form-control cc-exp" autocomplete="off" placeholder="•• / ••" required>
@@ -400,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
             <div class="form-group">
                 <label for="cc-cvc" class="control-label">Card CVC </label>
-                <input id="cc-cvc" name="cvc" type="tel" class="input-lg form-control cc-cvc" autocomplete="off" placeholder="•••" required>
+                <input id="cc-cvc" name="cvv" type="tel" class="input-lg form-control cc-cvc" autocomplete="off" placeholder="•••" required>
             </div>
 
             <div class="form-group">
@@ -408,10 +368,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 <input id="numeric" name="amount" type="tel" class="input-lg form-control" placeholder="$" data-numeric>
             </div>
 
-            <input type="hidden"                name="cid"              value="<?php echo $customer -> uuid; ?>" />
+            <input type="hidden"                name="cid"              value="<?php echo $cid; ?>" />
             <input type="hidden" id="mtid"      name="jp_tid"           value="<?php echo $jp_tid; ?>" />
             <input type="hidden"                name="jp_key"           value="<?php echo $jp_key; ?>" />
-            <input type="hidden" id="req_hash"  name="jp_request_hash"  value="" /> <!-- TODO: Need to fill this value before form is submitted -->
+            <input type="hidden" id="req_hash"  name="jp_request_hash"  value="" /> <!-- This input is filled with hash before form is submitted -->
             <input type="hidden" id="uuid"      name="order_number"     value="" />
             <input type="hidden"                name="trans_type"       value="<?php echo $trans_type; ?>" />
             <input type="hidden" id="jd_token"                          value="<?php echo $jp_token; ?>" />
@@ -419,7 +379,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             <input type="hidden" name="retUrl"  value="<?php echo $ret_url; ?>" />
             <input type="hidden" name="decUrl"  value="<?php echo $dec_url; ?>" />
             <input type="hidden" name="dataUrl" value="<?php echo $data_url; ?>" />
-            
+
             <button type="submit" class="btn btn-lg btn-primary" id="submit-btn">Submit</button>
         </div>
 
@@ -476,7 +436,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 placeholder: "Select a state",
                 allowClear:   true
             });
-            $('.selectpicker').selectpicker();
+//            $('.selectpicker').selectpicker();
         });
 
         // Credit card information
@@ -491,24 +451,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $('form').submit(function(e) {
             //e.preventDefault();
 
+            console.log('run 0');
+
             var cardType = $.payment.cardType($('.cc-number').val());
             $('.cardtype').val(cardType);
 
             $('[data-numeric]').toggleInputError($('[data-numeric]').val().length == 0 ? true : false );
             $('.cc-number').toggleInputError(!$.payment.validateCardNumber($('.cc-number').val()));
-            $('.cc-exp').toggleInputError(!$.payment.validateCardExpiry($('.cc-exp').payment('cardExpiryVal')));
+            //$('.cc-exp').toggleInputError(!$.payment.validateCardExpiry($('.cc-exp').payment('cardExpiryVal')));
 
             $('.cc-cvc').toggleInputError(!$.payment.validateCardCVC($('.cc-cvc').val(), cardType));
             $('.cc-brand').text(cardType);
             $('.validation').removeClass('text-danger text-success');
             $('.validation').addClass($('.has-error').length ? 'text-danger' : 'text-success');
 
-            split_card_expiry_field($('.cc-exp').val());
-            generate_sha512_hash();
+            console.log('run 1');
 
             if ($('.form-group').hasClass('has-error')) {
                 e.preventDefault();
+                return;
             }
+
+            console.log('run 2');
+
+            $("input[name=cardNum]").val($("input[name=cardNum]").val().replace(/\s/g, ''));
+
+            split_card_expiry_field($('.cc-exp').val());
+            generate_sha512_hash();
+            print_all_inputs();
+
         });
 
         function split_card_expiry_field(expire_date)
@@ -540,9 +511,107 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             // Apply SHA512 method to variables
             var hash = sha512(hash_vars);
 
+//            var baseUrl = window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
+//            var pathToController = "/customerform/customerform/generate_hash";
+//            $.post(baseUrl + pathToController, { hash_vars:hash_vars }, function(response){
+//                $('#req_hash').val(response);
+//                alert(  'JS Hash: '     + hash + '\n' +
+//                        'PHP Hash: '    + response
+//                );
+//            });
+
             // Put inside SHA512 hash field
             $('#req_hash').val(hash);
-//            alert( $('#req_hash').val() );
+            console.log(
+                'Hash Variables: ' + hash_vars + '\n' +
+                'Generated Hash: ' + $('#req_hash').val()
+            );
+        }
+
+        function print_all_inputs()
+        {
+            // Client info
+            var fName           = $("input[name=fName]").val();
+            var lName           = $("input[name=lName]").val();
+            var cardNum         = $("input[name=cardNum]").val();
+            var expMo           = $("input[name=expMo]").val();
+            var expYr           = $("input[name=expYr]").val();
+            var cvv             = $("input[name=cvv]").val();
+            var amount          = $("input[name=amount]").val();
+            var customerEmail   = $("input[name=customerEmail]").val();
+            var billingAddress1 = $("input[name=billingAddress1]").val();
+            var billingAddress2 = $("input[name=billingAddress2]").val();
+            var billingCity     = $("input[name=billingCity]").val();
+            var billingState    = $("select[name=billingState]").val();
+            var billingZip      = $("input[name=billingZip]").val();
+            var billingCountry  = $("input[name=billingCountry]").val();
+
+            // CC info
+            var cid             = $("input[name=cid]").val();
+            var jp_tid          = $("input[name=jp_tid]").val();
+            var jp_key          = $("input[name=jp_key]").val();
+            var jp_request_hash = $("input[name=jp_request_hash]").val();
+            var order_number    = $("input[name=order_number]").val();
+            var trans_type      = $("input[name=trans_type]").val();
+            var ud1             = $("input[name=ud1]").val();
+            var ud2             = $("input[name=ud2]").val();
+            var ud3             = $("input[name=ud3]").val();
+            var retUrl          = $("input[name=retUrl]").val();
+            var decUrl          = $("input[name=decUrl]").val();
+            var dataUrl         = $("input[name=dataUrl]").val();
+
+            console.log(
+                'First Name:            ' + fName + '\n' +
+                'Last Name:             ' + lName + '\n' +
+                'Card Number:           ' + cardNum + '\n' +
+                'Expiration Month:      ' + expMo + '\n' +
+                'Expiration Year:       ' + expYr + '\n' +
+                'Security Code/CVV:     ' + cvv + '\n' +
+                'Total Amount:          ' + amount + '\n' +
+                'Email:                 ' + customerEmail + '\n' +
+                'Billing Address 1:     ' + billingAddress1 + '\n' +
+                'Billing Address 2:     ' + billingAddress2 + '\n' +
+                'Billing City:          ' + billingCity + '\n' +
+                'Billing State:         ' + billingState + '\n' +
+                'Billing Zip Code:      ' + billingZip + '\n' +
+                'Billing Country:       ' + billingCountry + '\n' +
+
+                'Customer UUID:         ' + cid + '\n' +
+                'Merchant Terminal ID:  ' + jp_tid + '\n' +
+                'Merchant Key:          ' + jp_key + '\n' +
+                'SHA512 Hash:           ' + jp_request_hash + '\n' +
+                'Unique Order Number:   ' + order_number + '\n' +
+                'Transaction Type:      ' + trans_type + '\n' +
+                'User Data Field 1:     ' + ud1 + '\n' +
+                'User Data Field 2:     ' + ud2 + '\n' +
+                'User Data Field 3:     ' + ud3 + '\n' +
+                'Approved URL:          ' + retUrl + '\n' +
+                'Decline URL:           ' + decUrl + '\n' +
+                'Details URL:           ' + dataUrl + '\n'
+            );
+        }
+
+        function fill_sample_inputs()
+        {
+            $("input[name=fName]").val('Wade');
+            $("input[name=lName]").val('Wilson');
+            $("input[name=middleinitial]").val('W');
+            $("input[name=customerEmail]").val('wadewwilson@gmail.com');
+            $("input[name=billingAddress1]").val('3361 Boyington Dr');
+            $("input[name=billingAddress2]").val('Suite 180');
+            $("input[name=billingCity]").val('Carrollton');
+            $('select[name=billingState] option[value="TX"]').prop('selected', 'selected').change();
+            $("input[name=billingZip]").val('Suite 180');
+            $("input[name=ud1]").val('UD1 TAG');
+            $("input[name=ud2]").val('UD2 TAG');
+            $("input[name=ud3]").val('UD3 TAG');
+
+            $(".btn-next").click();
+
+            $("input[name=cardNum]").val('4111 1111 1111 1111');
+            $("input[name=cc-exp]").val('12 / 13');
+            $("input[name=cvv]").val('321');
+            $("input[name=amount]").val('10.00');
         }
     </script>
 

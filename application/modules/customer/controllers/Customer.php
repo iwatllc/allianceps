@@ -64,15 +64,20 @@ class Customer extends MX_Controller
             $cid = $this -> input -> post('cid');
             $fileExtension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
 
-            $targetPath = 'client/uploads/';
+            $uploadDir = 'client/uploads/';
+            if (!file_exists($uploadDir))
+            {
+                mkdir($uploadDir, 0777, true);
+            }
+
             $fileName = $cid.".".$fileExtension;
 
             // Delete if file already exists in directory
-            $mask = $targetPath.$cid.'.*';
+            $mask = $uploadDir.$cid.'.*';
             array_map('unlink', glob($mask));
 
             // Move the file to the client/uploads/ directory
-            move_uploaded_file($_FILES["file"]["tmp_name"],$targetPath.$fileName);
+            move_uploaded_file($_FILES["file"]["tmp_name"],$uploadDir.$fileName);
 
             // Save the filename to the database
             $this -> customer_model -> update_logo_name($cid, $fileName);

@@ -37,30 +37,41 @@ class Customerform extends MX_Controller {
 
         // Query customer table for the slug
         $data['customer'] = $this -> customerform_model -> get_customer_form_from_slug($slug);
+        
+        // MERCHANT TESTING VARIABLES
+        $data['jp_tid']     = 'TESTTERMINAL';
+        $data['jp_key']     = '1234567890abcdefghijk';
+        $data['jp_token']   = '1234567890ABCDEFGHIJKabcdefghijk';
+        $data['cid']        = 'allianceps';
+        // END TEST VARIABLES
+
 
         // JetDirect URL to send form for testing
-//        $data['jd_url'] = 'https://testapp1.jetpay.com/jetdirect/post/cc/process_cc.php';
-        $data['jd_url'] = 'testing_url';
-        
-        
+        $data['jd_url'] = 'https://testapp1.jetpay.com/jetdirect/post/cc/process_cc.php';
+
         // JetPay info
-        $data['jp_tid']     = 'TESTMCC3102X';
-        $data['jp_key']     = 'qyXzTempJRiV8iJJPS8V3st6';
-        $data['jp_token']   = 'vmdkorket3hSV12SuH5knWnOj4oqwW5LHTWV5MUuoVtzPcBJ8VK6vXUgGDwiRNzOMNxSEum7';
+//        $data['jp_tid']     = 'TESTMCC3102X';
+//        $data['jp_key']     = 'qyXzTempJRiV8iJJPS8V3st6';
+//        $data['jp_token']   = 'vmdkorket3hSV12SuH5knWnOj4oqwW5LHTWV5MUuoVtzPcBJ8VK6vXUgGDwiRNzOMNxSEum7';
+//        $data['cid']        = $data['customer'] -> uuid;
         $data['trans_type'] = 'SALE';
 
-        // TODO: Create a controller that will have two functions: one for APPROVED Transaction and another for DECLINED Transaction
-        $data['ret_url'] = '';
-        $data['dec_url'] = '';
-        $data['data_url'] = ''; // TODO: Create function in controller that will retrieve transaction information from JetPay to display on the two views
+        // Approved and declined URLs
+        $data['ret_url']    = base_url('paymentresponse/approved');
+        $data['dec_url']    = base_url('paymentresponse/decline');
+//        $data['data_url']   = base_url('paymentresponse/index');
+
+//        $data['ret_url']    = base_url('assets/approved.php');
+//        $data['dec_url']    = base_url('assets/decline.php');
+        $data['data_url']   = base_url('assets/transactions.php');
 
         $view_vars = array(
-            'title' => $this->configsys->get_config_value('Client_Title'),
-            'heading' => $this->configsys->get_config_value('Client_Title'),
-            'description' => $this->configsys->get_config_value('Client_Description'),
-            'company' => $this->configsys->get_config_value('Client_Name'),
-            'logo' => $this->configsys->get_config_value('Client_Logo'),
-            'author' => $this->configsys->get_config_value('Client_Author')
+            'title'         => $this -> configsys -> get_config_value('Client_Title'),
+            'heading'       => $this -> configsys -> get_config_value('Client_Title'),
+            'description'   => $this -> configsys -> get_config_value('Client_Description'),
+            'company'       => $this -> configsys -> get_config_value('Client_Name'),
+            'logo'          => $this -> configsys -> get_config_value('Client_Logo'),
+            'author'        => $this -> configsys -> get_config_value('Client_Author')
         );
         $data['page_data'] = $view_vars;
         
@@ -117,6 +128,15 @@ class Customerform extends MX_Controller {
         $data['uuid'] = $this -> customerform_model -> add_form_submission($data, $uid);
 
         echo json_encode($data);
+    }
+
+    public function generate_hash()
+    {
+        $hash_vars = $this -> input -> post('hash_vars');
+
+        $hash = hash('sha512', $hash_vars);
+        
+        echo $hash;
     }
 
     /**
