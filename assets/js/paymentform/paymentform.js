@@ -7,10 +7,10 @@ $.fn.toggleInputError = function(erred) {
     return this;
 };
 
-// Process client information
+// Next button press
 $(document).on('click', 'button.btn-next', function(e){
     e.preventDefault();
-
+    
     var baseUrl = window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
 
     // Replace button with animated loading gif
@@ -18,9 +18,8 @@ $(document).on('click', 'button.btn-next', function(e){
 
     // Collect all of the field values
     var array = {
-        uuid:       $('input[id=uuid]').val(),
+        uuid:       $('input[name=order_number]').val(),
         firstname:  $('.firstname').val(),
-        middleinit: $('.middleinitial').val(),
         lastname:   $('.lastname').val(),
         email:      $('.email').val(),
         address1:   $('.address1').val(),
@@ -31,8 +30,7 @@ $(document).on('click', 'button.btn-next', function(e){
         cf1:        $('.cf1').val(),
         cf2:        $('.cf2').val(),
         cf3:        $('.cf3').val(),
-        // notes:      $('.notes').val(),
-        amount:     $('[data-numeric]').val(),
+        amount:     $('input[name=amount]').val(),
         slug:       window.location.pathname.split( '/' )[3]
     };
 
@@ -98,14 +96,21 @@ $(document).on('click', 'button.btn-next', function(e){
                 $("button.btn-next").attr('disabled', true).empty().prepend('Next').hide();
                 $("button.btn-back").removeAttr('disabled').show();
 
-                // Populate hidden input with UUID
-                $("input[id=uuid]").val(res.uuid);
-
-                // Disable inputs
-                $("input, select", "#client-info").prop('disabled', true);
+                // DO NOT DISABLE INPUTS - ONLY MAKE THEM READ ONLY
+                // DISABLED INPUTS DO NOT GET SUBMITTED
+                // $("input, select", "#client-info").prop('disabled', true);
+                $("input, select", "#client-info").attr('readonly', true);
 
                 // Show CC fields and submit button
                 $('div#cc-info').show();
+
+                // Populate hidden inputs
+                $("input[name=order_number]").val(res.uuid);
+                $("input[name=jp_request_hash]").val(res.jphash);
+                $("input[name=jp_key]").val(res.jpkey);
+                $("input[name=jp_tid]").val(res.jptid);
+                $("input[name=trans_type]").val(res.jptranstype);
+
             }
         }
     });
@@ -119,8 +124,12 @@ $(document).on('click', 'button.btn-back', function(e){
     // Hide the CC fields
     $('div#cc-info').hide();
 
-    // Enable client fields
-    $("input, select", "#client-info").prop('disabled', false);
+    // DO NOT DISABLE INPUTS - ONLY MAKE THEM READ ONLY
+    // DISABLED INPUTS DO NOT GET SUBMITTED
+    //$("input, select", "#client-info").prop('disabled', false);
+
+    // Turn off read only fields
+    $("input, select", "#client-info").attr('readonly', false);
 
     // Hide back button, show Next button
     $(this).attr('disabled', true).hide();
@@ -130,3 +139,26 @@ $(document).on('click', 'button.btn-back', function(e){
     $("input", "#cc-info").val('');
 
 });
+
+
+function fill_sample_inputs()
+{
+    $("input[name=fName]").val('Wade');
+    $("input[name=lName]").val('Wilson');
+    $("input[name=customerEmail]").val('wadewwilson@gmail.com');
+    $("input[name=billingAddress1]").val('3361 Boyington Dr');
+    $("input[name=billingAddress2]").val('Suite 180');
+    $("input[name=billingCity]").val('Carrollton');
+    $('select[name=billingState] option[value="TX"]').prop('selected', 'selected').change();
+    $("input[name=billingZip]").val('75006');
+    $("input[name=ud1]").val('UD1 TAG');
+    $("input[name=ud2]").val('UD2 TAG');
+    $("input[name=ud3]").val('UD3 TAG');
+    $("input[name=amount]").val('10.00');
+
+    $(".btn-next").click();
+
+    $("input[name=cardNum]").val('4111 1111 1111 1111');
+    $("input[name=cc-exp]").val('12 / 13');
+    $("input[name=cvv]").val('321');
+}

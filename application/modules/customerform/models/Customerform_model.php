@@ -45,6 +45,14 @@ class Customerform_model extends CI_Model {
             //set uuid column value as UUID
             $this -> db -> set('uuid', 'UUID()', FALSE);
 
+            // Generate length 12 alphanumeric UUID
+//            $length = 12;
+//            $random = '';
+//            for ($i = 0; $i < $length; $i++) {
+//                $random .= rand(0, 1) ? rand(0, 9) : chr(rand(ord('a'), ord('z')));
+//            }
+//            $data['uuid'] = $random;
+
             //insert all together
             $this -> db -> insert('form_submissions', $data);
 
@@ -57,10 +65,4 @@ class Customerform_model extends CI_Model {
         return $q -> row() -> uuid;
     }
 
-
-    public function save($data)
-    {
-        $this->db->insert('guestform_submissions', $data);
-        return $this->db->insert_id();
-    }
 }

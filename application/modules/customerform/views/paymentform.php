@@ -173,11 +173,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             </div>
 
             <div class="form-group">
-                <label for="middleinitial" class="control-label">Middle Initial</label>
-                <input id="middleinitial" name="middleinitial" type="text" class="input-lg form-control middleinitial" autocomplete="middleinitial" placeholder="Middle Initial" maxlength ="1" required>
-            </div>
-
-            <div class="form-group">
                 <label for="lastname" class="control-label">Last Name &#42;</label>
                 <input id="lastname" name="lName" type="text" class="input-lg form-control lastname" autocomplete="lastname" placeholder="Last Name" maxlength ="50" required>
             </div>
@@ -267,11 +262,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
             <input type="hidden" name="billingCountry" value="USA">
 
-            <!--<div class="form-group">
-                <label for="notes" class="control-label">Notes</label>
-                <input id="notes" name="notes" type="text" class="input-lg form-control notes" placeholder="Notes" required>
-            </div>-->
-
             <?php if ($customer -> cf1enabled == 1) { ?>
             <div class="form-group">
                 <label for="<?php echo $customer->cf1name; ?>" class="control-label"><?php echo $customer->cf1name . ($customer->cf1required == 1 ? ' &#42;' : '') ?></label>
@@ -334,6 +324,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 ?>
             </div>
             <?php } ?>
+            
+            <div class="form-group">
+                <label for="numeric" class="control-label">Amount &#42;</label>
+                <input id="numeric" name="amount" type="tel" class="input-lg form-control" placeholder="$" data-numeric>
+            </div>
 
             <button type="button" class="btn btn-lg btn-primary btn-next">Next</button>
             <button type="button" class="btn btn-lg btn-primary btn-back" style="display:none;">Back</button>
@@ -342,7 +337,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         <br/><br/>
 
-        <div id="cc-info" style="display:block;">
+        <div id="cc-info" style="display:none;">
             <div class="form-group">
                 <label for="cc-number" class="control-label">Card Number  <small class="text-muted">[<span class="cc-brand"></span>]</small></label>
                 <input id="cc-number" name="cardNum" type="tel" class="input-lg form-control cc-number" autocomplete="off" placeholder="•••• •••• •••• ••••" required>
@@ -363,18 +358,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 <input id="cc-cvc" name="cvv" type="tel" class="input-lg form-control cc-cvc" autocomplete="off" placeholder="•••" required>
             </div>
 
-            <div class="form-group">
-                <label for="numeric" class="control-label">Amount &#42;</label>
-                <input id="numeric" name="amount" type="tel" class="input-lg form-control" placeholder="$" data-numeric>
-            </div>
-
             <input type="hidden"                name="cid"              value="<?php echo $cid; ?>" />
-            <input type="hidden" id="mtid"      name="jp_tid"           value="<?php echo $jp_tid; ?>" />
-            <input type="hidden"                name="jp_key"           value="<?php echo $jp_key; ?>" />
-            <input type="hidden" id="req_hash"  name="jp_request_hash"  value="" /> <!-- This input is filled with hash before form is submitted -->
-            <input type="hidden" id="uuid"      name="order_number"     value="" />
-            <input type="hidden"                name="trans_type"       value="<?php echo $trans_type; ?>" />
-            <input type="hidden" id="jd_token"                          value="<?php echo $jp_token; ?>" />
+            <input type="hidden"                name="jp_tid"           value="" />
+            <input type="hidden"                name="jp_key"           value="" />
+            <input type="hidden"                name="jp_request_hash"  value="" /> <!-- This input is filled with hash before form is submitted -->
+            <input type="hidden"                name="order_number"     value="" />
+            <input type="hidden"                name="trans_type"       value="" />
 
             <input type="hidden" name="retUrl"  value="<?php echo $ret_url; ?>" />
             <input type="hidden" name="decUrl"  value="<?php echo $dec_url; ?>" />
@@ -451,100 +440,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $('form').submit(function(e) {
             //e.preventDefault();
 
-            console.log('run 0');
-
             var cardType = $.payment.cardType($('.cc-number').val());
             $('.cardtype').val(cardType);
 
             $('[data-numeric]').toggleInputError($('[data-numeric]').val().length == 0 ? true : false );
             $('.cc-number').toggleInputError(!$.payment.validateCardNumber($('.cc-number').val()));
             //$('.cc-exp').toggleInputError(!$.payment.validateCardExpiry($('.cc-exp').payment('cardExpiryVal')));
-
             $('.cc-cvc').toggleInputError(!$.payment.validateCardCVC($('.cc-cvc').val(), cardType));
             $('.cc-brand').text(cardType);
             $('.validation').removeClass('text-danger text-success');
             $('.validation').addClass($('.has-error').length ? 'text-danger' : 'text-success');
-
-            console.log('run 1');
 
             if ($('.form-group').hasClass('has-error')) {
                 e.preventDefault();
                 return;
             }
 
-            console.log('run 2');
-
             $("input[name=cardNum]").val($("input[name=cardNum]").val().replace(/\s/g, ''));
 
-            split_card_expiry_field($('.cc-exp').val());
-            generate_sha512_hash();
-            print_all_inputs();
-
-        });
-
-        function split_card_expiry_field(expire_date)
-        {
-            // Split expire_date into two strings (month and year)
+            // Split card expirty fields into two hidden inputs (month and year)
+            var expire_date = $('.cc-exp').val();
             var splitdate = expire_date.split(' / ');
             var expMo = splitdate[0];
             var expYr = splitdate[1];
-
             if (expYr.length > 2) {
                 expYr = expYr.substring(2);
             }
-
             // Fill inputs with values
             $('#mo-exp').val(expMo);
             $('#yr-exp').val(expYr);
-        }
 
-        function generate_sha512_hash()
-        {
-            // Get inputs from fields
-            var tid         = $('#mtid').val();
-            var amount      = $('#numeric').val();
-            var token       = $('#jd_token').val();
-            var ordernum    = $('#uuid').val();
-
-            var hash_vars = tid + amount + token + ordernum;
-
-            // Apply SHA512 method to variables
-            var hash = sha512(hash_vars);
-
-//            var baseUrl = window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
-//            var pathToController = "/customerform/customerform/generate_hash";
-//            $.post(baseUrl + pathToController, { hash_vars:hash_vars }, function(response){
-//                $('#req_hash').val(response);
-//                alert(  'JS Hash: '     + hash + '\n' +
-//                        'PHP Hash: '    + response
-//                );
-//            });
-
-            // Put inside SHA512 hash field
-            $('#req_hash').val(hash);
-            console.log(
-                'Hash Variables: ' + hash_vars + '\n' +
-                'Generated Hash: ' + $('#req_hash').val()
-            );
-        }
-
-        function print_all_inputs()
-        {
+            // Print all inputs
             // Client info
-            var fName           = $("input[name=fName]").val();
-            var lName           = $("input[name=lName]").val();
-            var cardNum         = $("input[name=cardNum]").val();
-            var expMo           = $("input[name=expMo]").val();
-            var expYr           = $("input[name=expYr]").val();
-            var cvv             = $("input[name=cvv]").val();
-            var amount          = $("input[name=amount]").val();
-            var customerEmail   = $("input[name=customerEmail]").val();
-            var billingAddress1 = $("input[name=billingAddress1]").val();
-            var billingAddress2 = $("input[name=billingAddress2]").val();
-            var billingCity     = $("input[name=billingCity]").val();
-            var billingState    = $("select[name=billingState]").val();
-            var billingZip      = $("input[name=billingZip]").val();
-            var billingCountry  = $("input[name=billingCountry]").val();
 
             // CC info
             var cid             = $("input[name=cid]").val();
@@ -560,59 +487,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             var decUrl          = $("input[name=decUrl]").val();
             var dataUrl         = $("input[name=dataUrl]").val();
 
+            // Set our own hash
+//            $("input[name=jp_request_hash]").val("6E076FF0046D57BB8A1B536393B440D3AD09F9BC42A5CD6015DFBECA5BE163EC63C1EE28171E86EBA5E835F16901EF69D1DC79248EA0B984A37D4F887E64D8D4")
+
             console.log(
-                'First Name:            ' + fName + '\n' +
-                'Last Name:             ' + lName + '\n' +
-                'Card Number:           ' + cardNum + '\n' +
-                'Expiration Month:      ' + expMo + '\n' +
-                'Expiration Year:       ' + expYr + '\n' +
-                'Security Code/CVV:     ' + cvv + '\n' +
-                'Total Amount:          ' + amount + '\n' +
-                'Email:                 ' + customerEmail + '\n' +
-                'Billing Address 1:     ' + billingAddress1 + '\n' +
-                'Billing Address 2:     ' + billingAddress2 + '\n' +
-                'Billing City:          ' + billingCity + '\n' +
-                'Billing State:         ' + billingState + '\n' +
-                'Billing Zip Code:      ' + billingZip + '\n' +
-                'Billing Country:       ' + billingCountry + '\n' +
-
-                'Customer UUID:         ' + cid + '\n' +
-                'Merchant Terminal ID:  ' + jp_tid + '\n' +
-                'Merchant Key:          ' + jp_key + '\n' +
-                'SHA512 Hash:           ' + jp_request_hash + '\n' +
-                'Unique Order Number:   ' + order_number + '\n' +
-                'Transaction Type:      ' + trans_type + '\n' +
-                'User Data Field 1:     ' + ud1 + '\n' +
-                'User Data Field 2:     ' + ud2 + '\n' +
-                'User Data Field 3:     ' + ud3 + '\n' +
-                'Approved URL:          ' + retUrl + '\n' +
-                'Decline URL:           ' + decUrl + '\n' +
-                'Details URL:           ' + dataUrl + '\n'
+                'fName: '                   + $("input[name=fName]").val() + '\n' +
+                'lName: '                   + $("input[name=lName]").val() + '\n' +
+                'cardNum: '                 + $("input[name=cardNum]").val() + '\n' +
+                'expMo: '                   + $("input[name=expMo]").val() + '\n' +
+                'expYr: '                   + $("input[name=expYr]").val() + '\n' +
+                'cvv: '                     + $("input[name=cvv]").val() + '\n' +
+                'amount: '                  + $("input[name=amount]").val() + '\n' +
+                'email: '                   + $("input[name=customerEmail]").val() + '\n' +
+                'billingAddress1: '         + $("input[name=billingAddress1]").val() + '\n' +
+                'billingAddress2: '         + $("input[name=billingAddress2]").val() + '\n' +
+                'billingCity: '             + $("input[name=billingCity]").val() + '\n' +
+                'billingState: '            + $("select[name=billingState]").val() + '\n' +
+                'billingZip: '              + $("input[name=billingZip]").val() + '\n' +
+                'billingCountry: '          + $("input[name=billingCountry]").val() + '\n' +
+                '\n' +
+                'cid: '                     + $("input[name=cid]").val() + '\n' +
+                'jp_tid: '                  + jp_tid + '\n' +
+                'jp_key: '                  + jp_key + '\n' +
+                'jp_request_hash: '         + jp_request_hash + '\n' +
+                'order_number: '            + order_number + '\n' +
+                'trans_type: '              + trans_type + '\n' +
+                'UD1: '                     + ud1 + '\n' +
+                'UD2: '                     + ud2 + '\n' +
+                'UD3: '                     + ud3 + '\n' +
+                'retURL: '            + retUrl + '\n' +
+                'decURL: '             + decUrl + '\n' +
+                'dataURL: '             + dataUrl + '\n'
             );
-        }
 
-        function fill_sample_inputs()
-        {
-            $("input[name=fName]").val('Wade');
-            $("input[name=lName]").val('Wilson');
-            $("input[name=middleinitial]").val('W');
-            $("input[name=customerEmail]").val('wadewwilson@gmail.com');
-            $("input[name=billingAddress1]").val('3361 Boyington Dr');
-            $("input[name=billingAddress2]").val('Suite 180');
-            $("input[name=billingCity]").val('Carrollton');
-            $('select[name=billingState] option[value="TX"]').prop('selected', 'selected').change();
-            $("input[name=billingZip]").val('Suite 180');
-            $("input[name=ud1]").val('UD1 TAG');
-            $("input[name=ud2]").val('UD2 TAG');
-            $("input[name=ud3]").val('UD3 TAG');
-
-            $(".btn-next").click();
-
-            $("input[name=cardNum]").val('4111 1111 1111 1111');
-            $("input[name=cc-exp]").val('12 / 13');
-            $("input[name=cvv]").val('321');
-            $("input[name=amount]").val('10.00');
-        }
+//            e.preventDefault();
+        });
     </script>
 
 </body>

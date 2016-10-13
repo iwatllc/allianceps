@@ -15,7 +15,7 @@
 
 <p><?php echo $test; ?></p>
 
-<table style="width:100%" border="1px solid black;border-collapse: collapse;">
+<!--<table style="width:100%" border="1px solid black;border-collapse: collapse;">
     <tr>
         <th>Variable Name</th>
         <th>Value</th>
@@ -52,7 +52,7 @@
         <td>merOrderNumber</td>
         <td><?php echo $merOrderNumber; ?></td>
     </tr>
-</table>
+</table>-->
 
 </body>
 </html>
