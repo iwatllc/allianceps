@@ -94,9 +94,9 @@ class Customer extends MX_Controller
         $this -> form_validation -> set_rules('cf1name', 'Custom Field 1 Name', 'max_length[50]');
         $this -> form_validation -> set_rules('cf2name', 'Custom Field 2 Name', 'max_length[50]');
         $this -> form_validation -> set_rules('cf3name', 'Custom Field 3 Name', 'max_length[50]');
-//        $this -> form_validation -> set_rules('tid', 'Merchant TID', 'required|max_length[12]');
-//        $this -> form_validation -> set_rules('key', 'Key', 'required|max_length[24]');
-//        $this -> form_validation -> set_rules('token', 'Token', 'required|max_length[72]');
+        $this -> form_validation -> set_rules('tid', 'Merchant TID', 'required|max_length[12]');
+        $this -> form_validation -> set_rules('key', 'Key', 'required|max_length[24]');
+        $this -> form_validation -> set_rules('token', 'Token', 'required|max_length[72]');
 
         if ($this -> form_validation -> run() == FALSE || $this -> customer_exists($this -> input -> post('customername')) == FALSE || $this -> slug_exists($this -> input -> post('slugname')) == FALSE)
         {
