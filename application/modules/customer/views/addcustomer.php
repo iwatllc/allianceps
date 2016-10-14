@@ -96,7 +96,33 @@
     </div>
 </div>
 
-<hr/>
+<div class="row">
+    <div class="col-xs-4">
+        <div class="form-group well" id="tid-field">
+            <label for="tid">Merchant TID:&nbsp;</label><span class="label label-danger">Required</span>
+            <br/>
+            <input type="text" maxlength="12" class="form-control" name="tid">
+            <span class="help-block" id="tid-err"></span>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <div class="form-group well" id="key-field">
+            <label for="key">Key:&nbsp;</label><span class="label label-danger">Required</span>
+            <br/>
+            <input type="text" maxlength="24" class="form-control" name="key">
+            <span class="help-block" id="key-err"></span>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <div class="form-group well" id="token-field">
+            <label for="token">Token:&nbsp;</label><span class="label label-danger">Required</span>
+            <br/>
+            <input type="text" maxlength="72" class="form-control" name="token">
+            <span class="help-block" id="token-err"></span>
+        </div>
+    </div>
+</div>
+
 
 <div class="btns">
     <button type="button" class="btn btn-primary btn-lg addcustomer-submit"><span class="glyphicon glyphicon-plus"></span> Add Customer</button>

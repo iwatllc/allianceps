@@ -63,10 +63,10 @@ class Customer_model extends CI_Model
         $query = $this -> db -> get('customers');
         if ($query -> num_rows() > 0)
         {
-            return false;
+            return true; // name already exists
         } else
         {
-            return true;
+            return false; // name does not exist
         }
     }
 
@@ -76,10 +76,10 @@ class Customer_model extends CI_Model
         $query = $this -> db -> get('customers');
         if ($query -> num_rows() > 0)
         {
-            return false;
+            return true;
         } else
         {
-            return true;
+            return false;
         }
     }
 }

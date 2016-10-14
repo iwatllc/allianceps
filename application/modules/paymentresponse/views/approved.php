@@ -1,88 +1,58 @@
 <?php
-
-session_start();
-
-if (!strlen($_SERVER['QUERY_STRING']))
-{
-    exit ();
-}
-
-$string_out = base64_decode($_SERVER['QUERY_STRING']);
-
-parse_str($string_out, $_SESSION);
-
-//print ($string_out);
-
-$card = $_SESSION['card'];
-//GET CARD TYPE
-switch ($card){
-    case "VS":
-        $card = '<img src="'.base_url('assets/img/cards/visa.jpg').'">';
-        break;
-    case "AX":
-        $card = '<img src="'.base_url('assets/img/cards/amex.jpg').'">';
-        break;
-    case "MC":
-        $card = '<img src="'.base_url('assets/img/cards/mastercard.jpg').'">';
-        break;
-    case "DS":
-        $card = '<img src="'.base_url('assets/img/cards/discover.jpg').'">';
-        break;
-    case "DC":
-        $card = '<img src="'.base_url('assets/img/cards/dinersclub.jpg').'">';
-        break;
-}
-
+/**
+ * Created by PhpStorm.
+ * User: aaronfrazer
+ * Date: 10/6/16
+ * Time: 10:59 AM
+ */
 ?>
 
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Receipt Page</title>
-</head>
-
 <body>
 
-<div align="center" style="font-family:Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif">
-    <?php
-    print "<br>";
-    print "<br>";
-    print "<strong style=\"color:#FF6600\">" . $_SESSION['responseText'] . "</strong><br>";
-    print "<br>";
-    print "Account Holder: " . $_SESSION['name'] . "<br>";
-    print "<br>";
-    print $card . "<br>";
-    print $_SESSION['expandedCardNum'] . "<br>Expires: " . $_SESSION['expDate'] . "<br>";
-    print "<br>";
-    print "Amount Charged: <span style=\"color:#B20000\">$" . $_SESSION['amount'] . "</span><br>";
-    print "<br>";
-    print "Transaction ID: " . $_SESSION['transId'] . "<br>";
-    print "Order#: " . $_SESSION['order_number'] . "<br>";
-    print "<br>";
-    print "<span style=\"font-size:8px\">Customer ID: " . $_SESSION['cid'] . "</span><br>";
-    print "<br>";
-    print "<span style=\"font-size:8px\">TransToken ID: " . $_SESSION['jpToId'] . "</span><br>";
-    print "<br>";
-    print "<h5><a href=\"dataform.php\">click here to run another</a></h5>";
-    ?>
-</div>
+<h1>Payment Approved</h1>
 
+<p><?php echo $test; ?></p>
+
+<!--<table style="width:100%" border="1px solid black;border-collapse: collapse;">
+    <tr>
+        <th>Variable Name</th>
+        <th>Value</th>
+    </tr>
+    <tr>
+        <td>jp_return_hash</td>
+        <td><?php echo $jp_return_hash; ?></td>
+    </tr>
+    <tr>
+        <td>cid</td>
+        <td><?php echo $cid; ?></td>
+    </tr>
+    <tr>
+        <td>transId</td>
+        <td><?php echo $transId; ?></td>
+    </tr>
+    <tr>
+        <td>responseText</td>
+        <td><?php echo $responseText; ?></td>
+    </tr>
+    <tr>
+        <td>actCode</td>
+        <td><?php echo $actCode; ?></td>
+    </tr>
+    <tr>
+        <td>amount</td>
+        <td><?php echo $amount; ?></td>
+    </tr>
+    <tr>
+        <td>name</td>
+        <td><?php echo $name; ?></td>
+    </tr>
+    <tr>
+        <td>merOrderNumber</td>
+        <td><?php echo $merOrderNumber; ?></td>
+    </tr>
+</table>-->
 
 </body>
-
-<?php
-
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000,
-        $params["path"], $params["domain"],
-        $params["secure"], $params["httponly"]
-    );
-}
-
-// Finally, destroy the session.
-session_destroy();
-
-?>
 </html>

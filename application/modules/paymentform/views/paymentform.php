@@ -99,50 +99,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <script src="<?php echo base_url('assets/js/paymentform/jquery.payment.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/js/paymentform/jquery.maskMoney.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/js/paymentform/paymentform.js'); ?>"></script>
-    <link href="<?php echo base_url('assets/plugins/select2/select2.min.css'); ?>" rel="stylesheet" />
-    <script src="<?php echo base_url('assets/plugins/select2/select2.min.js'); ?>"></script>
-    <script src="<?php echo base_url('assets/plugins/js-sha512/sha512.js'); ?>"></script>
 
 <?php if($page_status == 'payment'){
     //=======================================================================================
     // DISPLAY THE PAYMENT FORM
     //=======================================================================================
 ?>
-
-    <style type="text/css" media="screen">
-        .has-error input {
-            border-width: 2px;
-        }
-        .validation.text-danger:after {
-            content: 'Validation failed: Please make sure all fields are filled out and correct';
-        }
-        .validation.text-success:after {
-            content: 'Validation passed';
-        }
-
-        .select2-container--default .select2-selection--single {
-            height: 46px !important;
-            padding: 10px 16px;
-            font-size: 18px;
-            line-height: 1.33;
-            border-radius: 6px;
-        }
-        .select2-container--default .select2-selection--single .select2-selection__arrow b {
-            top: 85% !important;
-        }
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            line-height: 26px !important;
-        }
-        .select2-container--default .select2-selection--single {
-            border: 1px solid #CCC !important;
-            box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
-            transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-        }
-        .has-error .state {
-            border: 1px solid #a94442;
-            border-radius: 4px;
-        }
-    </style>
 
 </head>
 <body>
@@ -168,96 +130,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         <div id="client-info">
             <div class="form-group">
-                <label for="firstname" class="control-label">First Name &#42;</label>
-                <input id="firstname" name="fName" type="text" class="input-lg form-control firstname" autocomplete="firstname" placeholder="First Name" maxlength ="50" required>
-            </div>
-
-            <div class="form-group">
-                <label for="lastname" class="control-label">Last Name &#42;</label>
-                <input id="lastname" name="lName" type="text" class="input-lg form-control lastname" autocomplete="lastname" placeholder="Last Name" maxlength ="50" required>
+                <label for="name" class="control-label">Name &#42;</label>
+                <input name="name" type="text" class="input-lg form-control" autocomplete="name" placeholder="Card Holder Name" maxlength ="100" required>
             </div>
 
             <div class="form-group">
                 <label for="email" class="control-label">Email </label>
-                <input id="email" name="customerEmail" type="text" class="input-lg form-control email" autocomplete="email" placeholder="Email" maxlength ="255" required>
+                <input name="customerEmail" type="text" class="input-lg form-control" autocomplete="email" placeholder="Email" maxlength ="255" required>
             </div>
 
             <div class="form-group">
                 <label for="address1" class="control-label">Billing Address &#42;</label>
-                <input id="address1" name="billingAddress1" type="text" class="input-lg form-control address1" autocomplete="address1" placeholder="Billing Address 1" maxlength ="100" required>
+                <input name="billingAddress1" type="text" class="input-lg form-control" autocomplete="address1" placeholder="Billing Address 1" maxlength ="100" required>
             </div>
 
             <div class="form-group">
                 <label for="address2" class="control-label">Billing Address (2)</label>
-                <input id="address2" name="billingAddress2" type="text" class="input-lg form-control address2" autocomplete="address2" placeholder="Billing Address 2" maxlength ="100" required>
+                <input name="billingAddress2" type="text" class="input-lg form-control" autocomplete="address2" placeholder="Billing Address 2" maxlength ="100" required>
             </div>
 
             <div class="form-group">
                 <label for="city" class="control-label">City &#42;</label>
-                <input id="city" name="billingCity" type="text" class="input-lg form-control city" autocomplete="city" placeholder="City" maxlength ="50" required>
+                <input name="billingCity" type="text" class="input-lg form-control" autocomplete="city" placeholder="City" maxlength ="50" required>
             </div>
 
             <div class="form-group">
-                <label for="state" class="control-label">State &#42;</label><br/>
-                <select id="state" name="billingState" class="form-control select2-container step2-select state">
-                    <option></option>
-                    <option value="AL">Alabama</option>
-                    <option value="AK">Alaska</option>
-                    <option value="AZ">Arizona</option>
-                    <option value="AR">Arkansas</option>
-                    <option value="CA">California</option>
-                    <option value="CO">Colorado</option>
-                    <option value="CT">Connecticut</option>
-                    <option value="DE">Delaware</option>
-                    <option value="DC">District Of Columbia</option>
-                    <option value="FL">Florida</option>
-                    <option value="GA">Georgia</option>
-                    <option value="HI">Hawaii</option>
-                    <option value="ID">Idaho</option>
-                    <option value="IL">Illinois</option>
-                    <option value="IN">Indiana</option>
-                    <option value="IA">Iowa</option>
-                    <option value="KS">Kansas</option>
-                    <option value="KY">Kentucky</option>
-                    <option value="LA">Louisiana</option>
-                    <option value="ME">Maine</option>
-                    <option value="MD">Maryland</option>
-                    <option value="MA">Massachusetts</option>
-                    <option value="MI">Michigan</option>
-                    <option value="MN">Minnesota</option>
-                    <option value="MS">Mississippi</option>
-                    <option value="MO">Missouri</option>
-                    <option value="MT">Montana</option>
-                    <option value="NE">Nebraska</option>
-                    <option value="NV">Nevada</option>
-                    <option value="NH">New Hampshire</option>
-                    <option value="NJ">New Jersey</option>
-                    <option value="NM">New Mexico</option>
-                    <option value="NY">New York</option>
-                    <option value="NC">North Carolina</option>
-                    <option value="ND">North Dakota</option>
-                    <option value="OH">Ohio</option>
-                    <option value="OK">Oklahoma</option>
-                    <option value="OR">Oregon</option>
-                    <option value="PA">Pennsylvania</option>
-                    <option value="RI">Rhode Island</option>
-                    <option value="SC">South Carolina</option>
-                    <option value="SD">South Dakota</option>
-                    <option value="TN">Tennessee</option>
-                    <option value="TX">Texas</option>
-                    <option value="UT">Utah</option>
-                    <option value="VT">Vermont</option>
-                    <option value="VA">Virginia</option>
-                    <option value="WA">Washington</option>
-                    <option value="WV">West Virginia</option>
-                    <option value="WI">Wisconsin</option>
-                    <option value="WY">Wyoming</option>
-                </select>
+                <label for="state" class="control-label">State &#42;</label>
+                <input name="billingState" type="text" class="input-lg form-control" autocomplete="state" placeholder="State" maxlength ="2" required>
             </div>
 
             <div class="form-group">
                 <label for="zip" class="control-label">Zip &#42;</label>
-                <input id="zip" name="billingZip" type="text" class="input-lg form-control zip" autocomplete="zip" placeholder="Zip" maxlength="11" required>
+                <input name="billingZip" type="text" class="input-lg form-control" autocomplete="zip" placeholder="Zip" maxlength="11" required>
             </div>
 
             <input type="hidden" name="billingCountry" value="USA">
@@ -267,9 +171,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 <label for="<?php echo $customer->cf1name; ?>" class="control-label"><?php echo $customer->cf1name . ($customer->cf1required == 1 ? ' &#42;' : '') ?></label>
                 <?php
                     $data = array(
-                        'id'            => 'cf1',
                         'name'          => 'ud1',
-                        'class'         => 'input-lg form-control cf1',
+                        'class'         => 'input-lg form-control',
                         'type'          => 'text',
                         'value'         => set_value('cf1'),
                         'placeholder'   => ($customer->cf1required == 1 ? 'Required' : $customer->cf1name),
@@ -288,9 +191,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 <label for="<?php echo $customer->cf2name; ?>" class="control-label"><?php echo $customer->cf2name . ($customer->cf2required == 1 ? ' &#42;' : '') ?></label>
                 <?php
                     $data = array(
-                        'id'            => 'cf2',
                         'name'          => 'ud2',
-                        'class'         => 'input-lg form-control cf2',
+                        'class'         => 'input-lg form-control',
                         'type'          => 'text',
                         'value'         => set_value('cf2'),
                         'placeholder'   => ($customer->cf2required == 1 ? 'Required' : $customer->cf2name),
@@ -309,9 +211,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 <label for="<?php echo $customer->cf3name; ?>" class="control-label"><?php echo $customer->cf3name . ($customer->cf3required == 1 ? ' &#42;' : '') ?></label>
                 <?php
                     $data = array(
-                        'id'            => 'cf3',
                         'name'          => 'ud3',
-                        'class'         => 'input-lg form-control cf3',
+                        'class'         => 'input-lg form-control',
                         'type'          => 'text',
                         'value'         => set_value('cf3'),
                         'placeholder'   => ($customer->cf3required == 1 ? 'Required' : $customer->cf3name),
@@ -358,12 +259,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 <input id="cc-cvc" name="cvv" type="tel" class="input-lg form-control cc-cvc" autocomplete="off" placeholder="•••" required>
             </div>
 
-            <input type="hidden"                name="cid"              value="<?php echo $cid; ?>" />
-            <input type="hidden"                name="jp_tid"           value="" />
-            <input type="hidden"                name="jp_key"           value="" />
-            <input type="hidden"                name="jp_request_hash"  value="" /> <!-- This input is filled with hash before form is submitted -->
-            <input type="hidden"                name="order_number"     value="" />
-            <input type="hidden"                name="trans_type"       value="" />
+            <input type="hidden"    name="cid"              value="<?php echo $cid; ?>" />
+            <input type="hidden"    name="jp_tid"                                       />
+            <input type="hidden"    name="jp_key"                                       />
+            <input type="hidden"    name="jp_request_hash"                              />
+            <input type="hidden"    name="order_number"                                 />
+            <input type="hidden"    name="trans_type"                                   />
 
             <input type="hidden" name="retUrl"  value="<?php echo $ret_url; ?>" />
             <input type="hidden" name="decUrl"  value="<?php echo $dec_url; ?>" />
@@ -420,15 +321,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 } ?>
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            $("select.state").select2({
-                placeholder: "Select a state",
-                allowClear:   true
-            });
-//            $('.selectpicker').selectpicker();
-        });
-
-        // Credit card information
+        // Credit card validation
         $('[data-numeric]').maskMoney();
         $('.cc-number').payment('formatCardNumber');
         $('.cc-exp').payment('formatCardExpiry');
@@ -437,28 +330,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             this.parent('.form-group').toggleClass('has-error', erred);
             return this;
         };
+
         $('form').submit(function(e) {
             //e.preventDefault();
-
+        
             var cardType = $.payment.cardType($('.cc-number').val());
             $('.cardtype').val(cardType);
-
+        
             $('[data-numeric]').toggleInputError($('[data-numeric]').val().length == 0 ? true : false );
             $('.cc-number').toggleInputError(!$.payment.validateCardNumber($('.cc-number').val()));
-            //$('.cc-exp').toggleInputError(!$.payment.validateCardExpiry($('.cc-exp').payment('cardExpiryVal')));
+            $('.cc-exp').toggleInputError(!$.payment.validateCardExpiry($('.cc-exp').payment('cardExpiryVal')));
             $('.cc-cvc').toggleInputError(!$.payment.validateCardCVC($('.cc-cvc').val(), cardType));
             $('.cc-brand').text(cardType);
             $('.validation').removeClass('text-danger text-success');
             $('.validation').addClass($('.has-error').length ? 'text-danger' : 'text-success');
-
+        
             if ($('.form-group').hasClass('has-error')) {
                 e.preventDefault();
                 return;
             }
-
+        
             $("input[name=cardNum]").val($("input[name=cardNum]").val().replace(/\s/g, ''));
-
-            // Split card expirty fields into two hidden inputs (month and year)
+        
+            // Split card expiry fields into two hidden inputs (month and year)
             var expire_date = $('.cc-exp').val();
             var splitdate = expire_date.split(' / ');
             var expMo = splitdate[0];
@@ -469,27 +363,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             // Fill inputs with values
             $('#mo-exp').val(expMo);
             $('#yr-exp').val(expYr);
-
+        
             // Print all inputs
-            // Client info
-
-            // CC info
-            var cid             = $("input[name=cid]").val();
-            var jp_tid          = $("input[name=jp_tid]").val();
-            var jp_key          = $("input[name=jp_key]").val();
-            var jp_request_hash = $("input[name=jp_request_hash]").val();
-            var order_number    = $("input[name=order_number]").val();
-            var trans_type      = $("input[name=trans_type]").val();
-            var ud1             = $("input[name=ud1]").val();
-            var ud2             = $("input[name=ud2]").val();
-            var ud3             = $("input[name=ud3]").val();
-            var retUrl          = $("input[name=retUrl]").val();
-            var decUrl          = $("input[name=decUrl]").val();
-            var dataUrl         = $("input[name=dataUrl]").val();
-
-            // Set our own hash
-//            $("input[name=jp_request_hash]").val("6E076FF0046D57BB8A1B536393B440D3AD09F9BC42A5CD6015DFBECA5BE163EC63C1EE28171E86EBA5E835F16901EF69D1DC79248EA0B984A37D4F887E64D8D4")
-
             console.log(
                 'fName: '                   + $("input[name=fName]").val() + '\n' +
                 'lName: '                   + $("input[name=lName]").val() + '\n' +
@@ -507,20 +382,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 'billingCountry: '          + $("input[name=billingCountry]").val() + '\n' +
                 '\n' +
                 'cid: '                     + $("input[name=cid]").val() + '\n' +
-                'jp_tid: '                  + jp_tid + '\n' +
-                'jp_key: '                  + jp_key + '\n' +
-                'jp_request_hash: '         + jp_request_hash + '\n' +
-                'order_number: '            + order_number + '\n' +
-                'trans_type: '              + trans_type + '\n' +
-                'UD1: '                     + ud1 + '\n' +
-                'UD2: '                     + ud2 + '\n' +
-                'UD3: '                     + ud3 + '\n' +
-                'retURL: '            + retUrl + '\n' +
-                'decURL: '             + decUrl + '\n' +
-                'dataURL: '             + dataUrl + '\n'
+                'jp_tid: '                  + $("input[name=jp_tid]").val() + '\n' +
+                'jp_key: '                  + $("input[name=jp_key]").val() + '\n' +
+                'jp_request_hash: '         + $("input[name=jp_request_hash]").val() + '\n' +
+                'order_number: '            + $("input[name=order_number]").val() + '\n' +
+                'trans_type: '              + $("input[name=trans_type]").val() + '\n' +
+                'UD1: '                     + $("input[name=ud1]").val() + '\n' +
+                'UD2: '                     + $("input[name=ud2]").val() + '\n' +
+                'UD3: '                     + $("input[name=ud3]").val() + '\n' +
+                'retURL: '                  + $("input[name=retUrl]").val() + '\n' +
+                'decURL: '                  + $("input[name=decUrl]").val() + '\n' +
+                'dataURL: '                 + $("input[name=dataUrl]").val() + '\n'
             );
-
-//            e.preventDefault();
+        
+        //            e.preventDefault();
         });
     </script>
 

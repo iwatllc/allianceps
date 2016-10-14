@@ -63,7 +63,10 @@ $(document).on('click', '.addcustomer-submit', function(e){
         cf3required:    $('input[name=cf3required]:checked').val(),
         cf1name:        $('input[name=cf1name]').val(),
         cf2name:        $('input[name=cf2name]').val(),
-        cf3name:        $('input[name=cf3name]').val()
+        cf3name:        $('input[name=cf3name]').val(),
+        tid:            $('input[name=tid]').val(),
+        key:            $('input[name=key]').val(),
+        token:          $('input[name=token]').val()
     };
 
     var pathToController = "/customer/customer/ajax_add_customer";
@@ -178,7 +181,10 @@ $(document).on('click', '.editcustomer-submit', function(e){
         cf3required:    $('input[name=cf3required]:checked').val(),
         cf1name:        $('input[name=cf1name]').val(),
         cf2name:        $('input[name=cf2name]').val(),
-        cf3name:        $('input[name=cf3name]').val()
+        cf3name:        $('input[name=cf3name]').val(),
+        tid:            $('input[name=tid]').val(),
+        key:            $('input[name=key]').val(),
+        token:          $('input[name=token]').val()
     };
 
     var pathToController = "/customer/customer/ajax_update_customer";
@@ -195,7 +201,7 @@ $(document).on('click', '.editcustomer-submit', function(e){
         if (res) {// Show Entered Value
 
             // Replace button with original glyphicon
-            $('.updatecustomer-submit').removeAttr('disabled').empty().prepend('<span class="glyphicon glyphicon-pencil"></span> Update Customer');
+            $('.editcustomer-submit').removeAttr('disabled').empty().prepend('<span class="glyphicon glyphicon-pencil"></span> Update Customer');
 
             $("span[id^='-err']").empty(); // remove previous error messages
             $("div[id^='-field']").removeClass('has-error'); // remove red field

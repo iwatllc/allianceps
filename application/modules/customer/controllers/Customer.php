@@ -94,6 +94,9 @@ class Customer extends MX_Controller
         $this -> form_validation -> set_rules('cf1name', 'Custom Field 1 Name', 'max_length[50]');
         $this -> form_validation -> set_rules('cf2name', 'Custom Field 2 Name', 'max_length[50]');
         $this -> form_validation -> set_rules('cf3name', 'Custom Field 3 Name', 'max_length[50]');
+//        $this -> form_validation -> set_rules('tid', 'Merchant TID', 'required|max_length[12]');
+//        $this -> form_validation -> set_rules('key', 'Key', 'required|max_length[24]');
+//        $this -> form_validation -> set_rules('token', 'Token', 'required|max_length[72]');
 
         if ($this -> form_validation -> run() == FALSE || $this -> customer_exists($this -> input -> post('customername')) == FALSE || $this -> slug_exists($this -> input -> post('slugname')) == FALSE)
         {
@@ -112,6 +115,12 @@ class Customer extends MX_Controller
                 $errors['error_cf2name'] = form_error('cf2name');
             if ($this -> form_validation -> run('cf3name') == FALSE)
                 $errors['error_cf3name'] = form_error('cf3name');
+            if ($this -> form_validation -> run('tid') == FALSE)
+                $errors['error_tid'] = form_error('tid');
+            if ($this -> form_validation -> run('key') == FALSE)
+                $errors['error_key'] = form_error('key');
+            if ($this -> form_validation -> run('token') == FALSE)
+                $errors['error_token'] = form_error('token');
 
             echo json_encode($errors);
 
@@ -121,8 +130,8 @@ class Customer extends MX_Controller
         $customername   = $this -> input -> post('customername');
         $slugname       = $this -> input -> post('slug');
 
-        $showname     = ($this -> input -> post('showname') == NULL ? 0 : 1);
-        $showlogo     = ($this -> input -> post('showlogo') == NULL ? 0 : 1);
+        $showname       = ($this -> input -> post('showname') == NULL ? 0 : 1);
+        $showlogo       = ($this -> input -> post('showlogo') == NULL ? 0 : 1);
 
         $cf1enabled     = ($this -> input -> post('cf1enabled') == NULL ? 0 : 1);
         $cf2enabled     = ($this -> input -> post('cf2enabled') == NULL ? 0 : 1);
@@ -135,6 +144,10 @@ class Customer extends MX_Controller
         $cf1name        = $this -> input -> post('cf1name');
         $cf2name        = $this -> input -> post('cf2name');
         $cf3name        = $this -> input -> post('cf3name');
+
+        $tid            = $this -> input -> post('tid');
+        $key            = $this -> input -> post('key');
+        $token          = $this -> input -> post('token');
 
         $this -> load -> helper('date');
         $datestring = "%Y-%m-%d %H:%i:%s";
@@ -155,6 +168,9 @@ class Customer extends MX_Controller
             'slugname'      => $slugname,
             'showname'      => $showname,
             'showlogo'      => $showlogo,
+            'tid'           => $tid,
+            'jp_key'        => $key,
+            'jp_token'      => $token,
             'created'       => $createddate
         );
 
@@ -191,6 +207,9 @@ class Customer extends MX_Controller
         $this -> form_validation -> set_rules('cf1name', 'Custom Field 1 Name', 'max_length[50]');
         $this -> form_validation -> set_rules('cf2name', 'Custom Field 2 Name', 'max_length[50]');
         $this -> form_validation -> set_rules('cf3name', 'Custom Field 3 Name', 'max_length[50]');
+        $this -> form_validation -> set_rules('tid', 'Merchant TID', 'required|max_length[12]');
+        $this -> form_validation -> set_rules('key', 'Key', 'required|max_length[24]');
+        $this -> form_validation -> set_rules('token', 'Token', 'required|max_length[72]');
 
         if ($this -> form_validation -> run() == FALSE)
         {
@@ -205,6 +224,12 @@ class Customer extends MX_Controller
                 $errors['error_cf2name'] = form_error('cf2name');
             if ($this -> form_validation -> run('cf3name') == FALSE)
                 $errors['error_cf3name'] = form_error('cf3name');
+            if ($this -> form_validation -> run('tid') == FALSE)
+                $errors['error_tid'] = form_error('tid');
+            if ($this -> form_validation -> run('key') == FALSE)
+                $errors['error_key'] = form_error('key');
+            if ($this -> form_validation -> run('token') == FALSE)
+                $errors['error_token'] = form_error('token');
 
             echo json_encode($errors);
 
@@ -230,6 +255,10 @@ class Customer extends MX_Controller
         $cf2name        = $this -> input -> post('cf2name');
         $cf3name        = $this -> input -> post('cf3name');
 
+        $tid            = $this -> input -> post('tid');
+        $key            = $this -> input -> post('key');
+        $token          = $this -> input -> post('token');
+
         $this -> load -> helper('date');
         $datestring = "%Y-%m-%d %H:%i:%s";
         $time = time();
@@ -249,6 +278,9 @@ class Customer extends MX_Controller
             'slugname'      => $slugname,
             'showname'      => $showname,
             'showlogo'      => $showlogo,
+            'tid'           => $tid,
+            'jp_key'        => $key,
+            'jp_token'      => $token,
             'modified'      => $modifieddate
         );
 
