@@ -9,6 +9,7 @@
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 <meta content=<?php // echo $page_data['description']; ?> name="description" />
 <meta content=<?php // echo $page_data['author']; ?> name="author" />
+<link rel="icon" href="<?php echo base_url('/client/logo-small.png'); ?>">
 
 <!-- ================== BEGIN BASE CSS STYLE ================== -->
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
@@ -116,13 +117,6 @@
                     <a href="<?php echo base_url(); ?>customer">
                         <i class="fa fa-user"></i>
                         <span>Customers</span>
-                    </a>
-                </li>
-
-                <li class="has-sub<?php echo $pageName == 'form' ? ' active' : ''; ?>">
-                    <a href="<?php echo base_url(); ?>guestform">
-                        <i class="fa fa-credit-card"></i>
-                        <span>Form</span>
                     </a>
                 </li>
 
