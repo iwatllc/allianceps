@@ -1,9 +1,7 @@
-<?php
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-defined('BASEPATH') OR exit('No direct script access allowed');
-
-class Search extends MX_Controller {
-        
+class Search extends MX_Controller 
+{
     public function __construct()
     {
         if (!$this->dx_auth->is_logged_in())
@@ -13,24 +11,12 @@ class Search extends MX_Controller {
         }
         
         parent::__construct();
+        $this -> load -> library('session');
     }
     
     public function index()
     {
-        $this->load->helper('form');
-        $this->load->helper('url');
-        $this->load->load->library('session');
-        
-        $this->load->model('Search_model', 'Search');
-
-        $view_vars = array(
-            'title' => $this->config->item('Company_Title'),
-            'heading' => $this->config->item('Company_Title'),
-            'description' => $this->config->item('Company_Description'),
-            'company' => $this->config->item('Company_Name'),
-            'logo' => $this->config->item('Company_Logo'),
-            'author' => $this->config->item('Company_Author')
-        );
+        $this -> load -> model('search_model', '', TRUE);
 		
 		$search_array['PaymentTransactionId'] = '';
         $search_array['BegDate'] = '';
@@ -46,11 +32,15 @@ class Search extends MX_Controller {
 		
 		$data['search_array'] = $search_array;
 		
-		$data['transaction_statuses'] = $this->Search->get_transaction_statuses();
-		$data['payment_sources'] = $this->Search->get_form_lists();
-        $data['page_data'] = $view_vars;
+		$data['transaction_statuses']   = $this -> search_model -> get_transaction_statuses();
+        $data['results']                = $this -> search_model -> get_transactions();
+        $data['num_results']            = $this -> search_model -> get_num_transactions($data['results']);
+        $data['total_amount']           = $this -> search_model -> get_total_amount_transactions();
 
-        $this->load->view('search', $data);
+        $this -> blade
+            -> set('data', $data)
+            -> set('search_array', $search_array)
+            -> render('search');
     }
     
     public function execute_search()
