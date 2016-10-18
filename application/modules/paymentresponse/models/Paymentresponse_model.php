@@ -11,4 +11,11 @@ class Paymentresponse_model extends CI_Model {
     {
         $this -> db -> insert('payment_response', $data);
     }
+    
+    public function get_customer_by_uuid($uuid)
+    {
+        $row = $this -> db -> select('*') -> where('uuid', $uuid) -> get('customers') -> row();
+
+        return $row;
+    }
 }
