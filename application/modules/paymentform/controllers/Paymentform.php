@@ -1,27 +1,26 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: robertfulcher
- * Date: 2/9/15
+ * User: aaronfrazer
+ * Date: 10/10/16
  * Time: 7:07 PM
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Paymentform extends MX_Controller {
-
+class Paymentform extends MX_Controller
+{
     public function __construct()
     {
+//        if (!$this->dx_auth->is_logged_in()) {
+//            // redirect to login page
+//            redirect('security/auth', 'refresh');
+//        }
+
         parent::__construct();
-
-        // Loaded in here to make the validation work correctly.
-        $this->load->library('form_validation');
-        $this->form_validation->CI =& $this;
-
-        // Load Required Modules
-        $this->load->module('configsys');
+        $this->load->library('session');
     }
-    
+
     public function index($slug = NULL)
     {
         $this -> load -> model('paymentform_model', '', TRUE);
@@ -32,31 +31,73 @@ class Paymentform extends MX_Controller {
             show_404();
         }
 
-        // Query customer table for the slug
+        // Customer slug
         $data['customer'] = $this -> paymentform_model -> get_customer_form_from_slug($slug);
-        
-        // JetDirect URL to send form for testing
-        $data['jd_url'] = 'https://testapp1.jetpay.com/jetdirect/post/cc/process_cc.php';
 
-        // JetPay info
+        // JetDirect URL for testing
+//        $data['jd_url'] = 'https://testapp1.jetpay.com/jetdirect/post/cc/process_cc.php';
+        $data['jd_url'] = 'https://testapp1.jetpay.com/jetdirect/jdv2/gateway/jp-handler.php';
+
+        // Customer ID
         $data['cid'] = $data['customer'] -> uuid;
 
         // Approved and declined URLs
-        $data['ret_url']    = base_url('paymentresponse/approved');
-        $data['dec_url']    = base_url('paymentresponse/decline');
-        $data['data_url']   = base_url('paymentresponse/trans_details');
+        $data['retUrl']    = base_url('paymentresponse/response');
+        $data['decUrl']    = base_url('paymentresponse/decline');
+        $data['dataUrl']   = base_url('paymentresponse/trans_details');
 
-        $view_vars = array(
-            'title'         => $this -> configsys -> get_config_value('Client_Title'),
-            'heading'       => $this -> configsys -> get_config_value('Client_Title'),
-            'description'   => $this -> configsys -> get_config_value('Client_Description'),
-            'company'       => $this -> configsys -> get_config_value('Client_Name'),
-            'logo'          => $this -> configsys -> get_config_value('Client_Logo'),
-            'author'        => $this -> configsys -> get_config_value('Client_Author')
-        );
-        $data['page_data'] = $view_vars;
+        // Set Custom Fields
+        if ($data['customer'] -> cf1enabled == 1)
+        {
+            $data['cf1'] = array(
+                'name'                  => 'ud1',
+                'class'                 => 'input-lg form-control',
+                'type'                  => 'text',
+                'value'                 => set_value('cf1'),
+                'placeholder'           => ($data['customer']->cf1required == 1 ? 'Required' : $data['customer']->cf1name),
+                'maxlength'             => '50',
+                'required'              => ($data['customer']->cf1required == 1 ? 'required' : ''),
+                'data-parsley-required' => ($data['customer']->cf1required == 1 ? 'true' : 'false')
+            );
+        }
+        if ($data['customer'] -> cf2enabled == 1)
+        {
+            $data['cf2'] = array(
+                'name'                  => 'ud2',
+                'class'                 => 'input-lg form-control',
+                'type'                  => 'text',
+                'value'                 => set_value('cf2'),
+                'placeholder'           => ($data['customer']->cf2required == 1 ? 'Required' : $data['customer']->cf2name),
+                'maxlength'             => '50',
+                'required'              => ($data['customer']->cf2required == 1 ? 'required' : ''),
+                'data-parsley-required' => ($data['customer']->cf2required == 1 ? 'true' : 'false')
+            );
+        }
+        if ($data['customer'] -> cf3enabled == 1)
+        {
+            $data['cf3'] = array(
+                'name'                  => 'ud3',
+                'class'                 => 'input-lg form-control',
+                'type'                  => 'text',
+                'value'                 => set_value('cf3'),
+                'placeholder'           => ($data['customer']->cf3required == 1 ? 'Required' : $data['customer']->cf3name),
+                'maxlength'             => '50',
+                'required'              => ($data['customer']->cf3required == 1 ? 'required' : ''),
+                'data-parsley-required' => ($data['customer']->cf3required == 1 ? 'true' : 'false')
+            );
+        }
         
-        $this -> load -> view('paymentform', $data);
+        $page_data = array(
+            'title'         => $data['customer'] -> customername,
+            'description'   => $data['customer'] -> customername,
+            'logo'          => $data['customer'] -> logofile,
+            'author'        => $data['customer'] -> customername,
+        );
+
+        $this->blade
+            ->set('data', $data)
+            ->set('page_data', $page_data)
+            ->render('paymentform');
     }
 
     public function ajax_submit_form()
@@ -139,8 +180,7 @@ class Paymentform extends MX_Controller {
             'jptid'         => $tid,
             'jptranstype'   => $transtype,
         );
-        
+
         echo json_encode($data);
     }
-
 }
