@@ -37,7 +37,12 @@
         </h1>
     @endif
 
-    <input type="button" value="Fill All Inputs (Testing)" onclick="fill_sample_inputs();" />
+    @if ($data['customer'] -> headertext)
+        {{ $data['customer'] -> headertext }}
+        <br/>
+    @endif
+
+    <!--<input type="button" value="Fill All Inputs (Testing)" onclick="fill_sample_inputs();" />-->
 
     <form novalidate id="submit-form" method="POST" action="{{ $data['jd_url'] }}">
 
@@ -157,6 +162,11 @@
 
         <h2 class="validation"></h2>
     </form>
+
+    @if ($data['customer'] -> footertext)
+        {{ $data['customer'] -> footertext }}
+        <br/>
+    @endif
 </div>
 
 <script type="text/javascript">

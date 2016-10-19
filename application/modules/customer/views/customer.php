@@ -24,7 +24,12 @@
         background-color: mediumpurple !important;
         border-color: rebeccapurple !important;
     }
-
+    .fixed-dialog {
+        position: fixed;
+        top: 50px;
+        left: 50px;
+        z-index: 1060;
+    }
 </style>
 
 <head>
@@ -35,10 +40,9 @@
 
     <div id="modal-dialog"></div>
 
-    <!-- Modal -->
+    <!-- Modal for Image Uploads -->
     <div id="myModal" class="modal fade" role="dialog">
       <div class="modal-dialog">
-
         <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
@@ -53,7 +57,50 @@
             <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
           </div>
         </div>
+      </div>
+    </div>
 
+    <!-- Modal for Header/Footer -->
+    <div id="headerModal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Modal Header</h4>
+          </div>
+          <div class="modal-body">
+              <form>
+                <textarea name="customerheader" id="customerheader" rows="10" cols="80"></textarea>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success header-submit">Update</button>
+            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Footer -->
+    <div id="footerModal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Modal Header</h4>
+          </div>
+          <div class="modal-body">
+              <form>
+                <textarea name="customerfooter" id="customerfooter" rows="10" cols="80"></textarea>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success footer-submit">Update</button>
+            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -117,7 +164,10 @@
                                     <?php foreach ($customers -> result() as $customer) { ?>
                                         <tr id="<?php echo $customer->id; ?>">
                                             <td>
-                                                <button type="button" class="btn btn-info editcustomer-btn" data-id="<?php echo $customer -> id ?>"><span class="glyphicon glyphicon-pencil"></span> Edit</button>
+                                                <button type="button" class="btn btn-info editcustomer-btn" data-id="<?php echo $customer -> id ?>" title="Update Customer"><span class="glyphicon glyphicon-pencil"></span> Edit</button>
+                                                <br/><br/>
+                                                <button type="button" class="btn btn-info editheader-btn" data-id="<?php echo $customer -> id ?>" data-cname="<?php echo $customer -> customername ?>" title="Update Header"><span class="glyphicon glyphicon-collapse-up"></span> H</button>
+                                                <button type="button" class="btn btn-info editfooter-btn" data-id="<?php echo $customer -> id ?>" data-cname="<?php echo $customer -> customername ?>" title="Update Footer"><span class="glyphicon glyphicon-collapse-down"></span> F</button>
                                             </td>
                                             <td><?php echo $customer -> customername ?></td>
                                             <td>
@@ -183,8 +233,12 @@
 
 <script type="text/javascript" src="<?php echo base_url()?>assets/js/customer/customer.js"></script>
 <script type="text/javascript" src="<?php echo base_url()?>assets/js/dropzone.js"></script>
+<script type="text/javascript" src="<?php echo base_url()?>assets/plugins/ckeditor/ckeditor.js"></script>
 
 <script type="text/javascript">
+
+CKEDITOR.replace('customerheader');
+CKEDITOR.replace('customerfooter');
 
 Dropzone.autoDiscover = false;
 

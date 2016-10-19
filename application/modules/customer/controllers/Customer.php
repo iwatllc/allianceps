@@ -54,6 +54,48 @@ class Customer extends MX_Controller
         $this -> load -> view('addlogo');
     }
     
+    public function get_customer_header()
+    {
+        $this -> load -> model('customer_model', '', TRUE);
+        
+        $id = $this -> input -> post('cid');
+        
+        $headertext = $this -> customer_model -> get_customer($id) -> headertext;
+        
+        echo $headertext;
+    }
+    
+    public function update_customer_header()
+    {
+        $this -> load -> model('customer_model', '', TRUE);
+        
+        $id = $this -> input -> post('cid');
+        $data['headertext'] = $this -> input -> post('headertext');
+        
+        $this -> customer_model -> update_customer($id, $data);
+    }
+
+    public function get_customer_footer()
+    {
+        $this -> load -> model('customer_model', '', TRUE);
+
+        $id = $this -> input -> post('cid');
+
+        $footertext = $this -> customer_model -> get_customer($id) -> footertext;
+
+        echo $footertext;
+    }
+
+    public function update_customer_footer()
+    {
+        $this -> load -> model('customer_model', '', TRUE);
+
+        $id = $this -> input -> post('cid');
+        $data['footertext'] = $this -> input -> post('footertext');
+
+        $this -> customer_model -> update_customer($id, $data);
+    }
+    
     public function upload_image()
     {
         $this -> load -> model('customer_model', '', TRUE);

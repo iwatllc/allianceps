@@ -19,6 +19,7 @@ $(document).on('click', '.addcustomer-btn', function(e){
             modal: true,
             height: 'auto',
             width: $(window).width()-250,
+            position: ['middle',75],
             title: 'Add New Customer',
             open: function (event, ui) {
                 $('#modal-dialog').css('overflow', 'hidden');
@@ -137,6 +138,7 @@ $(document).on('click', '.editcustomer-btn', function(e){
             height: 'auto',
             width: $(window).width()-250,
             title: 'Update Customer',
+            position: ['middle',75],
             open: function (event, ui) {
                 $('#modal-dialog').css('overflow', 'hidden');
             },
@@ -292,6 +294,58 @@ $(document).on('click', '.addlogo-btn', function(e){
     
     // Set customer ID in modal so that we can get it when uploading file via dropzone.js
     $( "#myModal" ).attr( "customerid", cid );
+});
+
+// Load Header modal
+$(document).on('click', '.editheader-btn', function(e){
+    $(this).attr('disabled', true).empty().prepend('<i class="fa fa-spinner fa-spin"></i> H');
+    var cid = $(this).data('id');
+    var cname = $(this).data('cname');
+    $(".modal-title").html("Update Header for <strong>" + cname + "</strong>");
+    var pathToController = "/customer/customer/get_customer_header";
+    $.post(baseUrl + pathToController, { cid:cid }, function(response){
+        CKEDITOR.instances['customerheader'].setData(response);
+        $(".editheader-btn").removeAttr('disabled').empty().prepend('<span class="glyphicon glyphicon-collapse-up"></span> H');
+    });
+    $(".header-submit").attr( "data-customerid", cid );
+    $('#headerModal').modal("show");
+});
+
+// Update Header
+$(document).on('click', '.header-submit', function(e){
+    $(this).attr('disabled', true).empty().prepend('<i class="fa fa-spinner fa-spin"></i> Update');
+    var cid = $(this).data('customerid');
+    var headertext = CKEDITOR.instances['customerheader'].getData();
+    var pathToController = "/customer/customer/update_customer_header";
+    $.post(baseUrl + pathToController, { cid:cid, headertext:headertext }, function(){
+        location.reload();
+    });
+});
+
+// Load Footer modal
+$(document).on('click', '.editfooter-btn', function(e){
+    $(this).attr('disabled', true).empty().prepend('<i class="fa fa-spinner fa-spin"></i> F');
+    var cid = $(this).data('id');
+    var cname = $(this).data('cname');
+    $(".modal-title").html("Update Footer for <strong>" + cname + "</strong>");
+    var pathToController = "/customer/customer/get_customer_footer";
+    $.post(baseUrl + pathToController, { cid:cid }, function(response){
+        CKEDITOR.instances['customerfooter'].setData(response);
+        $(".editfooter-btn").removeAttr('disabled').empty().prepend('<span class="glyphicon glyphicon-collapse-down"></span> F');
+    });
+    $(".footer-submit").attr( "data-customerid", cid );
+    $('#footerModal').modal("show");
+});
+
+// Update Footer
+$(document).on('click', '.footer-submit', function(e){
+    $(this).attr('disabled', true).empty().prepend('<i class="fa fa-spinner fa-spin"></i> Update');
+    var cid = $(this).data('customerid');
+    var footertext = CKEDITOR.instances['customerfooter'].getData();
+    var pathToController = "/customer/customer/update_customer_footer";
+    $.post(baseUrl + pathToController, { cid:cid, footertext:footertext }, function(){
+        location.reload();
+    });
 });
 
 // Search Customer table
