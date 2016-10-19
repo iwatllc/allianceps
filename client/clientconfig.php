@@ -2,7 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-$config['base_url'] = 'http://localhost/allianceps/';
+//$config['base_url'] = 'http://localhost/allianceps/';
+$config['base_url'] = 'http://www.onebzb.com/allianceps/';
 // $config['base_url'] = 'https://www.website.com/xxx/';
 
 
@@ -42,12 +43,13 @@ $config['NMI_URL_QUERY'] = 'https://securitycardservices.transactiongateway.com/
 
 
 /***** COMPANY CONFIG ******/
-$config['Company_Title'] = 'Company Title';
+$config['Company_Title'] = 'Alliance Payment Solutions';
 $config['Company_Heading'] = 'Company Heading';
 $config['Company_Description'] = '';
-$config['Company_Author'] = 'Company Author ' . date("Y");
-$config['Company_Name'] = 'Company Name';
-$config['Company_Logo'] = 'assets/img/logo.png';
+$config['Company_Author'] = 'Alliance ' . date("Y");
+$config['Company_Name'] = 'Alliance Payment Solutions';
+$config['Company_Logo'] = 'client/logo.png';
+$config['Company_Icon'] = 'client/logo-small.png';
 $config['Company_Slogan'] = 'Company Slogan';
 /***End Company Config Settings***/
 
