@@ -47,6 +47,7 @@ $submit = array(
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     <meta content="" name="description" />
     <meta content="" name="author" />
+    <link rel="icon" href="<?php echo base_url($this -> config -> item('Company_Icon')); ?>">
     
     <!-- ================== BEGIN BASE CSS STYLE ================== -->
     
