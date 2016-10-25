@@ -78,6 +78,7 @@
                 <br/>
                 <strong>Customer ID:</strong> {{ $data['cid'] }}
                 <br/>
+                <strong>Response:</strong> {{ $data['responseText'] }}
             </fieldset>
             <br/>
             <h5 class="centeredtext">

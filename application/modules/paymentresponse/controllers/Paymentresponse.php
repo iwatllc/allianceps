@@ -75,11 +75,6 @@ class Paymentresponse extends MX_Controller
             'insertDate'        => mdate("%Y-%m-%d %H:%i:%s", time())
         );
 
-//        $file = fopen(FCPATH . 'client/logs/' . date("Y-d-m-His") . '.txt', "w") or die("can't open/create log file");
-//        fwrite($file, "Request Array: \n" . print_r($_REQUEST, TRUE) . "\n\n");
-//        fwrite($file, "Data Array: \n" . print_r($data, TRUE) . "\n");
-//        fclose($file);
-
         $this -> paymentresponse_model -> insert_jp_response($data);
     }
     
@@ -103,7 +98,7 @@ class Paymentresponse extends MX_Controller
             $page_data = array(
                 'title'         => 'Payment Approved',
                 'description'   => 'Payment Successful',
-//            'logo'          => $data['customer'] -> logofile,
+                'logo'          => $this -> config -> item('Company_Icon'),
                 'author'        => $data['cid'],
             );
 
@@ -116,7 +111,7 @@ class Paymentresponse extends MX_Controller
             $page_data = array(
                 'title'         => 'Payment Declined',
                 'description'   => 'Payment was not successful',
-//            'logo'          => $data['customer'] -> logofile,
+                'logo'          => $this -> config -> item('Company_Icon'),
                 'author'        => $data['cid'],
             );
 

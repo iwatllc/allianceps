@@ -42,7 +42,7 @@
         <br/>
     @endif
 
-    <!--<input type="button" value="Fill All Inputs (Testing)" onclick="fill_sample_inputs();" />-->
+    <input type="button" value="Fill All Inputs (Testing)" onclick="fill_sample_inputs();" />
 
     <form novalidate id="submit-form" method="POST" action="{{ $data['jd_url'] }}">
 
@@ -247,7 +247,11 @@
                 'dataURL: '                 + $("input[name=dataUrl]").val() + '\n'
             );
         
-        //            e.preventDefault();
+//            e.preventDefault();
+
+//             setTimeout(function() {
+//                 window.location.href = "<?php echo base_url('paymentresponse/error'); ?>";
+//             }, 30000); // will redirect to error page after 30 second timeout
         });
     </script>
 
