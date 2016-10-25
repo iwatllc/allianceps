@@ -36,9 +36,6 @@
             <div class="error-content">
                 <div class="error-message">The page you're looking for doesn't exist...</div>
 				<br/>
-                <div class="error-desc m-b-20">
-					You're URL should look something similar to <strong>{{ base_url('your-company-name') }}</strong>.
-                </div>
             </div>
         </div>
         <!-- end error -->
