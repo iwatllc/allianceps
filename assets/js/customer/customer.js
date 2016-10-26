@@ -65,9 +65,16 @@ $(document).on('click', '.addcustomer-submit', function(e){
         cf1name:        $('input[name=cf1name]').val(),
         cf2name:        $('input[name=cf2name]').val(),
         cf3name:        $('input[name=cf3name]').val(),
+        allowach:       $('input[name=allowach]:checked').val(),
+        allowcc:        $('input[name=allowcc]:checked').val(),
+        emailcustomer:  $('input[name=emailcustomer]:checked').val(),
+        emailmerchant:  $('input[name=emailmerchant]:checked').val(),
+        emailaddresses: $('input[name=emails]').val(),
         tid:            $('input[name=tid]').val(),
         key:            $('input[name=key]').val(),
-        token:          $('input[name=token]').val()
+        token:          $('input[name=token]').val(),
+        conveniencefee: $('input[name=conveniencefee]:checked').val(),
+        cfpercentage:   $('input[name=cfpercentage]').val()
     };
 
     var pathToController = "/customer/customer/ajax_add_customer";
@@ -184,9 +191,16 @@ $(document).on('click', '.editcustomer-submit', function(e){
         cf1name:        $('input[name=cf1name]').val(),
         cf2name:        $('input[name=cf2name]').val(),
         cf3name:        $('input[name=cf3name]').val(),
+        allowach:       $('input[name=allowach]:checked').val(),
+        allowcc:        $('input[name=allowcc]:checked').val(),
+        emailcustomer:  $('input[name=emailcustomer]:checked').val(),
+        emailmerchant:  $('input[name=emailmerchant]:checked').val(),
+        emailaddresses: $('input[name=emails]').val(),
         tid:            $('input[name=tid]').val(),
         key:            $('input[name=key]').val(),
-        token:          $('input[name=token]').val()
+        token:          $('input[name=token]').val(),
+        conveniencefee: $('input[name=conveniencefee]:checked').val(),
+        cfpercentage:   $('input[name=cfpercentage]').val()
     };
 
     var pathToController = "/customer/customer/ajax_update_customer";

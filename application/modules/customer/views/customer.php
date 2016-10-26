@@ -25,7 +25,7 @@
         border-color: rebeccapurple !important;
     }
     .fixed-dialog {
-        position: fixed;
+        /*position: fixed;*/
         top: 50px;
         left: 50px;
         z-index: 1060;
@@ -234,6 +234,8 @@
 <script type="text/javascript" src="<?php echo base_url()?>assets/js/customer/customer.js"></script>
 <script type="text/javascript" src="<?php echo base_url()?>assets/js/dropzone.js"></script>
 <script type="text/javascript" src="<?php echo base_url()?>assets/plugins/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="<?php echo base_url()?>assets/plugins/jquery-tag-it/js/tag-it.js"></script>
+
 
 <script type="text/javascript">
 
