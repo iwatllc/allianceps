@@ -67,4 +67,11 @@ class Paymentform_model extends CI_Model {
 
         return $row;
     }
+    
+    public function get_form_submission($uuid)
+    {
+        $row = $this -> db -> select('*') -> where('uuid', $uuid) -> get('form_submissions') -> row();
+
+        return $row;
+    }
 }

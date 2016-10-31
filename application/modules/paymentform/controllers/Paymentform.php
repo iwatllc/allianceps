@@ -85,6 +85,11 @@ class Paymentform extends MX_Controller
                 'required'              => ($data['customer']->cf3required == 1 ? 'required' : ''),
                 'data-parsley-required' => ($data['customer']->cf3required == 1 ? 'true' : 'false')
             );
+        } else if ($data['customer'] -> allowach == 1) // CF3 hidden
+        {
+            $data['cf3'] = array(
+                'ud3' => ''
+            );
         }
         
         $page_data = array(
@@ -104,19 +109,20 @@ class Paymentform extends MX_Controller
     {
         $this -> load -> model('paymentform_model', '', TRUE);
 
-        $prev_uuid  = $this -> input -> post('uuid'); // This is only used for updating form_submissions table
-        $name       = $this -> input -> post('name');
-        $email      = $this -> input -> post('email');
-        $address1   = $this -> input -> post('address1');
-        $address2   = $this -> input -> post('address2');
-        $city       = $this -> input -> post('city');
-        $state      = $this -> input -> post('state');
-        $zip        = $this -> input -> post('zip');
-        $cf1        = $this -> input -> post('cf1');
-        $cf2        = $this -> input -> post('cf2');
-        $cf3        = $this -> input -> post('cf3');
-        $slug       = $this -> input -> post('slug');
-        $amount     = $this -> input -> post('amount');
+        $prev_uuid      = $this -> input -> post('uuid'); // This is only used for updating form_submissions table
+        $name           = $this -> input -> post('name');
+        $email          = $this -> input -> post('email');
+        $address1       = $this -> input -> post('address1');
+        $address2       = $this -> input -> post('address2');
+        $city           = $this -> input -> post('city');
+        $state          = $this -> input -> post('state');
+        $zip            = $this -> input -> post('zip');
+        $cf1            = $this -> input -> post('cf1');
+        $cf2            = $this -> input -> post('cf2');
+        $cf3            = $this -> input -> post('cf3');
+        $slug           = $this -> input -> post('slug');
+        $amount         = $this -> input -> post('amount');
+        $cfpercentage   = $this -> input -> post('cfpercentage');
 
         // Get the customerid based on the name of the slug
         $cid = $this -> paymentform_model -> get_customer_form_from_slug($slug) -> uuid;
@@ -137,6 +143,11 @@ class Paymentform extends MX_Controller
             'amount'        => $amount,
             'insertdate'    => mdate("%Y-%m-%d %H:%i:%s", time())
         );
+
+        if ($cfpercentage)
+        {
+            $data['cfpercentage'] = $cfpercentage;
+        }
 
         // Insert/update form_submissions table
         if (!$prev_uuid)
@@ -173,14 +184,40 @@ class Paymentform extends MX_Controller
 
         $uuid = $this -> paymentform_model -> update_form_submission($uuid, $data);
 
+        $row = $this -> paymentform_model -> get_form_submission($uuid);
+
+        if ($row -> cfpercentage)
+        {
+            $percentage = $row -> cfpercentage / 100;
+            $amount = ($row -> amount * $percentage) + $row -> amount;
+        } else
+        {
+            $amount = $row -> amount;
+        }
+
+        $amount = number_format($amount, 2, '.', '');
+//        $amount = sprintf('%01.2f', $amount);
+
         $data = array(
             'uuid'          => $uuid,
             'jphash'        => $hash,
             'jpkey'         => $key,
             'jptid'         => $tid,
             'jptranstype'   => $transtype,
+            'amount'        => $amount
         );
 
         echo json_encode($data);
+    }
+    
+    public function ajax_get_form_submission_amount()
+    {
+        $this -> load -> model('paymentform_model', '', TRUE);
+        
+        $uuid = $this -> input -> post('uuid');
+        
+        $row = $this -> paymentform_model -> get_form_submission($uuid);
+        
+        echo $row -> amount;
     }
 }

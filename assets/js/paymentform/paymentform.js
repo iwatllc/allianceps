@@ -14,21 +14,24 @@ $(document).on('click', 'button.btn-next', function(e){
     // Replace button with animated loading gif
     $(this).attr('disabled', true).empty().prepend('<i class="fa fa-spinner fa-spin"></i>&nbsp;Next');
 
+    // $('input[name=amount]').val(parseFloat($('input[name=amount]').val().replace(/,/g, '')));
+
     // Collect all of the field values
     var array = {
-        uuid:       $('input[name=order_number]').val(),
-        name:       $('input[name=name]').val(),
-        email:      $('input[name=customerEmail]').val(),
-        address1:   $('input[name=billingAddress1]').val(),
-        address2:   $('input[name=billingAddress2]').val(),
-        city:       $('input[name=billingCity]').val(),
-        state:      $('input[name=billingState]').val(),
-        zip:        $('input[name=billingZip]').val(),
-        cf1:        $('input[name=ud1]').val(),
-        cf2:        $('input[name=ud2]').val(),
-        cf3:        $('input[name=ud3]').val(),
-        amount:     $('input[name=amount]').val(),
-        slug:       window.location.pathname.split( '/' )[3]
+        uuid:           $('input[name=order_number]').val(),
+        name:           $('input[name=name]').val(),
+        email:          $('input[name=customerEmail]').val(),
+        address1:       $('input[name=billingAddress1]').val(),
+        address2:       $('input[name=billingAddress2]').val(),
+        city:           $('input[name=billingCity]').val(),
+        state:          $('input[name=billingState]').val(),
+        zip:            $('input[name=billingZip]').val(),
+        cf1:            $('input[name=ud1]').val(),
+        cf2:            $('input[name=ud2]').val(),
+        cf3:            $('input[name=ud3]').val(),
+        amount:         $('input[name=amount]').val(),
+        paymenttype:    $("input[name=paymenttype]:checked").val(),
+        slug:           window.location.pathname.split( '/' )[3]
     };
 
     var cf1required = $('input[name=ud1]').data('parsley-required');
@@ -42,6 +45,7 @@ $(document).on('click', 'button.btn-next', function(e){
     $('input[name=billingState]').toggleInputError(array['state'].length == 0 ? true : false );
     $('input[name=billingZip]').toggleInputError(array['zip'].length == 0 ? true : false );
     $('input[name=amount]').toggleInputError(array['amount'].length == 0 ? true : false );
+    $('input[name=paymenttype]').toggleInputError(!array['paymenttype'] ? true : false );
 
     var pass = true;
     if (cf1required)
@@ -70,13 +74,28 @@ $(document).on('click', 'button.btn-next', function(e){
     }
 
     // If errors, do not proceed to next step
-    if (!pass || array['name'].length == 0 || array['address1'].length == 0 || array['city'].length == 0 || array['state'].length == 0 || array['zip'].length == 0 || array['amount'].length == 0)
+    if (
+        !pass
+        || array['name'].length == 0
+        || array['address1'].length == 0
+        || array['city'].length == 0
+        || array['state'].length == 0
+        || array['zip'].length == 0
+        || array['amount'].length == 0
+        || !array['paymenttype']
+    )
     {
         $(this).removeAttr('disabled').empty().prepend('Next');
         return;
     } else
     {
         $('input').toggleInputError( false ); // Reset form errors
+    }
+
+    // Apply convenience fee if credit card
+    if (array['paymenttype'] == 'cc' && $('input[name=cfpercentage]').val())
+    {
+        array['cfpercentage'] = $('input[name=cfpercentage]').val();
     }
 
     var baseUrl = window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
@@ -94,13 +113,37 @@ $(document).on('click', 'button.btn-next', function(e){
                 $("button.btn-next").attr('disabled', true).empty().prepend('Next').hide();
                 $("button.btn-back").removeAttr('disabled').show();
 
+                // TODO: Deals with calculating the convenience fee and applying it to input : NOT WORKING ON LIVE
+                // $("input[name=amount]").val(res.amount).focus();
+
                 // DO NOT DISABLE INPUTS - ONLY MAKE THEM READ ONLY
                 // DISABLED INPUTS DO NOT GET SUBMITTED
                 // $("input, select", "#client-info").prop('disabled', true);
                 $("input", "#client-info").attr('readonly', true);
 
-                // Show CC fields and submit button
-                $('div#cc-info').show();
+                // Disable radio buttons for CC and ACH
+                $("input[type=radio]", "#client-info").prop('disabled', true);
+
+                if (array['paymenttype'] == 'cc')
+                {
+                    // Show CC fields and submit button
+                    $('div#cc-info').show();
+                    $('div#submit-button').show();
+
+                    // Enable CC fields and disable ACH fields
+                    // $("input", "#cc-info").prop('disabled', false);
+                    // $("input", "#ach-info").prop('disabled', true);
+
+                } else if (array['paymenttype'] == 'ach')
+                {
+                    // Show ACH fields and submit button
+                    $('div#ach-info').show();
+                    $('div#submit-button').show();
+
+                    // Enable ACH fields and disable CC fields
+                    // $("input", "#cc-info").prop('disabled', true);
+                    // $("input", "#ach-info").prop('disabled', false);
+                }
 
                 // Populate hidden inputs
                 $("input[name=order_number]").val(res.uuid);
@@ -115,27 +158,96 @@ $(document).on('click', 'button.btn-next', function(e){
 
 });
 
-// On back button press
+// Back button press
 $(document).on('click', 'button.btn-back', function(e){
     e.preventDefault();
 
-    // Hide the CC fields
-    $('div#cc-info').hide();
+    var uuid = $("input[name=order_number]").val();
 
-    // DO NOT DISABLE INPUTS - ONLY MAKE THEM READ ONLY
-    // DISABLED INPUTS DO NOT GET SUBMITTED
-    //$("input, select", "#client-info").prop('disabled', false);
+    var baseUrl = window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
+    var pathToController = "/paymentform/paymentform/ajax_get_form_submission_amount";
 
-    // Turn off read only fields
-    $("input", "#client-info").attr('readonly', false);
+    $('#ach-err').hide();
+
+    // Query the database for the amount and put in amount field
+    $.post(baseUrl + pathToController, { uuid:uuid }, function(amount){
+
+        if ($("input[name=paymenttype]:checked").val() == 'cc')
+        {
+            $("input[name=amount]").val(amount).focus().blur();
+        }
+
+        // Hide the CC fields
+        $('div#cc-info').hide();
+        $('div#ach-info').hide();
+        $('div#submit-button').hide();
+
+        // DO NOT DISABLE INPUTS - ONLY MAKE THEM READ ONLY
+        // DISABLED INPUTS DO NOT GET SUBMITTED
+        //$("input, select", "#client-info").prop('disabled', false);
+
+        // Turn off read only fields
+        $("input", "#client-info").attr('readonly', false);
+
+        // Enable radio buttons for CC and ACH
+        $("input[type=radio]", "#client-info").prop('disabled', false);
+    });
 
     // Hide back button, show Next button
     $(this).attr('disabled', true).hide();
     $("button.btn-next").removeAttr('disabled').show();
 
-    // Clear CC info except for order_number (in case we want to go back and edit client info)
-    $("input", "#cc-info").not("input[name=order_number]").val('');
+    // // Clear CC and ACH info
+    $("input", "#cc-info, #ach-info").val('');
 
+});
+
+// Confirm dda/aba fields match
+$(document).on("keyup", "input[name=dda], input[name=aba], input[name=ddaDrop], input[name=abaDrop]", function(e) {
+    e.preventDefault();
+
+    var ddaDrop = $("input[name=ddaDrop]").val();
+    var dda     = $("input[name=dda]").val();
+    var abaDrop = $("input[name=abaDrop]").val();
+    var aba     = $("input[name=aba]").val();
+
+    if (ddaDrop != dda)
+    {
+        $('input[name=ddaDrop]').toggleInputError( true );
+        $('input[name=dda]').toggleInputError( true );
+        // $("#divCheckPasswordMatch").html("Passwords do not match!");
+    } else
+    {
+        $('input[name=ddaDrop]').toggleInputError( false );
+        $('input[name=dda]').toggleInputError( false );
+    }
+
+    if (abaDrop != aba)
+    {
+        $('input[name=abaDrop]').toggleInputError( true );
+        $('input[name=aba]').toggleInputError( true );
+        // $("#divCheckPasswordMatch").html("Passwords do not match!");
+    } else
+    {
+        $('input[name=abaDrop]').toggleInputError( false );
+        $('input[name=aba]').toggleInputError( false );
+    }
+});
+
+// Check ACH terms and conditions checkbox
+$(document).on("change", "[type=checkbox][name=ach-agreement]", function(e) {
+    e.preventDefault();
+
+    if(this.checked)
+    {
+        // Create and add date/time stamp to ud3 field
+        var currDatetime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        $("input[name=ud3]").val(currDatetime);
+    } else
+    {
+        // Empty ud3 field
+        $("input[name=ud3]").val('');
+    }
 });
 
 function fill_sample_inputs()
@@ -149,12 +261,22 @@ function fill_sample_inputs()
     $("input[name=billingZip]").val('75006');
     $("input[name=ud1]").val('UD1 TAG');
     $("input[name=ud2]").val('UD2 TAG');
-    $("input[name=ud3]").val('UD3 TAG');
+    // $("input[name=ud3]").val('UD3 TAG');
     $("input[name=amount]").val('10.00');
+    // $("input:radio[name=paymenttype][value='ach']").prop("checked",true);
 
     $(".btn-next").click();
 
-    $("input[name=cardNum]").val('4111 1111 1111 1111');
-    $("input[name=cc-exp]").val('12 / 17');
-    $("input[name=cvv]").val('321');
+    // Credit card sample inputs
+    // $("input[name=cardNum]").val('4111 1111 1111 1111');
+    // $("input[name=cc-exp]").val('12 / 17');
+    // $("input[name=cvv]").val('321');
+
+    // ACH sample inputs
+    $("input[name=accountName]").val('John Q. Public');
+    $("input[name=ddaDrop]").val('123411');
+    $("input[name=dda]").val('123411');
+    $("input[name=abaDrop]").val('122000496');
+    $("input[name=aba]").val('122000496');
+    $("input[name=chkNumber]").val('234');
 }

@@ -103,61 +103,130 @@
                 <label for="{{ $data['customer']->cf3name }}" class="control-label">{{ $data['customer']->cf3name . ($data['customer']->cf3required == 1 ? ' &#42;' : '') }}</label>
                 {{ form_input($data['cf3']) }}
             </div>
+            @elseif ($data['customer'] -> allowach == 1)
+                {{ form_hidden($data['cf3']) }}
             @endif
-            
+
             <div class="form-group">
                 <label for="numeric" class="control-label">Amount &#42;</label>
                 <input id="numeric" name="amount" type="tel" class="input-lg form-control" placeholder="$" data-numeric>
             </div>
 
+            <div class="form-group">
+                <label for="type" class="control-label">Payment Type &#42;</label>
+                <br/>
+                @if ($data['customer'] -> allowcc)
+                    <input type="radio" name="paymenttype" value="cc" /> Credit Card<br/>
+                @endif
+                @if ($data['customer'] -> allowach)
+                    <input type="radio" name="paymenttype" value="ach" /> ACH
+                @endif
+            </div>
+
+            @if ($data['customer'] -> conveniencefee)
+                <input type="hidden" name="cfpercentage" value="{{ $data['customer']->cfpercentage }}"/>
+            @endif
+
             <button type="button" class="btn btn-lg btn-primary btn-next">Next</button>
             <button type="button" class="btn btn-lg btn-primary btn-back" style="display:none;">Back</button>
+
+            @if ($data['customer'] -> conveniencefee)
+                <span class="alert alert-info cfinfo">
+                    <strong>NOTE: </strong>
+                    If you pay by credit card, there will be a convenience fee of <strong>{{ $data['customer'] -> cfpercentage }}</strong>&#37; applied to your payment.
+                </span>
+            @endif
 
         </div>
 
         <br/><br/>
 
         <div id="cc-info" style="display:none;">
-            <div class="form-group">
+            <div class="form-group cc-group">
                 <label for="cc-number" class="control-label">Card Number  <small class="text-muted"><span class="cc-brand"></span></small></label>
                 <input id="cc-number" name="cardNum" type="tel" class="input-lg form-control cc-number" autocomplete="off" placeholder="•••• •••• •••• ••••" required>
             </div>
-
-            <div class="form-group">
+            <div class="form-group cc-group">
                 <label for="cc-exp" class="control-label">Expiration Date </label>
                 <input id="cc-exp" name="cc-exp" type="tel" class="input-lg form-control cc-exp" autocomplete="off" placeholder="•• / ••" required>
             </div>
-
             <div id="exp-info" style="display:none;">
                 <input id="mo-exp" name="expMo" required>
                 <input id="yr-exp" name="expYr" required>
             </div>
-
-            <div class="form-group">
+            <div class="form-group cc-group">
                 <label for="cc-cvc" class="control-label">Card CVC </label>
                 <input id="cc-cvc" name="cvv" type="tel" class="input-lg form-control cc-cvc" autocomplete="off" placeholder="•••" required>
             </div>
+        </div>
 
-            <input type="hidden" name="merData0" maxlength="120" value="{{ $data['customer'] -> id }}"              />
-            <input type="hidden" name="merData1" maxlength="120" value="{{ $data['customer'] -> customername }}"    />
-            <input type="hidden" name="merData2" maxlength="120" value="{{ $data['customer'] -> logofile }}"        />
-            <input type="hidden" name="merData3" maxlength="120" value="{{ $data['customer'] -> slugname }}"        />
-            <input type="hidden" name="merData4" maxlength="120" value="{{ $data['customer'] -> showname }}"        />
-            <input type="hidden" name="merData5" maxlength="120" value="{{ $data['customer'] -> showlogo }}"        />
+        <div id="ach-info" style="display:none;">
+            <div class="form-group ach-group">
+                <label for="account-holder" class="control-label">Account Holder</label>
+                <input type="text" name="accountName" class="input-lg form-control" placeholder="Account Holder Name" maxlength="100" required />
+            </div>
+            <div class="form-group ach-group">
+                <label for="account-number" class="control-label">Account Number</label>
+                <input type="text" name="ddaDrop" class="input-lg form-control" placeholder="Account Number" maxlength="10" autocomplete="off" required />
+            </div>
+            <div class="form-group ach-group">
+                <label for="confirm-account-number" class="control-label">Confirm Account Number</label>
+                <input type="password" name="dda" class="input-lg form-control" placeholder="••••••••••"  maxlength="10" autocomplete="off" required />
+            </div>
+            <div class="form-group ach-group">
+                <label for="routing-number" class="control-label">Routing Number</label>
+                <input type="text" name="abaDrop" class="input-lg form-control" placeholder="Routing Number" maxlength="10" autocomplete="off" required />
+            </div>
+            <div class="form-group ach-group">
+                <label for="confirm-routing-number" class="control-label">Confirm Routing Number</label>
+                <input type="password" name="aba" class="input-lg form-control" placeholder="••••••••••"  maxlength="10" autocomplete="off" required />
+            </div>
+            <!--<div class="form-group ach-group">
+                <label for="check-number" class="control-label">ACH Type</label>
+                <input type="text" name="achType" class="input-lg form-control" placeholder="ACH Type" value="CHECKING" required />
+            </div>-->
+            <div class="form-group ach-group">
+                <label for="check-number" class="control-label">Check Number</label>
+                <input type="text" name="chkNumber" class="input-lg form-control" placeholder="Check Number" maxlength="5" required />
+            </div>
+
+            <div class="form-group">
+                <input type="checkbox" name="ach-agreement" value="yes" />
+                THE ABOVE ACCOUNT HOLDER AGREES TO THE TERMS AND CONDITIONS LISTED BELOW.
+                <br/><br/>
+                I AUTHORIZE THIS ELECTRONIC PAYMENT FROM THE FINANCIAL INSTITUTION ACCOUNT ABOVE IN THE AMOUNT
+                LISTED ABOVE ALONG WITH ANY APPLICABLE CONVENIENCE FEE.
+                <br/><br/>
+                I ALSO UNDERSTAND THAT ANY PAYMENT MADE IS SUBJECT TO THE CURRENT TERMS AND CONDITIONS OF (THE
+                COMPANY OR ENTITY WHICH PAYMENT IS BEING MADE) INCLUDING, BUT NOT LIMITED TO, THE BUSINESS DAY
+                IN WHICH THIS PAYMENT WILL BE APPLIED TO MY ACCOUNT DEPENDING UPON THE DAY AND TIME THIS
+                PAYMENT IS BEING MADE.
+            </div>
+
+        </div>
 
 
-            <input type="hidden"    name="cid"       value="{{ $data['cid'] }}" />
-            <input type="hidden"    name="jp_tid"                               />
-            <input type="hidden"    name="jp_key"                               />
-            <input type="hidden"    name="jp_request_hash"                      />
-            <input type="hidden"    name="order_number"                         />
-            <input type="hidden"    name="trans_type"                           />
+        <input type="hidden" name="merData0" maxlength="120" value="{{ $data['customer'] -> id }}"              />
+        <input type="hidden" name="merData1" maxlength="120" value="{{ $data['customer'] -> customername }}"    />
+        <input type="hidden" name="merData2" maxlength="120" value="{{ $data['customer'] -> logofile }}"        />
+        <input type="hidden" name="merData3" maxlength="120" value="{{ $data['customer'] -> slugname }}"        />
+        <input type="hidden" name="merData4" maxlength="120" value="{{ $data['customer'] -> showname }}"        />
+        <input type="hidden" name="merData5" maxlength="120" value="{{ $data['customer'] -> showlogo }}"        />
 
-            <input type="hidden" name="retUrl"  value="{{ $data['retUrl'] }}" />
-            <input type="hidden" name="decUrl"  value="{{ $data['decUrl'] }}" />
-            <input type="hidden" name="dataUrl" value="{{ $data['dataUrl'] }}" />
+        <input type="hidden"    name="cid"       value="{{ $data['cid'] }}" />
+        <input type="hidden"    name="jp_tid"                               />
+        <input type="hidden"    name="jp_key"                               />
+        <input type="hidden"    name="jp_request_hash"                      />
+        <input type="hidden"    name="order_number"                         />
+        <input type="hidden"    name="trans_type"                           />
 
+        <input type="hidden" name="retUrl"  value="{{ $data['retUrl'] }}" />
+        <input type="hidden" name="decUrl"  value="{{ $data['decUrl'] }}" />
+        <input type="hidden" name="dataUrl" value="{{ $data['dataUrl'] }}" />
+
+        <div id="submit-button" style="display:none;">
             <button type="submit" class="btn btn-lg btn-primary" id="submit-btn">Submit</button>
+            <span style="display:none;" id="ach-err">&nbsp;<font size="3" color="red">Account Holder must sign agreement before submitting.</font></span>
         </div>
 
         <h2 class="validation"></h2>
@@ -181,73 +250,103 @@
         };
 
         $('form').submit(function(e) {
-            //e.preventDefault();
 
             $('#submit-btn').attr('disabled', true).empty().prepend('<i class="fa fa-spinner fa-spin"></i>&nbsp;Submit');
-        
-            var cardType = $.payment.cardType($('.cc-number').val());
-            $('.cardtype').val(cardType);
-        
-            $('[data-numeric]').toggleInputError($('[data-numeric]').val().length == 0 ? true : false );
-            $('.cc-number').toggleInputError(!$.payment.validateCardNumber($('.cc-number').val()));
-            $('.cc-exp').toggleInputError(!$.payment.validateCardExpiry($('.cc-exp').payment('cardExpiryVal')));
-            $('.cc-cvc').toggleInputError(!$.payment.validateCardCVC($('.cc-cvc').val(), cardType));
-            $('.cc-brand').text(cardType);
-            $('.validation').removeClass('text-danger text-success');
-            $('.validation').addClass($('.has-error').length ? 'text-danger' : 'text-success');
 
-            if ($('.form-group').hasClass('has-error')) {
-                e.preventDefault();
-                $('#submit-btn').removeAttr('disabled').empty().prepend('Submit');
-                return;
+             $('#ach-err').hide();
+
+            if ($("input[name=paymenttype]:checked").val() == 'cc')
+            {
+                var cardType = $.payment.cardType($('.cc-number').val());
+                $('.cardtype').val(cardType);
+
+                $('[data-numeric]').toggleInputError($('[data-numeric]').val().length == 0 ? true : false );
+                $('.cc-number').toggleInputError(!$.payment.validateCardNumber($('.cc-number').val()));
+                $('.cc-exp').toggleInputError(!$.payment.validateCardExpiry($('.cc-exp').payment('cardExpiryVal')));
+                $('.cc-cvc').toggleInputError(!$.payment.validateCardCVC($('.cc-cvc').val(), cardType));
+                $('.cc-brand').text(cardType);
+                $('.validation').removeClass('text-danger text-success');
+                $('.validation').addClass($('.has-error').length ? 'text-danger' : 'text-success');
+
+                if ($('.form-group, .cc-group').hasClass('has-error')) {
+                    e.preventDefault();
+                    $('#submit-btn').removeAttr('disabled').empty().prepend('Submit');
+                    return;
+                }
+
+                $("input[name=cardNum]").val($("input[name=cardNum]").val().replace(/\s/g, ''));
+
+                // Split card expiry fields into two hidden inputs (month and year)
+                var expire_date = $('.cc-exp').val();
+                var splitdate = expire_date.split(' / ');
+                var expMo = splitdate[0];
+                var expYr = splitdate[1];
+                if (expYr.length > 2) {
+                    expYr = expYr.substring(2);
+                }
+                // Fill inputs with values
+                $('#mo-exp').val(expMo);
+                $('#yr-exp').val(expYr);
+
+                // Print all inputs
+                console.log(
+                    'name: '                    + $("input[name=name]").val() + '\n' +
+                    'cardNum: '                 + $("input[name=cardNum]").val() + '\n' +
+                    'expMo: '                   + $("input[name=expMo]").val() + '\n' +
+                    'expYr: '                   + $("input[name=expYr]").val() + '\n' +
+                    'cvv: '                     + $("input[name=cvv]").val() + '\n' +
+                    'amount: '                  + $("input[name=amount]").val() + '\n' +
+                    'email: '                   + $("input[name=customerEmail]").val() + '\n' +
+                    'billingAddress1: '         + $("input[name=billingAddress1]").val() + '\n' +
+                    'billingAddress2: '         + $("input[name=billingAddress2]").val() + '\n' +
+                    'billingCity: '             + $("input[name=billingCity]").val() + '\n' +
+                    'billingState: '            + $("input[name=billingState]").val() + '\n' +
+                    'billingZip: '              + $("input[name=billingZip]").val() + '\n' +
+                    'billingCountry: '          + $("input[name=billingCountry]").val() + '\n' +
+                    '\n' +
+                    'cid: '                     + $("input[name=cid]").val() + '\n' +
+                    'jp_tid: '                  + $("input[name=jp_tid]").val() + '\n' +
+                    'jp_key: '                  + $("input[name=jp_key]").val() + '\n' +
+                    'jp_request_hash: '         + $("input[name=jp_request_hash]").val() + '\n' +
+                    'order_number: '            + $("input[name=order_number]").val() + '\n' +
+                    'trans_type: '              + $("input[name=trans_type]").val() + '\n' +
+                    'UD1: '                     + $("input[name=ud1]").val() + '\n' +
+                    'UD2: '                     + $("input[name=ud2]").val() + '\n' +
+                    'UD3: '                     + $("input[name=ud3]").val() + '\n' +
+                    'retURL: '                  + $("input[name=retUrl]").val() + '\n' +
+                    'decURL: '                  + $("input[name=decUrl]").val() + '\n' +
+                    'dataURL: '                 + $("input[name=dataUrl]").val() + '\n'
+                );
+
+            } else if ($("input[name=paymenttype]:checked").val() == 'ach')
+            {
+                // Form validation for ACH form
+                $('input[name=accountName]').toggleInputError($('input[name=accountName]').val().length == 0 ? true : false );
+                $('input[name=abaDrop]').toggleInputError($('input[name=abaDrop]').val().length < 8 ? true : false );
+                $('input[name=aba]').toggleInputError($('input[name=aba]').val().length < 8 ? true : false );
+                $('input[name=ddaDrop]').toggleInputError($('input[name=ddaDrop]').val().length < 4 ? true : false );
+                $('input[name=dda]').toggleInputError($('input[name=dda]').val().length < 4 ? true : false );
+                $('input[name=chkNumber]').toggleInputError($('input[name=chkNumber]').val().length == 0 ? true : false );
+
+                if ($('.form-group, .ach-group').hasClass('has-error')) {
+                    e.preventDefault();
+                    $('#submit-btn').removeAttr('disabled').empty().prepend('Submit');
+                    return;
+                }
+
+                // If purchase agreement not checked, do not proceed
+                if (!$("input[type=checkbox][name=ach-agreement]").is(':checked'))
+                {
+                    $('#ach-err').show();
+                    e.preventDefault();
+                    $('#submit-btn').removeAttr('disabled').empty().prepend('Submit');
+                    return;
+                }
+
+                // Disable CC inputs
+                $("#cc-info :input").attr("disabled", true);
+
             }
-        
-            $("input[name=cardNum]").val($("input[name=cardNum]").val().replace(/\s/g, ''));
-        
-            // Split card expiry fields into two hidden inputs (month and year)
-            var expire_date = $('.cc-exp').val();
-            var splitdate = expire_date.split(' / ');
-            var expMo = splitdate[0];
-            var expYr = splitdate[1];
-            if (expYr.length > 2) {
-                expYr = expYr.substring(2);
-            }
-            // Fill inputs with values
-            $('#mo-exp').val(expMo);
-            $('#yr-exp').val(expYr);
-        
-            // Print all inputs
-            console.log(
-                'fName: '                   + $("input[name=fName]").val() + '\n' +
-                'lName: '                   + $("input[name=lName]").val() + '\n' +
-                'cardNum: '                 + $("input[name=cardNum]").val() + '\n' +
-                'expMo: '                   + $("input[name=expMo]").val() + '\n' +
-                'expYr: '                   + $("input[name=expYr]").val() + '\n' +
-                'cvv: '                     + $("input[name=cvv]").val() + '\n' +
-                'amount: '                  + $("input[name=amount]").val() + '\n' +
-                'email: '                   + $("input[name=customerEmail]").val() + '\n' +
-                'billingAddress1: '         + $("input[name=billingAddress1]").val() + '\n' +
-                'billingAddress2: '         + $("input[name=billingAddress2]").val() + '\n' +
-                'billingCity: '             + $("input[name=billingCity]").val() + '\n' +
-                'billingState: '            + $("select[name=billingState]").val() + '\n' +
-                'billingZip: '              + $("input[name=billingZip]").val() + '\n' +
-                'billingCountry: '          + $("input[name=billingCountry]").val() + '\n' +
-                '\n' +
-                'cid: '                     + $("input[name=cid]").val() + '\n' +
-                'jp_tid: '                  + $("input[name=jp_tid]").val() + '\n' +
-                'jp_key: '                  + $("input[name=jp_key]").val() + '\n' +
-                'jp_request_hash: '         + $("input[name=jp_request_hash]").val() + '\n' +
-                'order_number: '            + $("input[name=order_number]").val() + '\n' +
-                'trans_type: '              + $("input[name=trans_type]").val() + '\n' +
-                'UD1: '                     + $("input[name=ud1]").val() + '\n' +
-                'UD2: '                     + $("input[name=ud2]").val() + '\n' +
-                'UD3: '                     + $("input[name=ud3]").val() + '\n' +
-                'retURL: '                  + $("input[name=retUrl]").val() + '\n' +
-                'decURL: '                  + $("input[name=decUrl]").val() + '\n' +
-                'dataURL: '                 + $("input[name=dataUrl]").val() + '\n'
-            );
-        
-//            e.preventDefault();
 
 //             setTimeout(function() {
 //                 window.location.href = "<?php echo base_url('paymentresponse/error'); ?>";

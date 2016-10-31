@@ -27,7 +27,6 @@ class Paymentresponse extends MX_Controller
         $this -> load -> model('paymentresponse_model', '', TRUE);
         $this->load->library('user_agent');
 
-        //session_start();
 
 //        if ( !isset( $_SESSION["origURL"] ) )
 //        {
@@ -99,7 +98,7 @@ class Paymentresponse extends MX_Controller
                 'title'         => 'Payment Approved',
                 'description'   => 'Payment Successful',
                 'logo'          => $this -> config -> item('Company_Icon'),
-                'author'        => $data['cid'],
+                'author'        => $data['cid']
             );
 
             $this -> blade
@@ -112,7 +111,7 @@ class Paymentresponse extends MX_Controller
                 'title'         => 'Payment Declined',
                 'description'   => 'Payment was not successful',
                 'logo'          => $this -> config -> item('Company_Icon'),
-                'author'        => $data['cid'],
+                'author'        => $data['cid']
             );
 
             $this -> blade
