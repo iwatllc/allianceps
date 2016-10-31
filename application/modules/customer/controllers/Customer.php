@@ -142,16 +142,20 @@ class Customer extends MX_Controller
         $this -> form_validation -> set_rules('token', 'Token', 'required|max_length[72]');
         $this -> form_validation -> set_rules('cfpercentage', 'Convenience Fee', 'numeric');
 
-        if ($this -> form_validation -> run() == FALSE || $this -> customer_exists($this -> input -> post('customername')) == FALSE || $this -> slug_exists($this -> input -> post('slugname')) == FALSE)
+        if ($this -> form_validation -> run() == FALSE
+            || $this -> customer_exists(NULL, $this->input->post('customername')) == FALSE
+            || $this -> slug_exists(NULL, $this->input->post('slug')) == FALSE
+            || $this -> fields_disabled($this->input->post('cf3enabled'), $this->input->post('allowach')) == FALSE
+            || $this -> fields_enabled($this->input->post('allowcc'), $this->input->post('allowach')) == FALSE)
         {
             $errors = array();
             if ($this -> form_validation -> run('customername') == FALSE)
                 $errors['error_customername'] = form_error('customername');
-            if ($this -> customer_exists($this -> input -> post('customername')))
+            if ($this -> customer_exists(NULL, $this -> input -> post('customername')))
                 $errors['error_customername'] = '<p> Customer Name already exists in the system. Please choose a different name. </p>';
             if ($this -> form_validation -> run('slug') == FALSE)
                 $errors['error_slug'] = form_error('slug');
-            if ($this -> slug_exists($this -> input -> post('slug')))
+            if ($this -> slug_exists(NULL, $this -> input -> post('slug')))
                 $errors['error_slug'] = '<p> Slug Name already exists in the system. Please choose a different name. </p>';
             if ($this -> form_validation -> run('cf1name') == FALSE)
                 $errors['error_cf1name'] = form_error('cf1name');
@@ -169,6 +173,17 @@ class Customer extends MX_Controller
                 $errors['error_token'] = form_error('token');
             if ($this -> form_validation -> run('cfpercentage') == FALSE)
                 $errors['error_cfpercentage'] = form_error('cfpercentage');
+            if ($this -> fields_disabled($this->input->post('cf3enabled'), $this->input->post('allowach')) == FALSE)
+            {
+                $errors['error_cf3'] = '<p> Custom Field 3 is not available when ACH is Allowed. </p>';
+                $errors['error_allowach'] = '<p> ACH is not available when Custom Field 3 is Enabled. </p>';
+            }
+            if ($this -> fields_enabled($this->input->post('allowcc'), $this->input->post('allowach')) == FALSE)
+            {
+                $errors['error_allowcc'] = '<p> Either Credit Card or ACH transactions are required. </p>';
+                $errors['error_allowach'] = '<p> Either Credit Card or ACH transactions are required. </p>';
+            }
+
 
             echo json_encode($errors);
 
@@ -247,18 +262,7 @@ class Customer extends MX_Controller
         // get row that was just inserted
         $row = $this -> customer_model -> get_customer($id);
 
-        $data = array(
-//            'id'                => $row -> id,
-//            'chargecategoryid'  => $this -> input -> post('chargecategoryid'),
-//            'qty'               => $row -> qty,
-//            'price'             => $row -> price,
-//            'descr'             => $row -> description,
-//            'onetimechargename' => $onetimechargename,
-//            'num_charges'       => $this-> ticket_charge_model -> get_num_charges($ticketid),
-//            'ticketid'          => $ticketid,
-//            'chargecategories'  => $data['chargecategories'],
-//            'custominput'       => $custominput
-        );
+        $data = array();
 
         // go back to ajax to print data
         echo json_encode($data);
@@ -280,13 +284,26 @@ class Customer extends MX_Controller
         $this -> form_validation -> set_rules('token', 'Token', 'required|max_length[72]');
         $this -> form_validation -> set_rules('cfpercentage', 'Convenience Fee', 'numeric');
 
-        if ($this -> form_validation -> run() == FALSE)
+        $customer_exists = $this -> customer_exists_update($this->input->post('customerid'), $this->input->post('customername'));
+        $slug_exists = $this -> slug_exists_update($this->input->post('customerid'), $this->input->post('slug'));
+        $fields_disabled = $this -> fields_disabled($this->input->post('cf3enabled'), $this->input->post('allowach'));
+        $form_validation = $this -> form_validation -> run();
+
+        if ($this -> form_validation -> run() == FALSE
+            || $this -> customer_exists_update($this->input->post('customerid'), $this->input->post('customername')) == FALSE
+            || $this -> slug_exists_update($this->input->post('customerid'), $this->input->post('slug')) == FALSE
+            || $this -> fields_disabled($this->input->post('cf3enabled'), $this->input->post('allowach')) == FALSE
+            || $this -> fields_enabled($this->input->post('allowcc'), $this->input->post('allowach')) == FALSE)
         {
             $errors = array();
             if ($this -> form_validation -> run('customername') == FALSE)
                 $errors['error_customername'] = form_error('customername');
+            if ($this -> customer_exists_update($this->input->post('customerid'), $this -> input -> post('customername')) == FALSE)
+                $errors['error_customername'] = '<p> Customer Name already exists in the system. Please choose a different name. </p>';
             if ($this -> form_validation -> run('slug') == FALSE)
                 $errors['error_slug'] = form_error('slug');
+            if ($this -> slug_exists_update($this->input->post('customerid'), $this -> input -> post('slug')) == FALSE)
+                $errors['error_slug'] = '<p> Slug Name already exists in the system. Please choose a different name. </p>';
             if ($this -> form_validation -> run('cf1name') == FALSE)
                 $errors['error_cf1name'] = form_error('cf1name');
             if ($this -> form_validation -> run('cf2name') == FALSE)
@@ -303,6 +320,16 @@ class Customer extends MX_Controller
                 $errors['error_token'] = form_error('token');
             if ($this -> form_validation -> run('cfpercentage') == FALSE)
                 $errors['error_cfpercentage'] = form_error('cfpercentage');
+            if ($this -> fields_disabled($this->input->post('cf3enabled'), $this->input->post('allowach')) == FALSE)
+            {
+                $errors['error_cf3'] = '<p> Custom Field 3 is not available when ACH is Allowed. </p>';
+                $errors['error_allowach'] = '<p> ACH is not available when Custom Field 3 is Enabled. </p>';
+            }
+            if ($this -> fields_enabled($this->input->post('allowcc'), $this->input->post('allowach')) == FALSE)
+            {
+                $errors['error_allowcc'] = '<p> Either Credit Card or ACH transactions are required. </p>';
+                $errors['error_allowach'] = '<p> Either Credit Card or ACH transactions are required. </p>';
+            }
 
             echo json_encode($errors);
 
@@ -381,18 +408,7 @@ class Customer extends MX_Controller
         // get row that was just inserted
         $row = $this -> customer_model -> get_customer($id);
 
-        $data = array(
-//            'id'                => $row -> id,
-//            'chargecategoryid'  => $this -> input -> post('chargecategoryid'),
-//            'qty'               => $row -> qty,
-//            'price'             => $row -> price,
-//            'descr'             => $row -> description,
-//            'onetimechargename' => $onetimechargename,
-//            'num_charges'       => $this-> ticket_charge_model -> get_num_charges($ticketid),
-//            'ticketid'          => $ticketid,
-//            'chargecategories'  => $data['chargecategories'],
-//            'custominput'       => $custominput
-        );
+        $data = array();
 
         // go back to ajax to print data
         echo json_encode($data);
@@ -417,9 +433,31 @@ class Customer extends MX_Controller
         echo json_encode($data);
     }
 
-    public function customer_exists($customername)
+    public function customer_exists($id, $customername)
     {
-        if ($this -> customer_model -> check_customer_exists($customername))
+        if ($this -> customer_model -> check_customer_exists($id, $customername))
+        {
+            return true; // already exists
+        } else
+        {
+            return false; // does not exist, we are ok to add/update
+        }
+    }
+    
+    public function slug_exists($id, $slugname)
+    {
+        if ($this -> customer_model -> check_slug_exists($id, $slugname))
+        {
+            return true; // already exists
+        } else
+        {
+            return false; // does not exist, we are ok to add/update
+        }
+    }
+    
+    public function customer_exists_update($id, $customername)
+    {
+        if ($this -> customer_model -> check_customer_exists($id, $customername))
         {
             return false; // already exists
         } else
@@ -428,9 +466,9 @@ class Customer extends MX_Controller
         }
     }
     
-    public function slug_exists($slugname)
+    public function slug_exists_update($id, $slugname)
     {
-        if ($this -> customer_model -> check_slug_exists($slugname))
+        if ($this -> customer_model -> check_slug_exists($id, $slugname))
         {
             return false; // already exists
         } else
@@ -438,5 +476,26 @@ class Customer extends MX_Controller
             return true; // does not exist, we are ok to add/update
         }
     }
-    
+
+    public function fields_disabled($field1, $field2)
+    {
+        if ($field1 == 'on' && $field2 == 'on')
+        {
+            return false;
+        } else
+        {
+            return true;
+        }
+    }
+
+    public function fields_enabled($field1, $field2)
+    {
+        if ($field1 == 'on' || $field2 == 'on')
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
 }

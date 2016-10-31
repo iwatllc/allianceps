@@ -50,6 +50,9 @@ $(document).on('click', '.addcustomer-cancel', function(e){
 // Add Customer
 $(document).on('click', '.addcustomer-submit', function(e){
 
+    $("span[id*='-err']").html(''); // remove previous error messages
+    $("div[id*='-field']").removeClass('has-error'); // remove red field
+
     // Get inputs
     var array = {
         customername:   $('input[name=customername]').val(),
@@ -92,9 +95,6 @@ $(document).on('click', '.addcustomer-submit', function(e){
             
             // Replace button with original glyphicon
             $('.addcustomer-submit').removeAttr('disabled').empty().prepend('<span class="glyphicon glyphicon-save"></span> Add Customer');
-
-            $("span[id^='-err']").empty(); // remove previous error messages
-            $("div[id^='-field']").removeClass('has-error'); // remove red field
 
             var errors = false;
             for (var key in res)
@@ -175,6 +175,9 @@ $(document).on('click', '.editcustomer-cancel', function(e){
 // Update Customer
 $(document).on('click', '.editcustomer-submit', function(e){
 
+    $("span[id*='-err']").html(''); // remove previous error messages
+    $("div[id*='-field']").removeClass('has-error'); // remove red field
+
     // Get inputs
     var array = {
         customerid:     $('input[name=customerid]').val(),
@@ -218,9 +221,6 @@ $(document).on('click', '.editcustomer-submit', function(e){
 
             // Replace button with original glyphicon
             $('.editcustomer-submit').removeAttr('disabled').empty().prepend('<span class="glyphicon glyphicon-pencil"></span> Update Customer');
-
-            $("span[id^='-err']").empty(); // remove previous error messages
-            $("div[id^='-field']").removeClass('has-error'); // remove red field
 
             var errors = false;
             for (var key in res)

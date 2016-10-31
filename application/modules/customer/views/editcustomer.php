@@ -98,15 +98,17 @@
 
 <div class="row">
     <div class="col-xs-2">
-        <div class="form-group well">
+        <div class="form-group well" id="allowach-field">
             <label for="showname">Allow ACH:</label>
             <input type="checkbox" name="allowach" <?php if($customer->allowach == 1) {echo 'checked';} ?>>
+            <span class="help-block" id="allowach-err"></span>
         </div>
     </div>
     <div class="col-xs-2">
-        <div class="form-group well">
+        <div class="form-group well" id="allowcc-field">
             <label for="allowcc">Allow CC:</label>
             <input type="checkbox" name="allowcc" <?php if($customer->allowcc == 1) {echo 'checked';} ?>>
+            <span class="help-block" id="allowcc-err"></span>
         </div>
     </div>
     <div class="col-xs-2">

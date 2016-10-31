@@ -57,10 +57,17 @@ class Customer_model extends CI_Model
                     -> update('customers', $data);
     }
 
-    public function check_customer_exists($customername)
+    public function check_customer_exists($id, $customername)
     {
         $this -> db -> where('customername', $customername);
+
+        if ($id != NULL)
+        {
+            $this -> db -> where('id !=', $id);
+        }
+
         $query = $this -> db -> get('customers');
+
         if ($query -> num_rows() > 0)
         {
             return true; // name already exists
@@ -70,10 +77,17 @@ class Customer_model extends CI_Model
         }
     }
 
-    public function check_slug_exists($slugname)
+    public function check_slug_exists($id, $slugname)
     {
         $this -> db -> where('slugname', $slugname);
+
+        if ($id != NULL)
+        {
+            $this -> db -> where('id !=', $id);
+        }
+
         $query = $this -> db -> get('customers');
+
         if ($query -> num_rows() > 0)
         {
             return true;
