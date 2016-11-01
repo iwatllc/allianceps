@@ -140,7 +140,8 @@ class Customer extends MX_Controller
         $this -> form_validation -> set_rules('tid', 'Merchant TID', 'required|max_length[12]');
         $this -> form_validation -> set_rules('key', 'Key', 'required|max_length[24]');
         $this -> form_validation -> set_rules('token', 'Token', 'required|max_length[72]');
-        $this -> form_validation -> set_rules('cfpercentage', 'Convenience Fee', 'numeric');
+        $this -> form_validation -> set_rules('cc_cfpercentage', 'Credit Card Convenience Fee', 'numeric');
+        $this -> form_validation -> set_rules('ach_cfpercentage', 'ACH Convenience Fee', 'numeric');
 
         if ($this -> form_validation -> run() == FALSE
             || $this -> customer_exists(NULL, $this->input->post('customername')) == FALSE
@@ -171,8 +172,10 @@ class Customer extends MX_Controller
                 $errors['error_key'] = form_error('key');
             if ($this -> form_validation -> run('token') == FALSE)
                 $errors['error_token'] = form_error('token');
-            if ($this -> form_validation -> run('cfpercentage') == FALSE)
-                $errors['error_cfpercentage'] = form_error('cfpercentage');
+            if ($this -> form_validation -> run('cc_cfpercentage') == FALSE)
+                $errors['error_cc_cfpercentage'] = form_error('cc_cfpercentage');
+            if ($this -> form_validation -> run('ach_cfpercentage') == FALSE)
+                $errors['error_ach_cfpercentage'] = form_error('ach_cfpercentage');
             if ($this -> fields_disabled($this->input->post('cf3enabled'), $this->input->post('allowach')) == FALSE)
             {
                 $errors['error_cf3'] = '<p> Custom Field 3 is not available when ACH is Allowed. </p>';
@@ -183,7 +186,6 @@ class Customer extends MX_Controller
                 $errors['error_allowcc'] = '<p> Either Credit Card or ACH transactions are required. </p>';
                 $errors['error_allowach'] = '<p> Either Credit Card or ACH transactions are required. </p>';
             }
-
 
             echo json_encode($errors);
 
@@ -220,9 +222,10 @@ class Customer extends MX_Controller
         $key            = $this -> input -> post('key');
         $token          = $this -> input -> post('token');
 
-        $conveniencefee = ($this -> input -> post('conveniencefee') == NULL ? 0 : 1);
-        $cfpercentage   = $this -> input -> post('cfpercentage');
-
+        $cc_conveniencefee = ($this -> input -> post('cc_conveniencefee') == NULL ? 0 : 1);
+        $cc_cfpercentage   = $this -> input -> post('cc_cfpercentage');
+        $ach_conveniencefee = ($this -> input -> post('ach_conveniencefee') == NULL ? 0 : 1);
+        $ach_cfpercentage   = $this -> input -> post('ach_cfpercentage');
 
         $this -> load -> helper('date');
         $datestring = "%Y-%m-%d %H:%i:%s";
@@ -230,30 +233,32 @@ class Customer extends MX_Controller
         $createddate = mdate($datestring, $time);
 
         $data = array(
-            'customername'  => $customername,
-            'cf1enabled'    => $cf1enabled,
-            'cf1required'   => $cf1required,
-            'cf1name'       => $cf1name,
-            'cf2enabled'    => $cf2enabled,
-            'cf2required'   => $cf2required,
-            'cf2name'       => $cf2name,
-            'cf3enabled'    => $cf3enabled,
-            'cf3required'   => $cf3required,
-            'cf3name'       => $cf3name,
-            'allowach'      => $allowach,
-            'allowcc'       => $allowcc,
-            'emailcustomer' => $emailcustomer,
-            'emailmerchant' => $emailmerchant,
-            'emailaddresses'=> $emailaddresses,
-            'slugname'      => $slugname,
-            'showname'      => $showname,
-            'showlogo'      => $showlogo,
-            'tid'           => $tid,
-            'jp_key'        => $key,
-            'jp_token'      => $token,
-            'conveniencefee'=> $conveniencefee,
-            'cfpercentage'  => $cfpercentage,
-            'created'       => $createddate
+            'customername'      => $customername,
+            'cf1enabled'        => $cf1enabled,
+            'cf1required'       => $cf1required,
+            'cf1name'           => $cf1name,
+            'cf2enabled'        => $cf2enabled,
+            'cf2required'       => $cf2required,
+            'cf2name'           => $cf2name,
+            'cf3enabled'        => $cf3enabled,
+            'cf3required'       => $cf3required,
+            'cf3name'           => $cf3name,
+            'allowach'          => $allowach,
+            'allowcc'           => $allowcc,
+            'emailcustomer'     => $emailcustomer,
+            'emailmerchant'     => $emailmerchant,
+            'emailaddresses'    => $emailaddresses,
+            'slugname'          => $slugname,
+            'showname'          => $showname,
+            'showlogo'          => $showlogo,
+            'tid'               => $tid,
+            'jp_key'            => $key,
+            'jp_token'          => $token,
+            'cc_conveniencefee' => $cc_conveniencefee,
+            'cc_cfpercentage'   => $cc_cfpercentage,
+            'ach_conveniencefee'=> $ach_conveniencefee,
+            'ach_cfpercentage'  => $ach_cfpercentage,
+            'created'           => $createddate
         );
 
         // insert data to database, return the id of the row that was inserted
@@ -282,12 +287,8 @@ class Customer extends MX_Controller
         $this -> form_validation -> set_rules('tid', 'Merchant TID', 'required|max_length[12]');
         $this -> form_validation -> set_rules('key', 'Key', 'required|max_length[24]');
         $this -> form_validation -> set_rules('token', 'Token', 'required|max_length[72]');
-        $this -> form_validation -> set_rules('cfpercentage', 'Convenience Fee', 'numeric');
-
-        $customer_exists = $this -> customer_exists_update($this->input->post('customerid'), $this->input->post('customername'));
-        $slug_exists = $this -> slug_exists_update($this->input->post('customerid'), $this->input->post('slug'));
-        $fields_disabled = $this -> fields_disabled($this->input->post('cf3enabled'), $this->input->post('allowach'));
-        $form_validation = $this -> form_validation -> run();
+        $this -> form_validation -> set_rules('cc_cfpercentage', 'Credit Card Convenience Fee', 'numeric');
+        $this -> form_validation -> set_rules('ach_cfpercentage', 'ACH Convenience Fee', 'numeric');
 
         if ($this -> form_validation -> run() == FALSE
             || $this -> customer_exists_update($this->input->post('customerid'), $this->input->post('customername')) == FALSE
@@ -318,8 +319,10 @@ class Customer extends MX_Controller
                 $errors['error_key'] = form_error('key');
             if ($this -> form_validation -> run('token') == FALSE)
                 $errors['error_token'] = form_error('token');
-            if ($this -> form_validation -> run('cfpercentage') == FALSE)
-                $errors['error_cfpercentage'] = form_error('cfpercentage');
+            if ($this -> form_validation -> run('cc_cfpercentage') == FALSE)
+                $errors['error_cc_cfpercentage'] = form_error('cc_cfpercentage');
+            if ($this -> form_validation -> run('ach_cfpercentage') == FALSE)
+                $errors['error_ach_cfpercentage'] = form_error('ach_cfpercentage');
             if ($this -> fields_disabled($this->input->post('cf3enabled'), $this->input->post('allowach')) == FALSE)
             {
                 $errors['error_cf3'] = '<p> Custom Field 3 is not available when ACH is Allowed. </p>';
@@ -367,8 +370,10 @@ class Customer extends MX_Controller
         $key            = $this -> input -> post('key');
         $token          = $this -> input -> post('token');
 
-        $conveniencefee = ($this -> input -> post('conveniencefee') == NULL ? 0 : 1);
-        $cfpercentage   = $this -> input -> post('cfpercentage');
+        $cc_conveniencefee = ($this -> input -> post('cc_conveniencefee') == NULL ? 0 : 1);
+        $cc_cfpercentage   = $this -> input -> post('cc_cfpercentage');
+        $ach_conveniencefee = ($this -> input -> post('ach_conveniencefee') == NULL ? 0 : 1);
+        $ach_cfpercentage   = $this -> input -> post('ach_cfpercentage');
 
         $this -> load -> helper('date');
         $datestring = "%Y-%m-%d %H:%i:%s";
@@ -376,30 +381,32 @@ class Customer extends MX_Controller
         $modifieddate = mdate($datestring, $time);
 
         $data = array(
-            'customername'  => $customername,
-            'cf1enabled'    => $cf1enabled,
-            'cf1required'   => $cf1required,
-            'cf1name'       => $cf1name,
-            'cf2enabled'    => $cf2enabled,
-            'cf2required'   => $cf2required,
-            'cf2name'       => $cf2name,
-            'cf3enabled'    => $cf3enabled,
-            'cf3required'   => $cf3required,
-            'cf3name'       => $cf3name,
-            'allowach'      => $allowach,
-            'allowcc'       => $allowcc,
-            'emailcustomer' => $emailcustomer,
-            'emailmerchant' => $emailmerchant,
-            'emailaddresses'=> $emailaddresses,
-            'slugname'      => $slugname,
-            'showname'      => $showname,
-            'showlogo'      => $showlogo,
-            'tid'           => $tid,
-            'jp_key'        => $key,
-            'jp_token'      => $token,
-            'conveniencefee'=> $conveniencefee,
-            'cfpercentage'  => $cfpercentage,
-            'modified'      => $modifieddate
+            'customername'      => $customername,
+            'cf1enabled'        => $cf1enabled,
+            'cf1required'       => $cf1required,
+            'cf1name'           => $cf1name,
+            'cf2enabled'        => $cf2enabled,
+            'cf2required'       => $cf2required,
+            'cf2name'           => $cf2name,
+            'cf3enabled'        => $cf3enabled,
+            'cf3required'       => $cf3required,
+            'cf3name'           => $cf3name,
+            'allowach'          => $allowach,
+            'allowcc'           => $allowcc,
+            'emailcustomer'     => $emailcustomer,
+            'emailmerchant'     => $emailmerchant,
+            'emailaddresses'    => $emailaddresses,
+            'slugname'          => $slugname,
+            'showname'          => $showname,
+            'showlogo'          => $showlogo,
+            'tid'               => $tid,
+            'jp_key'            => $key,
+            'jp_token'          => $token,
+            'cc_conveniencefee' => $cc_conveniencefee,
+            'cc_cfpercentage'   => $cc_cfpercentage,
+            'ach_conveniencefee'=> $ach_conveniencefee,
+            'ach_cfpercentage'  => $ach_cfpercentage,
+            'modified'          => $modifieddate
         );
 
         // insert data to database, return the id of the row that was inserted

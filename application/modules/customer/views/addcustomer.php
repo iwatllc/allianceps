@@ -98,17 +98,17 @@
 
 <div class="row">
     <div class="col-xs-2">
-        <div class="form-group well" id="allowach-field">
-            <label for="showname">Allow ACH:</label>
-            <input type="checkbox" name="allowach" checked>
-            <span class="help-block" id="allowach-err"></span>
-        </div>
-    </div>
-    <div class="col-xs-2">
         <div class="form-group well" id="allowcc-field">
             <label for="allowcc">Allow CC:</label>
             <input type="checkbox" name="allowcc" checked>
             <span class="help-block" id="allowcc-err"></span>
+        </div>
+    </div>
+    <div class="col-xs-2">
+        <div class="form-group well" id="allowach-field">
+            <label for="showname">Allow ACH:</label>
+            <input type="checkbox" name="allowach" checked>
+            <span class="help-block" id="allowach-err"></span>
         </div>
     </div>
     <div class="col-xs-2">
@@ -134,7 +134,33 @@
 </div>
 
 <div class="row">
-    <div class="col-xs-3">
+    <div class="col-xs-2">
+        <div class="form-group well" id="cc_cfpercentage-field">
+            <label for="cc_conveniencefee">Credit Card Convenience Fee:</label>
+            <br/>
+            <span class="input-group">
+                <span class="input-group-addon">
+                    <input type="checkbox" name="cc_conveniencefee" />
+                </span>
+                    <input type="text" class="form-control cfp" name="cc_cfpercentage" maxlength="5"><span class="input-group-addon cfp">%</span>
+                <span class="help-block" id="cc_cfpercentage-err"></span>
+            </span>
+        </div>
+    </div>
+    <div class="col-xs-2">
+        <div class="form-group well" id="ach_cfpercentage-field">
+            <label for="ach_conveniencefee">ACH Convenience Fee:</label>
+            <br/>
+            <span class="input-group">
+                <span class="input-group-addon">
+                    <input type="checkbox" name="ach_conveniencefee" />
+                </span>
+                    <input type="text" class="form-control cfp" name="ach_cfpercentage" maxlength="5"><span class="input-group-addon cfp">%</span>
+                <span class="help-block" id="ach_cfpercentage-err"></span>
+            </span>
+        </div>
+    </div>
+    <div class="col-xs-2">
         <div class="form-group well" id="tid-field">
             <label for="tid">Merchant TID:&nbsp;</label><span class="label label-danger">Required</span>
             <br/>
@@ -156,19 +182,6 @@
             <br/>
             <input type="text" maxlength="72" class="form-control" name="token">
             <span class="help-block" id="token-err"></span>
-        </div>
-    </div>
-    <div class="col-xs-3">
-        <div class="form-group well" id="cfpercentage-field">
-            <label for="conveniencefee">Convenience Fee:</label>
-            <br/>
-            <span class="input-group">
-                <span class="input-group-addon">
-                    <input type="checkbox" name="conveniencefee" />
-                </span>
-                    <input type="text" class="form-control cfp" name="cfpercentage" maxlength="5"><span class="input-group-addon cfp">%</span>
-                <span class="help-block" id="cfpercentage-err"></span>
-            </span>
         </div>
     </div>
 </div>
