@@ -28,81 +28,82 @@ class Paymentform extends MX_Controller
         // Make sure slug is enabled
         if ($this -> paymentform_model -> customer_enabled($slug))
         {
-            show_404();
-        }
-
-        // Customer slug
-        $data['customer'] = $this -> paymentform_model -> get_customer_form_from_slug($slug);
-
-        // JetDirect URL for testing
-//        $data['jd_url'] = 'https://testapp1.jetpay.com/jetdirect/post/cc/process_cc.php';
-        $data['jd_url'] = 'https://testapp1.jetpay.com/jetdirect/jdv2/gateway/jp-handler.php';
-
-        // Customer ID
-        $data['cid'] = $data['customer'] -> uuid;
-
-        // Approved and declined URLs
-        $data['retUrl']    = base_url('paymentresponse/response');
-        $data['decUrl']    = base_url('paymentresponse/decline');
-        $data['dataUrl']   = base_url('paymentresponse/trans_details');
-
-        // Set Custom Fields
-        if ($data['customer'] -> cf1enabled == 1)
+            $this -> show_404();
+        } else
         {
-            $data['cf1'] = array(
-                'name'                  => 'ud1',
-                'class'                 => 'input-lg form-control',
-                'type'                  => 'text',
-                'value'                 => set_value('cf1'),
-                'placeholder'           => ($data['customer']->cf1required == 1 ? 'Required' : $data['customer']->cf1name),
-                'maxlength'             => '50',
-                'required'              => ($data['customer']->cf1required == 1 ? 'required' : ''),
-                'data-parsley-required' => ($data['customer']->cf1required == 1 ? 'true' : 'false')
-            );
-        }
-        if ($data['customer'] -> cf2enabled == 1)
-        {
-            $data['cf2'] = array(
-                'name'                  => 'ud2',
-                'class'                 => 'input-lg form-control',
-                'type'                  => 'text',
-                'value'                 => set_value('cf2'),
-                'placeholder'           => ($data['customer']->cf2required == 1 ? 'Required' : $data['customer']->cf2name),
-                'maxlength'             => '50',
-                'required'              => ($data['customer']->cf2required == 1 ? 'required' : ''),
-                'data-parsley-required' => ($data['customer']->cf2required == 1 ? 'true' : 'false')
-            );
-        }
-        if ($data['customer'] -> cf3enabled == 1)
-        {
-            $data['cf3'] = array(
-                'name'                  => 'ud3',
-                'class'                 => 'input-lg form-control',
-                'type'                  => 'text',
-                'value'                 => set_value('cf3'),
-                'placeholder'           => ($data['customer']->cf3required == 1 ? 'Required' : $data['customer']->cf3name),
-                'maxlength'             => '50',
-                'required'              => ($data['customer']->cf3required == 1 ? 'required' : ''),
-                'data-parsley-required' => ($data['customer']->cf3required == 1 ? 'true' : 'false')
-            );
-        } else if ($data['customer'] -> allowach == 1) // CF3 hidden
-        {
-            $data['cf3'] = array(
-                'ud3' => ''
-            );
-        }
-        
-        $page_data = array(
-            'title'         => $data['customer'] -> customername,
-            'description'   => $data['customer'] -> customername,
-            'logo'          => $data['customer'] -> logofile,
-            'author'        => $data['customer'] -> customername,
-        );
+            // Customer slug
+            $data['customer'] = $this -> paymentform_model -> get_customer_form_from_slug($slug);
 
-        $this->blade
-            ->set('data', $data)
-            ->set('page_data', $page_data)
-            ->render('paymentform');
+            // JetDirect URL for testing
+    //        $data['jd_url'] = 'https://testapp1.jetpay.com/jetdirect/post/cc/process_cc.php';
+            $data['jd_url'] = 'https://testapp1.jetpay.com/jetdirect/jdv2/gateway/jp-handler.php';
+
+            // Customer ID
+            $data['cid'] = $data['customer'] -> uuid;
+
+            // Approved and declined URLs
+            $data['retUrl']    = base_url('paymentresponse/response');
+            $data['decUrl']    = base_url('paymentresponse/decline');
+            $data['dataUrl']   = base_url('paymentresponse/trans_details');
+
+            // Set Custom Fields
+            if ($data['customer'] -> cf1enabled == 1)
+            {
+                $data['cf1'] = array(
+                    'name'                  => 'ud1',
+                    'class'                 => 'input-lg form-control',
+                    'type'                  => 'text',
+                    'value'                 => set_value('cf1'),
+                    'placeholder'           => ($data['customer']->cf1required == 1 ? 'Required' : $data['customer']->cf1name),
+                    'maxlength'             => '50',
+                    'required'              => ($data['customer']->cf1required == 1 ? 'required' : ''),
+                    'data-parsley-required' => ($data['customer']->cf1required == 1 ? 'true' : 'false')
+                );
+            }
+            if ($data['customer'] -> cf2enabled == 1)
+            {
+                $data['cf2'] = array(
+                    'name'                  => 'ud2',
+                    'class'                 => 'input-lg form-control',
+                    'type'                  => 'text',
+                    'value'                 => set_value('cf2'),
+                    'placeholder'           => ($data['customer']->cf2required == 1 ? 'Required' : $data['customer']->cf2name),
+                    'maxlength'             => '50',
+                    'required'              => ($data['customer']->cf2required == 1 ? 'required' : ''),
+                    'data-parsley-required' => ($data['customer']->cf2required == 1 ? 'true' : 'false')
+                );
+            }
+            if ($data['customer'] -> cf3enabled == 1)
+            {
+                $data['cf3'] = array(
+                    'name'                  => 'ud3',
+                    'class'                 => 'input-lg form-control',
+                    'type'                  => 'text',
+                    'value'                 => set_value('cf3'),
+                    'placeholder'           => ($data['customer']->cf3required == 1 ? 'Required' : $data['customer']->cf3name),
+                    'maxlength'             => '50',
+                    'required'              => ($data['customer']->cf3required == 1 ? 'required' : ''),
+                    'data-parsley-required' => ($data['customer']->cf3required == 1 ? 'true' : 'false')
+                );
+            } else if ($data['customer'] -> allowach == 1) // CF3 hidden
+            {
+                $data['cf3'] = array(
+                    'ud3' => ''
+                );
+            }
+
+            $page_data = array(
+                'title'         => $data['customer'] -> customername,
+                'description'   => $data['customer'] -> customername,
+                'logo'          => $data['customer'] -> logofile,
+                'author'        => $data['customer'] -> customername,
+            );
+
+            $this->blade
+                ->set('data', $data)
+                ->set('page_data', $page_data)
+                ->render('paymentform');
+        }
     }
 
     public function ajax_submit_form()
@@ -123,9 +124,23 @@ class Paymentform extends MX_Controller
         $slug           = $this -> input -> post('slug');
         $amount         = $this -> input -> post('amount');
         $cfpercentage   = $this -> input -> post('cfpercentage');
+        $paymenttype    = $this -> input -> post('paymenttype');
 
         // Get the customerid based on the name of the slug
         $cid = $this -> paymentform_model -> get_customer_form_from_slug($slug) -> uuid;
+
+        // Apply convenience fee to amount
+        if ($cfpercentage)
+        {
+            $data['cfpercentage'] = $cfpercentage;
+            $percentage = (float)$cfpercentage / 100;
+            $amount_cf = (float)($amount * $percentage) + $amount;
+        } else
+        {
+            $amount_cf = $amount;
+            $percentage = 0;
+        }
+        $amount_cf = number_format($amount_cf, 2, '.', '');
 
         // Client info (part 1)
         $data = array(
@@ -141,13 +156,11 @@ class Paymentform extends MX_Controller
             'cf2'           => $cf2,
             'cf3'           => $cf3,
             'amount'        => $amount,
+            'cfpercentage'  => $cfpercentage,
+            'amount_cf'     => $amount_cf,
+            'paymenttype'   => $paymenttype,
             'insertdate'    => mdate("%Y-%m-%d %H:%i:%s", time())
         );
-
-        if ($cfpercentage)
-        {
-            $data['cfpercentage'] = $cfpercentage;
-        }
 
         // Insert/update form_submissions table
         if (!$prev_uuid)
@@ -168,7 +181,7 @@ class Paymentform extends MX_Controller
         $ordernum   = $uuid;
         $transtype  = "SALE";
 
-        $hash_vars  = $tid . $amount . $token . $ordernum;
+        $hash_vars  = $tid . $amount_cf . $token . $ordernum;
         $hash       = hash('sha512', $hash_vars);
 
         // Credit card info (part 2)
@@ -186,17 +199,15 @@ class Paymentform extends MX_Controller
 
         $row = $this -> paymentform_model -> get_form_submission($uuid);
 
-        if ($row -> cfpercentage)
-        {
-            $percentage = $row -> cfpercentage / 100;
-            $amount = ($row -> amount * $percentage) + $row -> amount;
-        } else
-        {
-            $amount = $row -> amount;
-        }
+        $amount_after = ((float)$row->amount * (float)$percentage);
+        $amount_after = number_format($amount_after, 2, '.', '');
+        $amount_total = number_format($row->amount + $amount_after, 2, '.', '');
 
-        $amount = number_format($amount, 2, '.', '');
-//        $amount = sprintf('%01.2f', $amount);
+        $order_data = array(
+            'amount_before' => $row -> amount,
+            'amount_after'  => $amount_after,
+            'amount_total'  => $amount_total
+        );
 
         $data = array(
             'uuid'          => $uuid,
@@ -204,7 +215,8 @@ class Paymentform extends MX_Controller
             'jpkey'         => $key,
             'jptid'         => $tid,
             'jptranstype'   => $transtype,
-            'amount'        => $amount
+            'amount'        => $amount_cf,
+            'table'         => $this -> load -> view('orderinfotable', $order_data, TRUE)
         );
 
         echo json_encode($data);
@@ -219,5 +231,22 @@ class Paymentform extends MX_Controller
         $row = $this -> paymentform_model -> get_form_submission($uuid);
         
         echo $row -> amount;
+    }
+
+    public function show_404()
+    {
+        $page_data = array(
+            'title'         => $this -> config -> item('Company_Title') . " | 404 Page Not Found",
+            'description'   => $this->config->item('Company_Description'),
+            'logo'          => $this->config->item('Company_Icon'),
+            'author'        => $this->config->item('Company_Author')
+        );
+
+        $data = '';
+
+        $this -> blade
+              -> set('data', $data)
+              -> set('page_data', $page_data)
+              -> render('ezolp_404');
     }
 }

@@ -115,31 +115,50 @@
             <div class="form-group">
                 <label for="type" class="control-label">Payment Type &#42;</label>
                 <br/>
-                @if ($data['customer'] -> allowcc)
+                @if ($data['customer'] -> allowcc && $data['customer'] -> allowach)
                     <input type="radio" name="paymenttype" value="cc" /> Credit Card<br/>
-                @endif
-                @if ($data['customer'] -> allowach)
                     <input type="radio" name="paymenttype" value="ach" /> ACH
+                @endif
+                @if ($data['customer'] -> allowcc && !$data['customer'] -> allowach)
+                    <input type="radio" name="paymenttype" value="cc" checked/> Credit Card
+                @endif
+                @if ($data['customer'] -> allowach && !$data['customer'] -> allowcc)
+                    <input type="radio" name="paymenttype" value="ach" checked/> ACH
                 @endif
             </div>
 
-            @if ($data['customer'] -> conveniencefee)
-                <input type="hidden" name="cfpercentage" value="{{ $data['customer']->cfpercentage }}"/>
+            @if ($data['customer'] -> cc_conveniencefee)
+                <input type="hidden" name="cc_cfpercentage" value="{{ $data['customer'] -> cc_cfpercentage }}"/>
+            @endif
+            @if ($data['customer'] -> ach_conveniencefee)
+                <input type="hidden" name="ach_cfpercentage" value="{{ $data['customer'] -> ach_cfpercentage }}"/>
             @endif
 
             <button type="button" class="btn btn-lg btn-primary btn-next">Next</button>
             <button type="button" class="btn btn-lg btn-primary btn-back" style="display:none;">Back</button>
 
-            @if ($data['customer'] -> conveniencefee)
-                <span class="alert alert-info cfinfo">
+            @if ($data['customer'] -> cc_conveniencefee)
+                <span class="alert alert-info cc_cfinfo" style="display:none;">
                     <strong>NOTE: </strong>
-                    If you pay by credit card, there will be a convenience fee of <strong>{{ $data['customer'] -> cfpercentage }}</strong>&#37; applied to your payment.
+                    If you pay by credit card, there will be a convenience fee of <strong>{{ $data['customer'] -> cc_cfpercentage }}</strong>&#37; applied to your payment.
+                </span>
+            @endif
+            @if ($data['customer'] -> ach_conveniencefee)
+                <span class="alert alert-info ach_cfinfo" style="display:none;">
+                    <strong>NOTE: </strong>
+                    If you pay by check, there will be a convenience fee of <strong>{{ $data['customer'] -> ach_cfpercentage }}</strong>&#37; applied to your payment.
                 </span>
             @endif
 
         </div>
 
-        <br/><br/>
+        <br/>
+
+        <div class="row">
+            <div id="order-info" class="col-md-5"></div>
+        </div>
+
+        <br/>
 
         <div id="cc-info" style="display:none;">
             <div class="form-group cc-group">
@@ -160,7 +179,7 @@
             </div>
         </div>
 
-        <div id="ach-info" style="display:none;">
+        <!--<div id="ach-info" style="display:none;">
             <div class="form-group ach-group">
                 <label for="account-holder" class="control-label">Account Holder</label>
                 <input type="text" name="accountName" class="input-lg form-control" placeholder="Account Holder Name" maxlength="100" required />
@@ -181,10 +200,10 @@
                 <label for="confirm-routing-number" class="control-label">Confirm Routing Number</label>
                 <input type="password" name="aba" class="input-lg form-control" placeholder="••••••••••"  maxlength="10" autocomplete="off" required />
             </div>
-            <!--<div class="form-group ach-group">
+            <div class="form-group ach-group">
                 <label for="check-number" class="control-label">ACH Type</label>
                 <input type="text" name="achType" class="input-lg form-control" placeholder="ACH Type" value="CHECKING" required />
-            </div>-->
+            </div>
             <div class="form-group ach-group">
                 <label for="check-number" class="control-label">Check Number</label>
                 <input type="text" name="chkNumber" class="input-lg form-control" placeholder="Check Number" maxlength="5" required />
@@ -203,7 +222,7 @@
                 PAYMENT IS BEING MADE.
             </div>
 
-        </div>
+        </div>-->
 
 
         <input type="hidden" name="merData0" maxlength="120" value="{{ $data['customer'] -> id }}"              />
@@ -253,7 +272,7 @@
 
             $('#submit-btn').attr('disabled', true).empty().prepend('<i class="fa fa-spinner fa-spin"></i>&nbsp;Submit');
 
-             $('#ach-err').hide();
+            $('#ach-err').hide();
 
             if ($("input[name=paymenttype]:checked").val() == 'cc')
             {

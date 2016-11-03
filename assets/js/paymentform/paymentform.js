@@ -2,6 +2,35 @@
  * Created by afrazer on 10/5/2016.
  */
 
+$( document ).ready(function() {
+    displaycfmessage();
+});
+
+// Display ACH/CC convenience fee message
+$(document).on("change", "[type=radio][name=paymenttype]", function(e) {
+    e.preventDefault();
+    displaycfmessage();
+});
+
+function displaycfmessage()
+{
+    var paymenttype = $('input[type=radio][name=paymenttype]:checked');
+
+    if (paymenttype.val() == 'cc')
+    {
+        $('span.cc_cfinfo').show();
+        $('span.ach_cfinfo').hide();
+    } else if (paymenttype.val() == 'ach')
+    {
+        $('span.ach_cfinfo').show();
+        $('span.cc_cfinfo').hide();
+    } else
+    {
+        $('span.cc_cfinfo').hide();
+        $('span.ach_cfinfo').hide();
+    }
+}
+
 $.fn.toggleInputError = function(erred) {
     this.parent('.form-group').toggleClass('has-error', erred);
     return this;
@@ -93,9 +122,13 @@ $(document).on('click', 'button.btn-next', function(e){
     }
 
     // Apply convenience fee if credit card
-    if (array['paymenttype'] == 'cc' && $('input[name=cfpercentage]').val())
+    if (array['paymenttype'] == 'cc' && $('input[name=cc_cfpercentage]').val())
     {
-        array['cfpercentage'] = $('input[name=cfpercentage]').val();
+        array['cfpercentage'] = $('input[name=cc_cfpercentage]').val();
+    }
+    if (array['paymenttype'] == 'ach' && $('input[name=ach_cfpercentage]').val())
+    {
+        array['cfpercentage'] = $('input[name=ach_cfpercentage]').val();
     }
 
     var baseUrl = window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
@@ -113,8 +146,8 @@ $(document).on('click', 'button.btn-next', function(e){
                 $("button.btn-next").attr('disabled', true).empty().prepend('Next').hide();
                 $("button.btn-back").removeAttr('disabled').show();
 
-                // TODO: Deals with calculating the convenience fee and applying it to input : NOT WORKING ON LIVE
-                // $("input[name=amount]").val(res.amount).focus();
+                // Calculates the convenience fee and applies it to input
+                $("input[name=amount]").val(res.amount).focus();
 
                 // DO NOT DISABLE INPUTS - ONLY MAKE THEM READ ONLY
                 // DISABLED INPUTS DO NOT GET SUBMITTED
@@ -151,6 +184,9 @@ $(document).on('click', 'button.btn-next', function(e){
                 $("input[name=jp_key]").val(res.jpkey);
                 $("input[name=jp_tid]").val(res.jptid);
                 $("input[name=trans_type]").val(res.jptranstype);
+                
+                // Show order summary table
+                $('div#order-info').html(res.table);
 
             }
         }
@@ -199,6 +235,9 @@ $(document).on('click', 'button.btn-back', function(e){
 
     // // Clear CC and ACH info
     $("input", "#cc-info, #ach-info").val('');
+
+    // Destroy order summary table
+    $('div#order-info').html('');
 
 });
 
@@ -253,7 +292,7 @@ $(document).on("change", "[type=checkbox][name=ach-agreement]", function(e) {
 function fill_sample_inputs()
 {
     $("input[name=name]").val('Wade Winston Wilson');
-    $("input[name=customerEmail]").val('wadewwilson@gmail.com');
+    $("input[name=customerEmail]").val('aarfrazer@gmail.com');
     $("input[name=billingAddress1]").val('3361 Boyington Dr');
     $("input[name=billingAddress2]").val('Suite 180');
     $("input[name=billingCity]").val('Carrollton');
@@ -262,21 +301,21 @@ function fill_sample_inputs()
     $("input[name=ud1]").val('UD1 TAG');
     $("input[name=ud2]").val('UD2 TAG');
     // $("input[name=ud3]").val('UD3 TAG');
-    $("input[name=amount]").val('10.00');
-    // $("input:radio[name=paymenttype][value='ach']").prop("checked",true);
+    $("input[name=amount]").val('9.00');
+    $("input:radio[name=paymenttype][value='cc']").prop("checked",true);
 
     $(".btn-next").click();
 
     // Credit card sample inputs
-    // $("input[name=cardNum]").val('4111 1111 1111 1111');
-    // $("input[name=cc-exp]").val('12 / 17');
-    // $("input[name=cvv]").val('321');
+    $("input[name=cardNum]").val('4111 1111 1111 1111');
+    $("input[name=cc-exp]").val('12 / 17');
+    $("input[name=cvv]").val('321');
 
     // ACH sample inputs
-    $("input[name=accountName]").val('John Q. Public');
-    $("input[name=ddaDrop]").val('123411');
-    $("input[name=dda]").val('123411');
-    $("input[name=abaDrop]").val('122000496');
-    $("input[name=aba]").val('122000496');
-    $("input[name=chkNumber]").val('234');
+    // $("input[name=accountName]").val('John Q. Public');
+    // $("input[name=ddaDrop]").val('123411');
+    // $("input[name=dda]").val('123411');
+    // $("input[name=abaDrop]").val('122000496');
+    // $("input[name=aba]").val('122000496');
+    // $("input[name=chkNumber]").val('234');
 }
