@@ -82,7 +82,7 @@ class Paymentresponse extends MX_Controller
 
         if (!strlen($_SERVER['QUERY_STRING']))
         {
-            exit();
+            $this -> load_error_trans();
         } else
         {
             $string_out = base64_decode($_SERVER['QUERY_STRING']);
@@ -93,7 +93,7 @@ class Paymentresponse extends MX_Controller
 
         if (strpos(strtolower($data['responseText']), 'approved') !== false)
         {
-            $this->load_approve_trans($data);
+            $this -> load_approve_trans($data);
         } else
         {
             $this -> load_decline_trans($data);
