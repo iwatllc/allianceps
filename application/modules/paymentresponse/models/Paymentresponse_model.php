@@ -18,4 +18,11 @@ class Paymentresponse_model extends CI_Model {
 
         return $row;
     }
+
+    public function get_form_submission_by_order_number($order_number)
+    {
+        $row = $this -> db -> select('*') -> where('order_number', $order_number) -> get('form_submissions') -> row();
+
+        return $row;
+    }
 }

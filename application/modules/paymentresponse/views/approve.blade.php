@@ -81,9 +81,11 @@
                 <strong>Response:</strong> {{ $data['responseText'] }}
             </fieldset>
             <br/>
-            <h5 class="centeredtext">
-                 An email receipt including the details about your payment has been sent to your email address.  Please keep it for your records.
-            </h5>
+            @if ($data['emailSent'] == TRUE)
+                <h5 class="centeredtext">
+                     An email receipt including the details about your payment has been sent to your email address.  Please keep it for your records.
+                </h5>
+            @endif
         </div>
 
         <br/>
