@@ -179,11 +179,11 @@
             </div>
         </div>
 
-        <!--<div id="ach-info" style="display:none;">
-            <div class="form-group ach-group">
+        <div id="ach-info" style="display:none;">
+            <!--<div class="form-group ach-group">
                 <label for="account-holder" class="control-label">Account Holder</label>
-                <input type="text" name="accountName" class="input-lg form-control" placeholder="Account Holder Name" maxlength="100" required />
-            </div>
+                <input type="text" name="name" class="input-lg form-control" placeholder="Account Holder Name" maxlength="100" required />
+            </div>-->
             <div class="form-group ach-group">
                 <label for="account-number" class="control-label">Account Number</label>
                 <input type="text" name="ddaDrop" class="input-lg form-control" placeholder="Account Number" maxlength="10" autocomplete="off" required />
@@ -200,10 +200,7 @@
                 <label for="confirm-routing-number" class="control-label">Confirm Routing Number</label>
                 <input type="password" name="aba" class="input-lg form-control" placeholder="••••••••••"  maxlength="10" autocomplete="off" required />
             </div>
-            <div class="form-group ach-group">
-                <label for="check-number" class="control-label">ACH Type</label>
-                <input type="text" name="achType" class="input-lg form-control" placeholder="ACH Type" value="CHECKING" required />
-            </div>
+            <input type="hidden" name="achType" value="CHECKING" />
             <div class="form-group ach-group">
                 <label for="check-number" class="control-label">Check Number</label>
                 <input type="text" name="chkNumber" class="input-lg form-control" placeholder="Check Number" maxlength="5" required />
@@ -222,15 +219,15 @@
                 PAYMENT IS BEING MADE.
             </div>
 
-        </div>-->
+        </div>
 
-
-        <input type="hidden" name="merData0" maxlength="120" value="{{ $data['customer'] -> id }}"              />
-        <input type="hidden" name="merData1" maxlength="120" value="{{ $data['customer'] -> customername }}"    />
-        <input type="hidden" name="merData2" maxlength="120" value="{{ $data['customer'] -> logofile }}"        />
-        <input type="hidden" name="merData3" maxlength="120" value="{{ $data['customer'] -> slugname }}"        />
-        <input type="hidden" name="merData4" maxlength="120" value="{{ $data['customer'] -> showname }}"        />
-        <input type="hidden" name="merData5" maxlength="120" value="{{ $data['customer'] -> showlogo }}"        />
+        <input type="hidden" name="merData0" maxlength="120" value="Payment Type"                               />
+        <input type="hidden" name="merData1" maxlength="120" value="{{ $data['customer'] -> id }}"              />
+        <input type="hidden" name="merData2" maxlength="120" value="{{ $data['customer'] -> customername }}"    />
+        <input type="hidden" name="merData3" maxlength="120" value="{{ $data['customer'] -> logofile }}"        />
+        <input type="hidden" name="merData4" maxlength="120" value="{{ $data['customer'] -> slugname }}"        />
+        <input type="hidden" name="merData5" maxlength="120" value="{{ $data['customer'] -> showname }}"        />
+        <input type="hidden" name="merData6" maxlength="120" value="{{ $data['customer'] -> showlogo }}"        />
 
         <input type="hidden"    name="cid"       value="{{ $data['cid'] }}" />
         <input type="hidden"    name="jp_tid"                               />
@@ -365,11 +362,10 @@
                 // Disable CC inputs
                 $("#cc-info :input").attr("disabled", true);
 
-            }
+                // Remove decimals from amount field
+                $("input[name=amount]").val($("input[name=amount]").val().replace(".", ""));
 
-//             setTimeout(function() {
-//                 window.location.href = "<?php echo base_url('paymentresponse/error'); ?>";
-//             }, 30000); // will redirect to error page after 30 second timeout
+            }
         });
     </script>
 

@@ -179,7 +179,11 @@ class Paymentform extends MX_Controller
         $key        = $customer -> jp_key;
         $token      = $customer -> jp_token;
         $ordernum   = $uuid;
-        $transtype  = "SALE";
+
+        if ($paymenttype == 'cc')
+            $transtype  = "SALE";
+        else if ($paymenttype == 'ach')
+            $transtype = "CHECK";
 
         $hash_vars  = $tid . $amount_cf . $token . $ordernum;
         $hash       = hash('sha512', $hash_vars);
@@ -216,6 +220,7 @@ class Paymentform extends MX_Controller
             'jptid'         => $tid,
             'jptranstype'   => $transtype,
             'amount'        => $amount_cf,
+            'payment_type'  => $paymenttype,
             'table'         => $this -> load -> view('orderinfotable', $order_data, TRUE)
         );
 

@@ -184,6 +184,7 @@ $(document).on('click', 'button.btn-next', function(e){
                 $("input[name=jp_key]").val(res.jpkey);
                 $("input[name=jp_tid]").val(res.jptid);
                 $("input[name=trans_type]").val(res.jptranstype);
+                $("input[name=merData0]").val(res.payment_type);
                 
                 // Show order summary table
                 $('div#order-info').html(res.table);
@@ -291,7 +292,7 @@ $(document).on("change", "[type=checkbox][name=ach-agreement]", function(e) {
 
 function fill_sample_inputs()
 {
-    $("input[name=name]").val('Wade Winston Wilson');
+    $("input[name=name]").val('Wade Wilson');
     $("input[name=customerEmail]").val('aarfrazer@gmail.com');
     $("input[name=billingAddress1]").val('3361 Boyington Dr');
     $("input[name=billingAddress2]").val('Suite 180');
@@ -301,15 +302,15 @@ function fill_sample_inputs()
     $("input[name=ud1]").val('UD1 TAG');
     $("input[name=ud2]").val('UD2 TAG');
     // $("input[name=ud3]").val('UD3 TAG');
-    $("input[name=amount]").val('9.00');
-    $("input:radio[name=paymenttype][value='cc']").prop("checked",true);
+    // $("input[name=amount]").val('10.00');
+    // $("input:radio[name=paymenttype][value='ach']").prop("checked",true);
 
     $(".btn-next").click();
 
     // Credit card sample inputs
-    $("input[name=cardNum]").val('4111 1111 1111 1111');
-    $("input[name=cc-exp]").val('12 / 17');
-    $("input[name=cvv]").val('321');
+    // $("input[name=cardNum]").val('4111 1111 1111 1111');
+    // $("input[name=cc-exp]").val('12 / 17');
+    // $("input[name=cvv]").val('321');
 
     // ACH sample inputs
     // $("input[name=accountName]").val('John Q. Public');
