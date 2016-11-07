@@ -36,7 +36,7 @@ class Paymentresponse extends MX_Controller
             'name'              => $_POST['name'],
             'card'              => $_POST['card'],
             'cardNum'           => $_POST['cardNum'],
-            'extendedCardNum'   => $_POST['extendedCardNum'],
+//            'extendedCardNum'   => $_POST['extendedCardNum'],
             'expDate'           => $_POST['expDate'],
             'amount'            => $_POST['amount'],
             'transId'           => $_POST['transId'],
@@ -60,10 +60,10 @@ class Paymentresponse extends MX_Controller
             'merData3'          => $_POST['merData3'],
             'merData4'          => $_POST['merData4'],
             'merData5'          => $_POST['merData5'],
-            'merData6'          => $_POST['merData6'],
-            'merData7'          => $_POST['merData7'],
-            'merData8'          => $_POST['merData8'],
-            'merData9'          => $_POST['merData9'],
+//            'merData6'          => $_POST['merData6'],
+//            'merData7'          => $_POST['merData7'],
+//            'merData8'          => $_POST['merData8'],
+//            'merData9'          => $_POST['merData9'],
             'merData0'          => $_POST['merData0'],
             'referrer'          => $this -> agent -> referrer(),
             'respArray'         => print_r($_POST, TRUE),
@@ -91,6 +91,15 @@ class Paymentresponse extends MX_Controller
 
         $data['slugname'] = $this -> paymentresponse_model -> get_customer_by_uuid($data['cid']) -> slugname;
 
+        if (array_key_exists('card' , $data))
+        {
+            $data['paymentType'] = 'cc';
+            $data['cardImage'] = $this -> getCardImage($data['card']);
+        } else
+        {
+            $data['paymentType'] = 'ach';
+        }
+
         if (strpos(strtolower($data['responseText']), 'approved') !== false)
         {
             $this -> load_approve_trans($data);
@@ -112,25 +121,46 @@ class Paymentresponse extends MX_Controller
         // Get form_submission record
         $order = $this -> paymentresponse_model -> get_form_submission_by_order_number($data['order_number']);
 
-        $data['subtotal']       = $order->amount;
-        $data['cfPercentage']   = $order->cfpercentage;
-        $data['total']          = $order->amount_cf;
-        $data['customerEmail']  = $order->email;
-        $data['address']        = $order->address;
-        $data['address2']       = $order->address2;
-        $data['city']           = $order->city;
-        $data['state']          = $order->state;
-        $data['zip']            = $order->zip;
-        $data['paymenttype']    = $order->paymenttype;
+        $data['subtotal']       = $order -> amount;
+        $data['cfPercentage']   = $order -> cfpercentage;
+        $data['total']          = $order -> amount_cf;
+        $data['customerEmail']  = $order -> email;
+        $data['address']        = $order -> address;
+        $data['address2']       = $order -> address2;
+        $data['city']           = $order -> city;
+        $data['state']          = $order -> state;
+        $data['zip']            = $order -> zip;
+        $data['paymenttype']    = $order -> paymenttype;
 
-        $data['customerName']   = $customer->customername;
-        $data['slugname']       = $customer->slugname;
-        $data['showlogo']       = $customer->showlogo;
-        $data['logofile']       = $customer->logofile;
+        $data['customerName']   = $customer -> customername;
+        $data['slugname']       = $customer -> slugname;
+        $data['showlogo']       = $customer -> showlogo;
+        $data['logofile']       = $customer -> logofile;
+
+        if ($data['paymenttype'] == 'cc')
+        {
+            $data['paymentMethod'] = 'Credit Card';
+            if ($data['card'] == 'VS') $data['cardName'] = 'Visa';
+            else if ($data['card'] == 'MC') $data['cardName'] = 'Mastercard';
+            else if ($data['card'] == 'DS') $data['cardName'] = 'Discover';
+            else if ($data['card'] == 'AX') $data['cardName'] = 'Amex';
+            else if ($data['card'] == 'DC') $data['cardName'] = 'Diners Club';
+            else $data['cardName'] = '';
+        } else if ($data['paymenttype'] == 'ach')
+        {
+            $data['paymentMethod'] = 'Check';
+        }
+
+        $data['subtotal'] = '$' . number_format($data['subtotal'], 2, '.', '');
+        $data['cfAmount'] = '$' . number_format((float)($data['total'] - $data['subtotal']), 2, '.', '');
+        if ($data['cfPercentage'] != '')
+            $data['cfPercentage'] = '('.$data['cfPercentage'].'%)';
+        else
+            $data['cfPercentage'] = '(0%)';
 
         // Set email preferences
         $from               = 'update@onebzb.com'; // TODO: Change this to the merchant's email
-        $fromname           = $customer->customername;
+        $fromname           = $customer -> customername;
         $to                 = $data['customerEmail'];
         $subject            = 'Order Reciept (#'.$data['transId'].')';
         $customer_message   = $this -> load -> view('customerordersummary', $data, TRUE);
@@ -221,5 +251,32 @@ class Paymentresponse extends MX_Controller
         $this -> email -> message($message);
 
         $this -> email -> send();
+    }
+
+    /**
+     * Gets a credit card image.
+     */
+    public function getCardImage($cardName)
+    {
+        switch ($cardName) 
+        {
+            case "VS":
+                $cardImage = base_url('assets/img/cards/visa.jpg');
+                break;
+            case "MC":
+                $cardImage = base_url('assets/img/cards/mastercard.jpg');
+                break;
+            case "DS":
+                $cardImage = base_url('assets/img/cards/discover.jpg');
+                break;
+            case "AX":
+                $cardImage = base_url('assets/img/cards/amex.jpg');
+                break;
+            case "DC":
+                $cardImage = base_url('assets/img/cards/dinersclub.jpg');
+                break;
+        }
+
+        return $cardImage;
     }
 }

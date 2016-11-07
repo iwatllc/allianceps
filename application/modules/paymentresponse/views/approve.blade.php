@@ -47,41 +47,36 @@
                 Your payment was processed successfully.
             </h4>
             <br/>
-            <fieldset>
-                <legend>Order Summary</legend>
-                <strong>Name:</strong> {{ $data['name'] }}
-                <br/>
-                <strong>Card Type:</strong>
-                @if ($data['card'] == 'VS')
-                    <img src="{{ base_url('assets/img/cards/visa.jpg') }}">
-                @elseif ($data['card'] == 'MC')
-                    <img src="{{ base_url('assets/img/cards/mastercard.jpg') }}">
-                @elseif ($data['card'] == 'DS')
-                    <img src="{{ base_url('assets/img/cards/discover.jpg') }}">
-                @elseif ($data['card'] == 'AX')
-                    <img src="{{ base_url('assets/img/cards/amex.jpg') }}">
-                @elseif ($data['card'] == 'DC')
-                    <img src="{{ base_url('assets/img/cards/dinersclub.jpg') }}">
-                @endif
-                <br/>
-                <strong>Card Number:</strong> **** **** **** {{ $data['cardNum'] }}
-                <br/>
-                <strong>Card Expires:</strong> {{ $data['expDate'] }}
-                <br/>
-                <strong>Amount Paid:</strong> ${{ $data['amount'] }}
-                <br/><br/>
-                <strong>Order Number:</strong> {{ $data['order_number'] }}
-                <br/>
-                <strong>Date:</strong> {{ date("m/d/y g:i A") }}
-                <br/>
-                <strong>Transaction ID:</strong> {{ $data['transId'] }}
-                <br/>
-                <strong>Customer ID:</strong> {{ $data['cid'] }}
-                <br/>
-                <strong>Response:</strong> {{ $data['responseText'] }}
-            </fieldset>
+                <fieldset>
+                    <legend>Order Summary</legend>
+                    <strong>Name:</strong> {{ $data['name'] }}
+                    <br/>
+                    @if ($data['paymentType'] == 'cc')
+                    <strong>Card Type:</strong>
+                    <img src="{{ $data['cardImage'] }}">
+                    <br/>
+                    <strong>Card Number:</strong> **** **** **** {{ $data['cardNum'] }}
+                    <br/>
+                    <strong>Card Expires:</strong> {{ $data['expDate'] }}
+                    <br/>
+                    @elseif ($data['paymentType'] == 'ach')
+                    <strong>Account Number:</strong> {{ $data['obfDdaNum'] }}
+                    <br/>
+                    @endif
+                    <strong>Amount Paid:</strong> ${{ $data['amount'] }}
+                    <br/><br/>
+                    <strong>Order Number:</strong> {{ $data['order_number'] }}
+                    <br/>
+                    <strong>Date:</strong> {{ date("m/d/y g:i A") }}
+                    <br/>
+                    <strong>Transaction ID:</strong> {{ $data['transId'] }}
+                    <br/>
+                    <strong>Customer ID:</strong> {{ $data['cid'] }}
+                    <br/>
+                    <strong>Response:</strong> {{ $data['responseText'] }}
+                </fieldset>
             <br/>
-            @if ($data['emailSent'] == TRUE)
+            @if ($data['emailSent'])
                 <h5 class="centeredtext">
                      An email receipt including the details about your payment has been sent to your email address.  Please keep it for your records.
                 </h5>
@@ -97,5 +92,9 @@
             <i class="fa fa-print" aria-hidden="true"></i> PRINT RECEIPT
         </a>
     </div>
+
+    <!--<pre>
+        {{ print_r($data) }}
+    </pre>-->
 </body>
 </html>

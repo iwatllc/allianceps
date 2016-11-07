@@ -59,16 +59,19 @@
                 <strong>Order Number:</strong> {{ $data['order_number'] }}
                 <br/><br/>
                 @if ($data['name'])
-                    <strong>Name:</strong> {{ $data['name'] }}
-                    <br/>
+                <strong>Name:</strong> {{ $data['name'] }}
+                <br/>
                 @endif
-                @if ($data['cardNum'])
-                    <strong>Card Number:</strong> **** **** **** {{ $data['cardNum'] }}
-                    <br/>
+                @if ($data['paymentType'] == 'cc' && array_key_exists('cardNum' , $data ))
+                <strong>Card Number:</strong> **** **** **** {{ $data['cardNum'] }}
+                <br/>
+                @elseif ($data['paymentType'] == 'ach' && array_key_exists('obfDdaNum', $data))
+                <strong>Account Number:</strong> {{ $data['obfDdaNum'] }}
+                <br/>
                 @endif
                 @if ($data['amount'])
-                    <strong>Amount Attempted:</strong> ${{ $data['amount'] }}
-                    <br/>
+                <strong>Amount Attempted:</strong> ${{ $data['amount'] }}
+                <br/>
                 @endif
                 <strong>Date:</strong> {{ date("m/d/y g:i A") }}
                 <br/><br/>
@@ -82,5 +85,9 @@
             <i class="fa fa-arrow-left" aria-hidden="true"></i> Go Back to Payment Screen
         </a>
     </div>
+
+    <!--<pre>
+        {{ print_r($data) }}
+    </pre>-->
 </body>
 </html>

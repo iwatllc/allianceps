@@ -273,7 +273,8 @@
 						<br/>
 
 						<h4>Your order has been submitted.</h4>
-						<p>Thank you for placing your order with <strong><?php echo $customerName; ?></strong>. This email is to confirm your order has been placed successfully.</p>
+						<p>Thank you for placing your order with <strong><?php echo $customerName; ?></strong>.
+							This email is to confirm your order has been placed successfully.</p>
 
 						<br/>
 
@@ -292,30 +293,23 @@
 						<br/>
 
 						<h4 style="background-color:#d3d3d3;">Payment Information</h4>
+						<p><strong>Name:</strong> <?php echo $name; ?></p>
 						<?php if ($paymenttype == 'cc') { ?>
-							<p><strong>Name:</strong> <?php echo $name; ?></p>
-							<p><strong>Card Type:</strong>
-							<?php
-								if ($card == 'VS') echo 'Visa';
-								else if ($card == 'MC') echo 'Mastercard';
-								else if ($card == 'DS') echo 'Discover';
-								else if ($card == 'AX') echo 'Amex';
-								else if ($card == 'DC') echo 'Diners Club';
-								else echo '';
-							?>
-							</p>
+							<p><strong>Card Type:</strong><?php echo $cardName; ?></p>
 							<p><strong>Credit Card Number:</strong> **** **** **** <?php echo $cardNum; ?></p>
 							<p><strong>Expiration Date:</strong> <?php echo $expDate; ?></p>
+						<?php } else { ?>
+							<p><strong>Account Number:</strong> **<? echo $obfDdaNum; ?></p>
 						<?php } ?>
 
 						<br/>
 
 						<h4 style="background-color:#d3d3d3;">Your Order</h4>
-						<p><strong>Payment Method:</strong> <?php echo 'Credit Card'; ?></p>
-						<p><strong>Subtotal:</strong> $<?php echo number_format($subtotal, 2, '.', ''); ?></p>
-						<p><strong>Convenience Fee:</strong> $<?php echo number_format((float)($total - $subtotal), 2, '.', ''); ?> (<?php echo $cfPercentage; ?>%)</p>
+						<p><strong>Payment Method:</strong> <?php echo $paymentMethod; ?></p>
+						<p><strong>Subtotal:</strong> <?php echo $subtotal; ?></p>
+						<p><strong>Convenience Fee:</strong> <?php echo $cfAmount . ' ' . $cfPercentage; ?></p>
 						<h5><strong>Total:</strong> $<?php echo $total; ?></h5>
-
+						
 						<br/>
 						<br/>
 
