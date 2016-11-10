@@ -2,6 +2,18 @@
  * Created by afrazer on 10/5/2016.
  */
 
+var baseUrl, slug;
+if (window.location.host == 'localhost') // local environment
+{
+    baseUrl = window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
+    slug = window.location.pathname.split( '/' )[3];
+} else // live environment
+{
+    baseUrl = window.location .protocol + "//" + window.location.host;
+    slug = window.location.pathname.split( '/' )[2];
+}
+
+
 $( document ).ready(function() {
     displaycfmessage();
 });
@@ -43,8 +55,6 @@ $(document).on('click', 'button.btn-next', function(e){
     // Replace button with animated loading gif
     $(this).attr('disabled', true).empty().prepend('<i class="fa fa-spinner fa-spin"></i>&nbsp;Next');
 
-    // $('input[name=amount]').val(parseFloat($('input[name=amount]').val().replace(/,/g, '')));
-
     // Collect all of the field values
     var array = {
         uuid:           $('input[name=order_number]').val(),
@@ -58,9 +68,9 @@ $(document).on('click', 'button.btn-next', function(e){
         cf1:            $('input[name=ud1]').val(),
         cf2:            $('input[name=ud2]').val(),
         cf3:            $('input[name=ud3]').val(),
-        amount:         $('input[name=amount]').val(),
+        amount:         parseFloat($('input[name=amount]').val().replace(/,/g, '')),
         paymenttype:    $("input[name=paymenttype]:checked").val(),
-        slug:           window.location.pathname.split( '/' )[3]
+        slug:           slug
     };
 
     var cf1required = $('input[name=ud1]').data('parsley-required');
@@ -131,7 +141,6 @@ $(document).on('click', 'button.btn-next', function(e){
         array['cfpercentage'] = $('input[name=ach_cfpercentage]').val();
     }
 
-    var baseUrl = window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
     var pathToController = "/paymentform/paymentform/ajax_submit_form";
 
     jQuery.ajax({
@@ -201,7 +210,6 @@ $(document).on('click', 'button.btn-back', function(e){
 
     var uuid = $("input[name=order_number]").val();
 
-    var baseUrl = window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
     var pathToController = "/paymentform/paymentform/ajax_get_form_submission_amount";
 
     $('#ach-err').hide();

@@ -12,9 +12,9 @@
 $config['protocol'] = 'smtp';
 $config['wordwrap'] = TRUE;
 $config['useragent'] = 'BZB';
-$config['smtp_host'] = 'ssl://mail.onebzb.com';
+$config['smtp_host'] = 'ssl://mail.onebzb.com'; // TODO: Change this to email server address once it is set up
 $config['smtp_port'] = '465';
-$config['smtp_user'] = 'update@onebzb.com';
+$config['smtp_user'] = 'update@onebzb.com';  // TODO: Change this to the merchant's email
 $config['smtp_pass'] = '5BpqG$Z%GoHe';
 $config['charset'] = 'utf-8';
 $config['mailtype'] = 'html';

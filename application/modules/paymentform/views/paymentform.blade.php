@@ -140,13 +140,13 @@
             @if ($data['customer'] -> cc_conveniencefee)
                 <span class="alert alert-info cc_cfinfo" style="display:none;">
                     <strong>NOTE: </strong>
-                    If you pay by credit card, there will be a convenience fee of <strong>{{ $data['customer'] -> cc_cfpercentage }}</strong>&#37; applied to your payment.
+                    Credit card payments will have a convenience fee of <strong>{{ $data['customer'] -> cc_cfpercentage }}</strong>&#37; applied.
                 </span>
             @endif
             @if ($data['customer'] -> ach_conveniencefee)
                 <span class="alert alert-info ach_cfinfo" style="display:none;">
                     <strong>NOTE: </strong>
-                    If you pay by check, there will be a convenience fee of <strong>{{ $data['customer'] -> ach_cfpercentage }}</strong>&#37; applied to your payment.
+                    Checks will have a convenience fee of <strong>{{ $data['customer'] -> ach_cfpercentage }}</strong>&#37; applied.
                 </span>
             @endif
 

@@ -34,17 +34,14 @@ class Paymentform extends MX_Controller
             // Customer slug
             $data['customer'] = $this -> paymentform_model -> get_customer_form_from_slug($slug);
 
-            // JetDirect URL for testing
-    //        $data['jd_url'] = 'https://testapp1.jetpay.com/jetdirect/post/cc/process_cc.php';
-            $data['jd_url'] = 'https://testapp1.jetpay.com/jetdirect/jdv2/gateway/jp-handler.php';
-
             // Customer ID
             $data['cid'] = $data['customer'] -> uuid;
 
-            // Approved and declined URLs
-            $data['retUrl']    = base_url('paymentresponse/response');
-            $data['decUrl']    = base_url('paymentresponse/decline');
-            $data['dataUrl']   = base_url('paymentresponse/trans_details');
+            // JetDirect URLs
+            $data['jd_url']     = $this -> config -> item('JetDirect_Url');
+            $data['retUrl']     = base_url($this -> config -> item('JetDirect_retUrl'));
+            $data['decUrl']     = base_url($this -> config -> item('JetDirect_decUrl'));
+            $data['dataUrl']    = base_url($this -> config -> item('JetDirect_dataUrl'));
 
             // Set Custom Fields
             if ($data['customer'] -> cf1enabled == 1)
@@ -98,7 +95,7 @@ class Paymentform extends MX_Controller
                 'logo'          => $data['customer'] -> logofile,
                 'author'        => $data['customer'] -> customername,
             );
-
+            
             $this->blade
                 ->set('data', $data)
                 ->set('page_data', $page_data)

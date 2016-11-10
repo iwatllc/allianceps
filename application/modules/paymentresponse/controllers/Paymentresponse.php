@@ -159,7 +159,7 @@ class Paymentresponse extends MX_Controller
             $data['cfPercentage'] = '(0%)';
 
         // Set email preferences
-        $from               = 'update@onebzb.com'; // TODO: Change this to the merchant's email
+        $from               = $this -> config -> item('smtp_user');
         $fromname           = $customer -> customername;
         $to                 = $data['customerEmail'];
         $subject            = 'Order Reciept (#'.$data['transId'].')';
@@ -184,7 +184,7 @@ class Paymentresponse extends MX_Controller
             {
                 foreach ($addresses as $address)
                 {
-                    $this -> send_email('update@onebzb.com', $fromname, $address, $subject, $merchant_message);
+                    $this -> send_email($from, $fromname, $address, $subject, $merchant_message);
                 }
             }
         }
