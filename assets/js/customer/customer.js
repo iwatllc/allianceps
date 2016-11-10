@@ -305,7 +305,7 @@ $(document).on('click', '.addlogo-btn', function(e){
     var cname = $(this).data('cname');
 
     // Change title of modal
-    $(".modal-title").html("Upload New Logo for Customer: <strong>" + cname + "</strong>");
+    $(".modal-title").html("Upload Logo for Customer: <strong>" + cname + "</strong>");
 
     // Show popup modal
     $('#myModal').modal("show");

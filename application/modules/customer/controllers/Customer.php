@@ -119,10 +119,11 @@ class Customer extends MX_Controller
             array_map('unlink', glob($mask));
 
             // Move the file to the client/uploads/ directory
-            move_uploaded_file($_FILES["file"]["tmp_name"],$uploadDir.$fileName);
-
-            // Save the filename to the database
-            $this -> customer_model -> update_logo_name($cid, $fileName);
+            if (move_uploaded_file($_FILES["file"]["tmp_name"],$uploadDir.$fileName))
+            {
+                // Save the filename to the database
+                $this -> customer_model -> update_logo_name($cid, $fileName);
+            }
         }
     }
     
@@ -144,8 +145,8 @@ class Customer extends MX_Controller
         $this -> form_validation -> set_rules('ach_cfpercentage', 'ACH Convenience Fee', 'numeric');
 
         if ($this -> form_validation -> run() == FALSE
-            || $this -> customer_exists(NULL, $this->input->post('customername')) == FALSE
-            || $this -> slug_exists(NULL, $this->input->post('slug')) == FALSE
+            || $this -> customer_exists($this->input->post('customername')) == FALSE
+            || $this -> slug_exists($this->input->post('slug')) == FALSE
             || $this -> fields_disabled($this->input->post('cf3enabled'), $this->input->post('allowach')) == FALSE
             || $this -> fields_enabled($this->input->post('allowcc'), $this->input->post('allowach')) == FALSE)
         {
@@ -267,7 +268,6 @@ class Customer extends MX_Controller
         // get row that was just inserted
         $row = $this -> customer_model -> get_customer($id);
 
-        $data = array();
 
         // go back to ajax to print data
         echo json_encode($data);
@@ -440,31 +440,31 @@ class Customer extends MX_Controller
         echo json_encode($data);
     }
 
-    public function customer_exists($id, $customername)
+    public function customer_exists($customername)
     {
-        if ($this -> customer_model -> check_customer_exists($id, $customername))
+        if ($this -> customer_model -> check_customer_exists($customername))
         {
-            return true; // already exists
+            return false; // already exists
         } else
         {
-            return false; // does not exist, we are ok to add/update
+            return true; // does not exist, we are ok to add/update
         }
     }
     
-    public function slug_exists($id, $slugname)
+    public function slug_exists($slugname)
     {
-        if ($this -> customer_model -> check_slug_exists($id, $slugname))
+        if ($this -> customer_model -> check_slug_exists($slugname))
         {
-            return true; // already exists
+            return false; // already exists
         } else
         {
-            return false; // does not exist, we are ok to add/update
+            return true; // does not exist, we are ok to add/update
         }
     }
     
     public function customer_exists_update($id, $customername)
     {
-        if ($this -> customer_model -> check_customer_exists($id, $customername))
+        if ($this -> customer_model -> check_customer_exists_update($id, $customername))
         {
             return false; // already exists
         } else
@@ -475,7 +475,7 @@ class Customer extends MX_Controller
     
     public function slug_exists_update($id, $slugname)
     {
-        if ($this -> customer_model -> check_slug_exists($id, $slugname))
+        if ($this -> customer_model -> check_slug_exists_update($id, $slugname))
         {
             return false; // already exists
         } else

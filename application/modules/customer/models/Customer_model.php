@@ -57,16 +57,9 @@ class Customer_model extends CI_Model
                     -> update('customers', $data);
     }
 
-    public function check_customer_exists($id, $customername)
+    public function check_customer_exists($customername)
     {
-        $this -> db -> where('customername', $customername);
-
-        if ($id != NULL)
-        {
-            $this -> db -> where('id !=', $id);
-        }
-
-        $query = $this -> db -> get('customers');
+        $query = $this -> db -> where('customername', $customername) -> get('customers');
 
         if ($query -> num_rows() > 0)
         {
@@ -77,16 +70,35 @@ class Customer_model extends CI_Model
         }
     }
 
-    public function check_slug_exists($id, $slugname)
+    public function check_slug_exists($slugname)
     {
-        $this -> db -> where('slugname', $slugname);
+        $query = $this -> db -> where('slugname', $slugname) -> get('customers');
 
-        if ($id != NULL)
+        if ($query -> num_rows() > 0)
         {
-            $this -> db -> where('id !=', $id);
+            return true;
+        } else
+        {
+            return false;
         }
+    }
+    
+    public function check_customer_exists_update($id, $customername)
+    {
+        $query = $this -> db -> where('customername', $customername) -> where('id !=', $id) -> get('customers');
 
-        $query = $this -> db -> get('customers');
+        if ($query -> num_rows() > 0)
+        {
+            return true; // name already exists
+        } else
+        {
+            return false; // name does not exist
+        }
+    }
+
+    public function check_slug_exists_update($id, $slugname)
+    {
+        $query = $this -> db -> where('slugname', $slugname) -> where('id !=', $id) -> get('customers');
 
         if ($query -> num_rows() > 0)
         {

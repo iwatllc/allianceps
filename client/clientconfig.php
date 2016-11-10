@@ -1,45 +1,8 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-//$config['base_url'] = 'http://localhost/allianceps/';
-$config['base_url'] = 'http://www.onebzb.com/allianceps/';
-// $config['base_url'] = 'https://www.website.com/xxx/';
-
-
-
-/*
-|--------------------------------------------------------------------------
-| NPC INFORMATION
-|--------------------------------------------------------------------------
-|
-*/
-/***Gateway Selection (Only 1 active at a time)***/
-// $config['Gateway'] = 'NPC';
-$config['Gateway'] = 'NMI';
-/***End Gateway Selection***/
-
-/***NPC Gateway Settings***/
-// $config['NPC_SerialNumber'] = '001515047250';
-// $config['NPC_Devloper_SerialNumber'] = '984964341831';
-// $config['NPC_DevRequestUrl'] = 'https://developer.skipjackic.com/scripts/evolvcc.dll?Authorize';
-// $config['NPC_ProdRequestUrl'] = 'https://www.skipjackic.com/scripts/evolvcc.dll?Authorize';
-/***End NPC Gateway Settings***/
-
-
-/***NMI Gateway Settings***/
-//Sandbox
-// $config['NMI_Username'] = 'demo';
-// $config['NMI_Password'] = 'password';
-// $config['NMI_URL'] = 'https://securitycardservices.transactiongateway.com/api/transact.php';
-
-//Live
-$config['NMI_Username'] = 'user';
-$config['NMI_Password'] = 'security';
-$config['NMI_URL'] = 'https://securitycardservices.transactiongateway.com/api/transact.php';
-$config['NMI_URL_QUERY'] = 'https://securitycardservices.transactiongateway.com/api/query.php?';
-
-/***End NMI Gateway Settings***/
+$config['base_url'] = 'http://localhost/allianceps/';
+// $config['base_url'] = 'https://allywebpay.com';
 
 
 /***** COMPANY CONFIG ******/
@@ -63,3 +26,11 @@ $config['Company_Slogan'] = 'Company Slogan';
 // $config['Client_Logo'] = 'client/client_website/JM-logo.png';
 // $config['Client_Slogan'] = 'CLIENT SLOGAN';
 /***End Company Config Settings***/
+
+/***** JetPay Config Variables ******/
+$config['JetDirect_Url']    = 'https://testapp1.jetpay.com/jetdirect/jdv2/gateway/jp-handler.php';
+// $config['JetDirect_Url']    = 'https://extapp01.jetpay.com/jetdirect/jdv2/gateway/jp-handler.php';
+$config['JetDirect_retUrl']   = 'paymentresponse/response';
+$config['JetDirect_decUrl']   = 'paymentresponse/decline';
+$config['JetDirect_dataUrl']  = 'paymentresponse/trans_details';
+/***** End JetPay Config Variables ******/
