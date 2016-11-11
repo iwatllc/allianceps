@@ -25,7 +25,7 @@
 
     @if ($data['customer'] -> showlogo == '1')
         <center>
-            @if($data['customer'] -> logofile != '')
+            @if(isset($data['customer'] -> logofile))
                 <img src="{{ base_url(); }}/client/uploads/{{ $data['customer'] -> logofile }}" alt="" style="max-width: 200px; max-height: 200px; vertical-align: middle;">
             @endif
         </center>
@@ -140,13 +140,13 @@
             @if ($data['customer'] -> cc_conveniencefee)
                 <span class="alert alert-info cc_cfinfo" style="display:none;">
                     <strong>NOTE: </strong>
-                    Credit card payments will have a convenience fee of <strong>{{ $data['customer'] -> cc_cfpercentage }}</strong>&#37; applied.
+                    If you pay by credit card, there will be a convenience fee of <strong>{{ $data['customer'] -> cc_cfpercentage }}</strong>&#37; applied to your payment.
                 </span>
             @endif
             @if ($data['customer'] -> ach_conveniencefee)
                 <span class="alert alert-info ach_cfinfo" style="display:none;">
                     <strong>NOTE: </strong>
-                    Checks will have a convenience fee of <strong>{{ $data['customer'] -> ach_cfpercentage }}</strong>&#37; applied.
+                    If you pay by check, there will be a convenience fee of <strong>{{ $data['customer'] -> ach_cfpercentage }}</strong>&#37; applied to your payment.
                 </span>
             @endif
 
@@ -305,34 +305,34 @@
                 $('#yr-exp').val(expYr);
 
                 // Print all inputs
-                console.log(
-                    'name: '                    + $("input[name=name]").val() + '\n' +
-                    'cardNum: '                 + $("input[name=cardNum]").val() + '\n' +
-                    'expMo: '                   + $("input[name=expMo]").val() + '\n' +
-                    'expYr: '                   + $("input[name=expYr]").val() + '\n' +
-                    'cvv: '                     + $("input[name=cvv]").val() + '\n' +
-                    'amount: '                  + $("input[name=amount]").val() + '\n' +
-                    'email: '                   + $("input[name=customerEmail]").val() + '\n' +
-                    'billingAddress1: '         + $("input[name=billingAddress1]").val() + '\n' +
-                    'billingAddress2: '         + $("input[name=billingAddress2]").val() + '\n' +
-                    'billingCity: '             + $("input[name=billingCity]").val() + '\n' +
-                    'billingState: '            + $("input[name=billingState]").val() + '\n' +
-                    'billingZip: '              + $("input[name=billingZip]").val() + '\n' +
-                    'billingCountry: '          + $("input[name=billingCountry]").val() + '\n' +
-                    '\n' +
-                    'cid: '                     + $("input[name=cid]").val() + '\n' +
-                    'jp_tid: '                  + $("input[name=jp_tid]").val() + '\n' +
-                    'jp_key: '                  + $("input[name=jp_key]").val() + '\n' +
-                    'jp_request_hash: '         + $("input[name=jp_request_hash]").val() + '\n' +
-                    'order_number: '            + $("input[name=order_number]").val() + '\n' +
-                    'trans_type: '              + $("input[name=trans_type]").val() + '\n' +
-                    'UD1: '                     + $("input[name=ud1]").val() + '\n' +
-                    'UD2: '                     + $("input[name=ud2]").val() + '\n' +
-                    'UD3: '                     + $("input[name=ud3]").val() + '\n' +
-                    'retURL: '                  + $("input[name=retUrl]").val() + '\n' +
-                    'decURL: '                  + $("input[name=decUrl]").val() + '\n' +
-                    'dataURL: '                 + $("input[name=dataUrl]").val() + '\n'
-                );
+//                console.log(
+//                    'name: '                    + $("input[name=name]").val() + '\n' +
+//                    'cardNum: '                 + $("input[name=cardNum]").val() + '\n' +
+//                    'expMo: '                   + $("input[name=expMo]").val() + '\n' +
+//                    'expYr: '                   + $("input[name=expYr]").val() + '\n' +
+//                    'cvv: '                     + $("input[name=cvv]").val() + '\n' +
+//                    'amount: '                  + $("input[name=amount]").val() + '\n' +
+//                    'email: '                   + $("input[name=customerEmail]").val() + '\n' +
+//                    'billingAddress1: '         + $("input[name=billingAddress1]").val() + '\n' +
+//                    'billingAddress2: '         + $("input[name=billingAddress2]").val() + '\n' +
+//                    'billingCity: '             + $("input[name=billingCity]").val() + '\n' +
+//                    'billingState: '            + $("input[name=billingState]").val() + '\n' +
+//                    'billingZip: '              + $("input[name=billingZip]").val() + '\n' +
+//                    'billingCountry: '          + $("input[name=billingCountry]").val() + '\n' +
+//                    '\n' +
+//                    'cid: '                     + $("input[name=cid]").val() + '\n' +
+//                    'jp_tid: '                  + $("input[name=jp_tid]").val() + '\n' +
+//                    'jp_key: '                  + $("input[name=jp_key]").val() + '\n' +
+//                    'jp_request_hash: '         + $("input[name=jp_request_hash]").val() + '\n' +
+//                    'order_number: '            + $("input[name=order_number]").val() + '\n' +
+//                    'trans_type: '              + $("input[name=trans_type]").val() + '\n' +
+//                    'UD1: '                     + $("input[name=ud1]").val() + '\n' +
+//                    'UD2: '                     + $("input[name=ud2]").val() + '\n' +
+//                    'UD3: '                     + $("input[name=ud3]").val() + '\n' +
+//                    'retURL: '                  + $("input[name=retUrl]").val() + '\n' +
+//                    'decURL: '                  + $("input[name=decUrl]").val() + '\n' +
+//                    'dataURL: '                 + $("input[name=dataUrl]").val() + '\n'
+//                );
 
             } else if ($("input[name=paymenttype]:checked").val() == 'ach')
             {

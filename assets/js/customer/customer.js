@@ -2,7 +2,14 @@
  * Created by iWAT on 9/24/2016.
  */
 
-var baseUrl = window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
+var baseUrl;
+if (window.location.host == 'localhost' || 'www.onebzb.com') // local environment
+{
+    baseUrl = window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
+} else // live environment
+{
+    baseUrl = window.location .protocol + "//" + window.location.host;
+}
 
 // Open Add Customer popup
 $(document).on('click', '.addcustomer-btn', function(e){

@@ -3,7 +3,7 @@
  */
 
 var baseUrl, slug;
-if (window.location.host == 'localhost') // local environment
+if (window.location.host == 'localhost' || 'www.onebzb.com') // local environment
 {
     baseUrl = window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
     slug = window.location.pathname.split( '/' )[3];
@@ -83,7 +83,7 @@ $(document).on('click', 'button.btn-next', function(e){
     $('input[name=billingCity]').toggleInputError(array['city'].length == 0 ? true : false );
     $('input[name=billingState]').toggleInputError(array['state'].length == 0 ? true : false );
     $('input[name=billingZip]').toggleInputError(array['zip'].length == 0 ? true : false );
-    $('input[name=amount]').toggleInputError(array['amount'].length == 0 ? true : false );
+    $('input[name=amount]').toggleInputError($('input[name=amount]').val().length == 0 ? true : false );
     $('input[name=paymenttype]').toggleInputError(!array['paymenttype'] ? true : false );
 
     var pass = true;
@@ -120,7 +120,7 @@ $(document).on('click', 'button.btn-next', function(e){
         || array['city'].length == 0
         || array['state'].length == 0
         || array['zip'].length == 0
-        || array['amount'].length == 0
+        || $('input[name=amount]').val().length == 0
         || !array['paymenttype']
     )
     {
@@ -300,7 +300,7 @@ $(document).on("change", "[type=checkbox][name=ach-agreement]", function(e) {
 
 function fill_sample_inputs()
 {
-    $("input[name=name]").val('Wade Wilson');
+    $("input[name=name]").val('John Q. Public');
     $("input[name=customerEmail]").val('aarfrazer@gmail.com');
     $("input[name=billingAddress1]").val('3361 Boyington Dr');
     $("input[name=billingAddress2]").val('Suite 180');
@@ -310,8 +310,8 @@ function fill_sample_inputs()
     $("input[name=ud1]").val('UD1 TAG');
     $("input[name=ud2]").val('UD2 TAG');
     // $("input[name=ud3]").val('UD3 TAG');
-    // $("input[name=amount]").val('10.00');
-    // $("input:radio[name=paymenttype][value='ach']").prop("checked",true);
+    $("input[name=amount]").val('10.00');
+    $("input:radio[name=paymenttype][value='ach']").prop("checked",true);
 
     $(".btn-next").click();
 
@@ -321,10 +321,9 @@ function fill_sample_inputs()
     // $("input[name=cvv]").val('321');
 
     // ACH sample inputs
-    // $("input[name=accountName]").val('John Q. Public');
-    // $("input[name=ddaDrop]").val('123411');
-    // $("input[name=dda]").val('123411');
-    // $("input[name=abaDrop]").val('122000496');
-    // $("input[name=aba]").val('122000496');
-    // $("input[name=chkNumber]").val('234');
+    $("input[name=ddaDrop]").val('123411');
+    $("input[name=dda]").val('123411');
+    $("input[name=abaDrop]").val('122000496');
+    $("input[name=aba]").val('122000496');
+    $("input[name=chkNumber]").val('234');
 }
