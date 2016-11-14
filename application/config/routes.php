@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'customer';
+$route['default_controller'] = 'home';
 $route['404_override'] = 'Ezolp_404';
 $route['translate_uri_dashes'] = FALSE;
 
@@ -67,9 +67,7 @@ foreach(glob(APPPATH . 'modules/*') as $module)
     $route[$module] = $module . '/index';
 }
 
-// Removes 'paymentform/index/' from the slug
-$route['([^/]+)/?'] = 'paymentform/index/$1';
+$route['login'] = 'security/Auth';
 
-// Anything typed in the URL will be routed through the Base controller.
-// Base controller will decide whether it is a controller or a slug.
-$route['(:any)'] = 'catchall/index';
+// Removes 'paymentform/index/' from the slug
+$route['(:any)'] = 'paymentform/index/$1';
