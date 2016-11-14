@@ -81,7 +81,7 @@
             <br/>
         </div>
 
-        <a href="{{ base_url('paymentform/'.$data['slugname']) }}" class="btn btn-primary">
+        <a href="{{ base_url($data['slugname']) }}" class="btn btn-primary">
             <i class="fa fa-arrow-left" aria-hidden="true"></i> Go Back to Payment Screen
         </a>
     </div>

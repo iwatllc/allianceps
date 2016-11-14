@@ -171,7 +171,7 @@
                                             </td>
                                             <td><?php echo $customer -> customername ?></td>
                                             <td>
-                                                <a href="<?php echo base_url('paymentform/'.$customer->slugname) ?>" target="_blank"><?php echo $customer -> slugname ?></a></td>
+                                                <a href="<?php echo base_url($customer->slugname) ?>" target="_blank"><?php echo $customer -> slugname ?></a></td>
                                             </td>
                                             <td bgcolor="<?php if ($customer->cf1enabled == 1) {echo '#e5ffe5';} else {echo '#ffe5e5';} ?>">
                                                 <?php

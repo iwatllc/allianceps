@@ -72,8 +72,8 @@
                     <strong>Transaction ID:</strong> {{ $data['transId'] }}
                     <br/>
                     <strong>Customer ID:</strong> {{ $data['cid'] }}
-                    <br/>
-                    <strong>Response:</strong> {{ $data['responseText'] }}
+                    <!--<br/>
+                    <strong>Response:</strong> {{ $data['responseText'] }}-->
                 </fieldset>
             <br/>
             @if ($data['emailSent'])
@@ -85,7 +85,7 @@
 
         <br/>
 
-        <a href="{{ base_url('paymentform/'.$data['slugname']) }}" class="btn btn-primary">
+        <a href="{{ base_url($data['slugname']) }}" class="btn btn-primary">
             <i class="fa fa-arrow-left" aria-hidden="true"></i> Process Another Payment
         </a>
         <a href="javascript:window.print()" class="btn btn-primary" style="float:right;">
