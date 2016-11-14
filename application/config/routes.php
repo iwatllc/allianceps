@@ -53,5 +53,23 @@ $route['default_controller'] = 'customer';
 $route['404_override'] = 'Ezolp_404';
 $route['translate_uri_dashes'] = FALSE;
 
-// This will make sure to route the slug
-$route['paymentform/([^/]+)/?'] = 'paymentform/index/$1';
+// Check if the slug is a controller
+foreach(glob(APPPATH . 'controllers/*' . EXT) as $controller)
+{
+    $controller = strtolower(basename($controller, EXT));
+    $route[$controller] = $controller . '/index';
+}
+
+// Check if the slug is a module
+foreach(glob(APPPATH . 'modules/*') as $module)
+{
+    $module = basename($module, EXT);
+    $route[$module] = $module . '/index';
+}
+
+// Removes 'paymentform/index/' from the slug
+$route['([^/]+)/?'] = 'paymentform/index/$1';
+
+// Anything typed in the URL will be routed through the Base controller.
+// Base controller will decide whether it is a controller or a slug.
+$route['(:any)'] = 'catchall/index';

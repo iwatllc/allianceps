@@ -2,16 +2,8 @@
  * Created by afrazer on 10/5/2016.
  */
 
-var baseUrl, slug;
-if (window.location.host == 'localhost' || 'www.onebzb.com') // local environment
-{
-    baseUrl = window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
-    slug = window.location.pathname.split( '/' )[3];
-} else // live environment
-{
-    baseUrl = window.location .protocol + "//" + window.location.host;
-    slug = window.location.pathname.split( '/' )[2];
-}
+var baseUrl = window.location .protocol + "//" + window.location.host;
+var slug = window.location.pathname.split( '/' )[1];
 
 
 $( document ).ready(function() {
@@ -141,7 +133,7 @@ $(document).on('click', 'button.btn-next', function(e){
         array['cfpercentage'] = $('input[name=ach_cfpercentage]').val();
     }
 
-    var pathToController = "/paymentform/paymentform/ajax_submit_form";
+    var pathToController = "/paymentform/ajax_submit_form";
 
     jQuery.ajax({
         type: "POST",
