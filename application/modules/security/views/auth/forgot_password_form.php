@@ -8,7 +8,8 @@ $login = array(
     'class' => 'form-control',
     'maxlength'	=> 80,
     'size'	=> 30,
-    'value' => set_value('login')
+    'value' => set_value('login'),
+    'autocomplete' => 'off'
 );
 
 $reset = array(

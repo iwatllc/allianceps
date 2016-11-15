@@ -2,7 +2,8 @@
 $password = array(
 	'name'	=> 'password',
 	'id'		=> 'password',
-	'size' 	=> 30
+	'size' 	=> 30,
+    'autocomplete' => 'off'
 );
 
 $cancel = array(

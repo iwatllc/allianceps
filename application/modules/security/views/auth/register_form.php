@@ -7,7 +7,8 @@ $username = array(
     'class' => 'form-control',
     'placeholder' => 'Username',
     'size'	=> 30,
-    'value' =>  set_value('username')
+    'value' =>  set_value('username'),
+    'autocomplete' => 'off'
 );
 
 $email = array(
@@ -26,7 +27,8 @@ $password = array(
     'class' => 'form-control',
     'placeholder' => 'Password',
     'size'	=> 30,
-    'value' => set_value('password')
+    'value' => set_value('password'),
+    'autocomplete' => 'off'
 );
 
 $confirm_password = array(
@@ -35,7 +37,8 @@ $confirm_password = array(
     'class' => 'form-control',
     'placeholder' => 'Confirm Password',
     'size'	=> 30,
-    'value' => set_value('confirm_password')
+    'value' => set_value('confirm_password'),
+    'autocomplete' => 'off'
 );
 
 $register = array(

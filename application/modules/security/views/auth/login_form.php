@@ -7,7 +7,8 @@ $username = array(
     'class' => 'form-control input-lg',
     'placeholder' => 'Username',
     'size'  => 30,
-    'value' => set_value('username')
+    'value' => set_value('username'),
+    'autocomplete' => 'off'
 );
 
 $password = array(
@@ -15,7 +16,8 @@ $password = array(
     'id'    => 'password',
     'class' => 'form-control input-lg',
     'placeholder' => 'Password',
-    'size'  => 30
+    'size'  => 30,
+    'autocomplete' => 'off'
 );
 
 $remember = array(

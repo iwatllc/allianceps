@@ -5,19 +5,22 @@ $old_password = array(
 	'name'	=> 'old_password',
 	'id'		=> 'old_password',
 	'size' 	=> 30,
-	'value' => set_value('old_password')
+	'value' => set_value('old_password'),
+    'autocomplete' => 'off'
 );
 
 $new_password = array(
 	'name'	=> 'new_password',
 	'id'		=> 'new_password',
-	'size'	=> 30
+	'size'	=> 30,
+    'autocomplete' => 'off'
 );
 
 $confirm_new_password = array(
 	'name'	=> 'confirm_new_password',
 	'id'		=> 'confirm_new_password',
-	'size' 	=> 30
+	'size' 	=> 30,
+    'autocomplete' => 'off'
 );
 
 $change = array(
