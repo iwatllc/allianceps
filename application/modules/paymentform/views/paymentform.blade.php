@@ -25,7 +25,7 @@
 
     @if ($data['customer'] -> showlogo == '1')
         <center>
-            @if(isset($data['customer'] -> logofile))
+            @if($data['customer'] -> logofile != '')
                 <img src="{{ base_url(); }}/client/uploads/{{ $data['customer'] -> logofile }}" alt="" style="max-width: 200px; max-height: 200px; vertical-align: middle;">
             @endif
         </center>

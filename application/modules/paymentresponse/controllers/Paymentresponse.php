@@ -162,14 +162,15 @@ class Paymentresponse extends MX_Controller
         $from               = $this -> config -> item('smtp_user');
         $fromname           = $customer -> customername;
         $to                 = $data['customerEmail'];
-        $subject            = 'Order Reciept (#'.$data['transId'].')';
+        $customer_subject   = 'Order Reciept (#'.$data['transId'].')';
+        $merchant_subject   = $customer_subject.' for '.$customer -> customername;
         $customer_message   = $this -> load -> view('customerordersummary', $data, TRUE);
-        $merchant_message   = 'Email message for merchants will go here.';
+        $merchant_message   = $this -> load -> view('merchantordersummary', $data, TRUE);
 
         // Send email out to customer
         if ($customer -> emailcustomer == '1')
         {
-            if ($this -> send_email($from, $fromname, $to, $subject, $customer_message))
+            if ($this -> send_email($from, $fromname, $to, $customer_subject, $customer_message))
             {
                 $data['emailSent'] = TRUE;
             }
@@ -184,7 +185,7 @@ class Paymentresponse extends MX_Controller
             {
                 foreach ($addresses as $address)
                 {
-                    $this -> send_email($from, $fromname, $address, $subject, $merchant_message);
+                    $this -> send_email($from, $fromname, $address, $merchant_subject, $merchant_message);
                 }
             }
         }
