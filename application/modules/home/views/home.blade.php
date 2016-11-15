@@ -12,7 +12,7 @@
 	<meta content="{{ $page_data['author'] }}" name="author" />
 	
 	<!-- ================== BEGIN BASE CSS STYLE ================== -->
-	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+	<link href="{{ base_url() }}assets/css/google-api-fonts.css" rel="stylesheet">
 	<link href="{{ base_url() }}assets/one-page-parallax/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 	<link href="{{ base_url() }}assets/one-page-parallax/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
 	<link href="{{ base_url() }}assets/one-page-parallax/assets/css/animate.min.css" rel="stylesheet" />
