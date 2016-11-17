@@ -23,8 +23,8 @@ class DX_Auth
 	var $_auth_error;	// Contain user error when login
 	var $_captcha_image;
     var $hasher;
-	
-	function DX_Auth()
+
+	public function __construct() 
 	{
 		$this->ci =& get_instance();
 
@@ -33,21 +33,21 @@ class DX_Auth
 		// Load required library
 		$this->ci->load->library('Session');
 		$this->ci->load->database();
-		
+
 		// Load DX Auth config
 		$this->ci->load->config('dx_auth');
-		
-		// Load DX Auth language		
+
+		// Load DX Auth language
 		$this->ci->lang->load('dx_auth');
-		
+
 		// Load DX Auth event
 		//$this->ci->load->library('DX_Auth_Event');
 
         $this->hasher = new PasswordHash(8, false);
-		
+
 		// Initialize
 		$this->_init();
-	}
+    }
 
 	/* Private function */
 
